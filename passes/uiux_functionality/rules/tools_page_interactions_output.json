@@ -1,0 +1,257 @@
+{
+  "rule_id": "tools_page_interactions",
+  "rule_name": "Tools Page - Filters & CRUD UX",
+  "checkboxes": [
+    {
+      "id": "filters_all_functional",
+      "description": "All filter types functional (department, status, cost range, category, search)",
+      "status": "UNCHECKED",
+      "points_awarded": 3,
+      "points_max": 8,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Status filter is functional with radio buttons and onChange handlers that update params state",
+          "location": "src/components/ToolsFilters/index.tsx:33-50",
+          "snippet": "STATUSES.map((s) => (\n  <input type=\"radio\" name=\"status\" checked={params.status === s}\n    onChange={() => onChange({ status: params.status === s ? undefined : s })}\n    className=\"accent-primary\" />\n))"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Category filter is functional with radio buttons and onChange handlers",
+          "location": "src/components/ToolsFilters/index.tsx:95-110",
+          "snippet": "CATEGORIES.map((c) => (\n  <input type=\"radio\" name=\"category\" checked={params.category === c}\n    onChange={() => onChange({ category: params.category === c ? undefined : c })}\n    className=\"accent-primary\" />\n))"
+        },
+        {
+          "confidence": 0.98,
+          "reasoning": "Department filter is COMMENTED OUT - not functional. This is a critical missing filter type.",
+          "location": "src/components/ToolsFilters/index.tsx:53-80",
+          "snippet": "/* <div>\n  <p className=\"text-xs font-semibold text-gray-400 uppercase mb-2\">Department</p>\n  <div className=\"flex flex-col gap-1\">\n    {DEPARTMENTS.map((d) => (\n      <input type=\"radio\" name=\"department\" checked={params.department === d}\n        onChange={() => onChange({ department: params.department === d ? undefined : d })} />\n    ))}\n  </div>\n</div> */"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Cost range filter is completely missing - no slider, no min/max inputs, no cost filtering logic found in component",
+          "location": "src/components/ToolsFilters/index.tsx:1-130",
+          "snippet": "// Entire component searched - no cost range filter implementation"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Search exists but uses separate Zustand store, not integrated as a filter in ToolsFilters component",
+          "location": "src/pages/ToolsPage.tsx:15-22",
+          "snippet": "const { query, setQuery } = useSearchStore()\nconst { data: tools } = useTools({ ...params, name_like: query || undefined })"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "filters_visual_feedback",
+      "description": "Active filters show visual indication (badges, count, highlights)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "Only visual feedback is radio button checked state. No badges, no count display, no highlights or visual indicators showing which filters are active beyond basic radio button state.",
+          "location": "src/components/ToolsFilters/index.tsx:33-110",
+          "snippet": "<input type=\"radio\" checked={params.status === s} className=\"accent-primary\" />\n<span className=\"capitalize\">{s}</span>"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Searched entire ToolsFilters component - no implementation of badges, count indicators, or special highlighting for active filters. No visual summary of applied filters.",
+          "location": "src/components/ToolsFilters/index.tsx:1-130"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "clear_filters_works",
+      "description": "Clear/Reset filters button resets all filters to default",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Individual clear button for status filter that resets status to undefined when clicked",
+          "location": "src/components/ToolsFilters/index.tsx:51-58",
+          "snippet": "{params.status && (\n  <button onClick={() => onChange({ status: undefined })}\n    className=\"text-xs text-primary hover:underline text-left mt-1\">\n    Clear\n  </button>\n)}"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Global 'Reset all filters' button that clears all filter states (status, department, category) simultaneously",
+          "location": "src/components/ToolsFilters/index.tsx:113-125",
+          "snippet": "{(params.status || params.department || params.category) && (\n  <button onClick={() => onChange({ status: undefined, department: undefined, category: undefined })}\n    className=\"text-xs text-red-400 hover:underline text-left\">\n    Reset all filters\n  </button>\n)}"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "add_modal_smooth",
+      "description": "Add Tool modal/form opens with smooth animation and proper focus",
+      "status": "UNCHECKED",
+      "points_awarded": 1,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.9,
+          "reasoning": "Modal opens but has NO animation classes (no transition, no transform, no animate-in). Modal just appears instantly without smooth animation or transition effects.",
+          "location": "src/components/ToolModal/index.tsx:18-23",
+          "snippet": "<div className=\"fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm\" onClick={onClose}>\n  <div className=\"bg-white dark:bg-secondary-dark rounded-2xl shadow-xl w-full max-w-lg p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto\""
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "No proper focus management found - no autoFocus attribute on first input, no useEffect for focus handling, no focus trap implementation for accessibility",
+          "location": "src/components/ToolModal/index.tsx:1-130"
+        }
+      ],
+      "confidence_aggregate": 0.89,
+      "is_bonus": false
+    },
+    {
+      "id": "edit_prefills_data",
+      "description": "Edit operation pre-fills form with existing tool data",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Edit mode passes entire tool object as defaultValues prop to ToolForm component",
+          "location": "src/components/ToolModal/index.tsx:45-50",
+          "snippet": "{mode === 'edit' && tool && (\n  <ToolForm\n    defaultValues={tool}\n    onSubmit={values => updateTool.mutate({ id: tool.id, data: values })}\n    isLoading={updateTool.isPending}\n    onCancel={onClose}\n  />\n)}"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "ToolForm properly extracts all fields from defaultValues and pre-fills form inputs with existing tool data",
+          "location": "src/components/ToolForm/index.tsx:38-48",
+          "snippet": "const form = useForm({\n  defaultValues: {\n    name: defaultValues?.name ?? '',\n    vendor: defaultValues?.vendor ?? '',\n    description: defaultValues?.description ?? '',\n    category: defaultValues?.category ?? '',\n    owner_department: defaultValues?.owner_department ?? '',\n    monthly_cost: defaultValues?.monthly_cost ?? 0,\n    status: defaultValues?.status ?? 'active',\n    website_url: defaultValues?.website_url ?? '',\n    icon_url: defaultValues?.icon_url ?? ''\n  }"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "delete_confirmation_safe",
+      "description": "Delete shows confirmation with clear warning and cancel option",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Delete confirmation dialog with clear warning message ('Cette action est irréversible'), tool name highlighted in bold, and explicit Cancel button to prevent accidental deletion",
+          "location": "src/components/ToolModal/index.tsx:53-65",
+          "snippet": "{mode === 'delete' && tool && (\n  <div className=\"flex flex-col gap-4\">\n    <p className=\"text-sm text-gray-500\">Supprimer <strong>{tool.name}</strong> ? Cette action est irréversible.</p>\n    <div className=\"flex gap-2 justify-end\">\n      <button onClick={onClose} className=\"px-4 py-2 rounded-lg border text-sm hover:bg-gray-50 dark:hover:bg-gray-700\">Annuler</button>\n      <button onClick={() => deleteTool.mutate(tool.id)} disabled={deleteTool.isPending}\n        className=\"px-4 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 disabled:opacity-50\">\n        {deleteTool.isPending ? 'Suppression...' : 'Supprimer'}\n      </button>\n    </div>\n  </div>\n)}"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Delete button is disabled during mutation to prevent double-clicks and shows loading state with 'Suppression...' text",
+          "location": "src/components/ToolModal/index.tsx:61"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "crud_success_feedback",
+      "description": "Success feedback shown after create/update/delete (toast, message)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Mutations only invalidate queries and call onSuccess callback which closes modal. NO toast, alert, notification, or success message shown to user after create/update/delete operations.",
+          "location": "src/hooks/useMutations.ts:6-11",
+          "snippet": "export const useCreateTool = (onSuccess?: () => void) => {\n  const qc = useQueryClient()\n  return useMutation({\n    mutationFn: (data: Partial<Tool>) => toolMutations.create(data),\n    onSuccess: () => { qc.invalidateQueries({ queryKey: ['tools'] }); onSuccess?.() }\n  })\n}"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "onSuccess callback only closes modal - no success feedback mechanism implemented. User has no confirmation that operation succeeded.",
+          "location": "src/components/ToolModal/index.tsx:14-16",
+          "snippet": "const createTool = useCreateTool(onClose)\nconst updateTool = useUpdateTool(onClose)\nconst deleteTool = useDeleteTool(onClose)"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "crud_error_handling",
+      "description": "Error feedback shown if CRUD operation fails with clear message",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "All three mutation hooks (create, update, delete) have NO onError callback. Errors are silently swallowed with no user feedback.",
+          "location": "src/hooks/useMutations.ts:6-28",
+          "snippet": "return useMutation({\n  mutationFn: (data: Partial<Tool>) => toolMutations.create(data),\n  onSuccess: () => { qc.invalidateQueries({ queryKey: ['tools'] }); onSuccess?.() }\n  // NO onError callback\n})"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Mutations throw generic errors but no UI feedback mechanism exists to display them to users. Failed operations provide no error message.",
+          "location": "src/lib/mutations.ts:6-10",
+          "snippet": "create: (data: Partial<Tool>) =>\n  fetch(`${BASE_URL}/tools`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })\n    .then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "form_validation_ui",
+      "description": "Form validation provides real-time feedback with error messages",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Zod schema with custom error messages for validation rules on all required fields",
+          "location": "src/components/ToolForm/index.tsx:6-15",
+          "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  category: z.string().min(1, 'Requis'),\n  owner_department: z.string().min(1, 'Requis'),\n  monthly_cost: z.coerce.number().min(0, 'Doit être positif'),\n  website_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n  icon_url: z.string().url('URL invalide').or(z.literal('')).optional()\n})"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Field component displays validation errors in real-time with red text styling below each input",
+          "location": "src/components/ToolForm/index.tsx:24-29",
+          "snippet": "const Field = ({ label, error, children }) => (\n  <div className=\"flex flex-col gap-1\">\n    <label className=\"text-xs font-medium text-gray-500\">{label}</label>\n    {children}\n    {error && <p className=\"text-xs text-red-500\">{error}</p>}\n  </div>\n)"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "TanStack Form configured with onChange validation for real-time feedback as user types in form fields",
+          "location": "src/components/ToolForm/index.tsx:44-48",
+          "snippet": "validatorAdapter: standardSchemaValidators,\nvalidators: { onChange: toolSchema },\nonSubmit: ({ value }) => onSubmit(value)"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    }
+  ],
+  "score": 17,
+  "max_score": 25,
+  "percentage": 68,
+  "confidence": 0.9377777777777777,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "JavaScript"
+  ],
+  "files_analyzed": [
+    "src/components/ToolsFilters/index.tsx",
+    "src/components/ToolForm/index.tsx",
+    "src/components/ToolModal/index.tsx",
+    "src/hooks/useMutations.ts",
+    "src/lib/mutations.ts",
+    "src/pages/ToolsPage.tsx",
+    "src/hooks/useApi.ts",
+    "src/types/index.ts"
+  ],
+  "tool_calls_total": 9,
+  "duration_seconds": 122.758,
+  "reasoning": "Evaluated Tools Page filters and CRUD UX interactions. Found partial implementation: Status and Category filters work (3/8 pts), but Department is commented out and cost range filter is missing entirely. Clear filters functionality is complete (2/2 pts). CRUD modals exist but lack smooth animations and focus management (1/3 pts). Edit properly pre-fills data (4/4 pts) and delete has safe confirmation (4/4 pts). Critical gaps: NO success/error feedback after CRUD operations (0/4 pts each) - mutations only close modal without toast/alert. Form validation UI is excellent with real-time Zod validation (3/3 pts). Total: 17/35 points (48.6%). Main issues: incomplete filters, missing user feedback system, no animations.",
+  "is_bonus": false
+}

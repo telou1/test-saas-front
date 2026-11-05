@@ -1,0 +1,214 @@
+{
+  "rule_id": "error_handling_robustness",
+  "rule_name": "Error Handling & Code Robustness",
+  "checkboxes": [
+    {
+      "id": "api_errors_handled",
+      "description": "API errors caught with try/catch and displayed to user",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.9,
+          "reasoning": "API errors are thrown but NOT caught with try/catch blocks. React Query handles errors internally but they are not displayed to users. No error boundaries or user-facing error messages found in the codebase.",
+          "location": "src/lib/api.ts:13-15",
+          "snippet": "fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n  if (!r.ok) throw new Error(`API error ${r.status}`)\n  return r.json()\n})"
+        },
+        {
+          "confidence": 0.85,
+          "reasoning": "Mutations throw errors but no try/catch blocks or error display logic found in components using these mutations. Errors are not caught or shown to users.",
+          "location": "src/lib/mutations.ts:9",
+          "snippet": ".then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+        }
+      ],
+      "confidence_aggregate": 0.88,
+      "is_bonus": false
+    },
+    {
+      "id": "error_messages_friendly",
+      "description": "Error messages user-friendly (not technical stack traces)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.88,
+          "reasoning": "Error messages are technical (e.g., 'API error 404', 'Create failed') and not user-friendly. No error display UI components or toast notifications found to show errors to users.",
+          "location": "src/lib/api.ts:14",
+          "snippet": "throw new Error(`API error ${r.status}`)"
+        }
+      ],
+      "confidence_aggregate": 0.88,
+      "is_bonus": false
+    },
+    {
+      "id": "loading_states_comprehensive",
+      "description": "Loading states present for all async operations",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Loading states present for data fetching with isLoading and isFetching from React Query, used to conditionally render skeleton components",
+          "location": "src/pages/ToolsPage.tsx:18-20",
+          "snippet": "const {\n  data: tools,\n  isLoading,\n  isFetching,\n} = useTools({...})"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Loading states used for mutations with isPending, showing loading text during operations to provide user feedback",
+          "location": "src/components/ToolModal/index.tsx:15-17",
+          "snippet": "const createTool = useCreateTool(onClose)\nconst updateTool = useUpdateTool(onClose)\nconst deleteTool = useDeleteTool(onClose)"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Skeleton components used during loading states for better UX, preventing blank screens while data loads",
+          "location": "src/pages/ToolsPage.tsx:62-64",
+          "snippet": "{isLoading ? (\n  <ToolsSkeletons />\n) : tools?.length === 0 ? ("
+        }
+      ],
+      "confidence_aggregate": 0.92,
+      "is_bonus": false
+    },
+    {
+      "id": "empty_states_handled",
+      "description": "Empty states handled (no data messages, not just blank page)",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Empty state with user-friendly message and helpful guidance when no tools found, not just a blank page",
+          "location": "src/pages/ToolsPage.tsx:64-68",
+          "snippet": ") : tools?.length === 0 ? (\n  <div className=\"flex-1 flex flex-col items-center justify-center gap-2 py-20 text-gray-400\">\n    <p className=\"text-lg font-medium\">No tools found</p>\n    <p className=\"text-sm\">Try adjusting your filters</p>\n  </div>"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "form_validation_present",
+      "description": "Form validation with real-time feedback and clear error messages",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "Comprehensive Zod schema validation with specific error messages for each field including min length, required fields, number validation, and URL validation",
+          "location": "src/components/ToolForm/index.tsx:5-14",
+          "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  description: z.string().optional(),\n  category: z.string().min(1, 'Requis'),\n  owner_department: z.string().min(1, 'Requis'),\n  monthly_cost: z.coerce.number().min(0, 'Doit être positif'),\n  status: z.enum(['active', 'expiring', 'unused']),\n  website_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n  icon_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n})"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Real-time validation with onChange and error display in Field component showing validation errors below each input",
+          "location": "src/components/ToolForm/index.tsx:27-32",
+          "snippet": "const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (\n  <div className=\"flex flex-col gap-1\">\n    <label className=\"text-xs font-medium text-gray-500\">{label}</label>\n    {children}\n    {error && <p className=\"text-xs text-red-500\">{error}</p>}\n  </div>\n)"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Form fields display validation errors from field.state.meta.errors with clear error messages for user feedback",
+          "location": "src/components/ToolForm/index.tsx:58-62",
+          "snippet": "<form.Field name=\"name\" children={field => (\n  <Field label=\"Nom *\" error={field.state.meta.errors?.[0]?.message}>\n    <input className={inputClass} value={field.state.value} onChange={e => field.handleChange(e.target.value)} placeholder=\"Slack\" />\n  </Field>\n)} />"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "null_checks_present",
+      "description": "Null/undefined checks before accessing properties (optional chaining ?.)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Optional chaining used extensively to safely access nested properties preventing runtime errors from undefined/null values",
+          "location": "src/components/ToolForm/index.tsx:58",
+          "snippet": "error={field.state.meta.errors?.[0]?.message}"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Nullish coalescing operator used for default values throughout the form to handle undefined/null cases",
+          "location": "src/components/ToolForm/index.tsx:38-46",
+          "snippet": "defaultValues: {\n  name: defaultValues?.name ?? '',\n  vendor: defaultValues?.vendor ?? '',\n  description: defaultValues?.description ?? '',\n  category: defaultValues?.category ?? '',\n  owner_department: defaultValues?.owner_department ?? '',\n  monthly_cost: defaultValues?.monthly_cost ?? 0,\n  status: defaultValues?.status ?? 'active',\n}"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "default_values_used",
+      "description": "Default values provided for optional data (fallbacks)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Default values provided for all form fields using nullish coalescing operator to prevent undefined values",
+          "location": "src/components/ToolForm/index.tsx:38-46",
+          "snippet": "name: defaultValues?.name ?? '',\nvendor: defaultValues?.vendor ?? '',\ndescription: defaultValues?.description ?? '',\ncategory: defaultValues?.category ?? '',\nowner_department: defaultValues?.owner_department ?? '',\nmonthly_cost: defaultValues?.monthly_cost ?? 0,\nstatus: defaultValues?.status ?? 'active',"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Default values used in hooks for pagination parameters ensuring functions work even without explicit parameters",
+          "location": "src/hooks/useApi.ts:17",
+          "snippet": "const { page = 1, limit = 10, ...rest } = params"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "graceful_degradation",
+      "description": "Application continues working if non-critical features fail",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "Image loading errors handled gracefully with fallback icon display, application continues working when images fail to load",
+          "location": "src/components/ToolIcon/index.tsx:7-19",
+          "snippet": "const [error, setError] = useState(false)\n\nif (!error && isSafeUrl(url)) {\n  return (\n    <img\n      src={url}\n      className=\"w-8 h-8 rounded-lg object-contain\"\n      referrerPolicy=\"no-referrer\"\n      crossOrigin=\"anonymous\"\n      onError={() => setError(true)}\n    />\n  )\n}\n\nreturn (\n  <div className=\"w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500\">\n    {getFallbackIcon(category)}\n  </div>\n)"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Application continues to function with empty data arrays, showing appropriate empty states instead of crashing",
+          "location": "src/pages/ToolsPage.tsx:64-68",
+          "snippet": "tools?.length === 0 ? (\n  <div className=\"flex-1 flex flex-col items-center justify-center gap-2 py-20 text-gray-400\">\n    <p className=\"text-lg font-medium\">No tools found</p>\n    <p className=\"text-sm\">Try adjusting your filters</p>\n  </div>\n)"
+        }
+      ],
+      "confidence_aggregate": 0.9,
+      "is_bonus": false
+    }
+  ],
+  "score": 17,
+  "max_score": 20,
+  "percentage": 85,
+  "confidence": 0.91875,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "JavaScript"
+  ],
+  "files_analyzed": [
+    "src/lib/mutations.ts",
+    "src/hooks/useApi.ts",
+    "src/lib/api.ts",
+    "src/components/ToolsFilters/index.tsx",
+    "src/pages/ToolsPage.tsx",
+    "src/components/ToolModal/index.tsx",
+    "src/components/ToolForm/index.tsx",
+    "src/components/ToolIcon/index.tsx",
+    "src/pages/DashboardPage.tsx"
+  ],
+  "tool_calls_total": 8,
+  "duration_seconds": 90.482,
+  "reasoning": "The codebase demonstrates partial error handling and robustness. Strong points include comprehensive loading states with skeleton components, proper empty state handling, excellent form validation using Zod with real-time feedback, consistent use of null checks with optional chaining and nullish coalescing operators, default values throughout, and graceful degradation for image loading failures. However, critical weaknesses exist: API errors are thrown but not caught with try/catch blocks, no user-facing error display mechanisms (toasts, error boundaries), and error messages are technical rather than user-friendly. React Query handles errors internally but users never see them. The application scores 17/25 points (68%), with major deductions for missing API error handling and user-friendly error messages, which are essential for production applications.",
+  "is_bonus": false
+}

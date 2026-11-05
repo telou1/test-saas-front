@@ -1,0 +1,109 @@
+{
+  "rule_id": "dashboard_responsive",
+  "rule_name": "Dashboard Responsive Design - 3 Breakpoints",
+  "checkboxes": [
+    {
+      "id": "mobile_layout_adapted",
+      "description": "Mobile (<640px): KPIs stack vertically, table becomes scrollable or cards",
+      "status": "CHECKED",
+      "points_awarded": 11,
+      "points_max": 12,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "KPIs stack vertically on mobile with grid-cols-1, fully responsive implementation",
+          "location": "src/components/KPI/index.tsx:13",
+          "snippet": "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Table becomes horizontally scrollable on mobile with overflow-x-auto and min-width constraint",
+          "location": "src/components/ToolsTable/index.tsx:122",
+          "snippet": "<div className=\"overflow-x-auto\">\n  <table className=\"w-full min-w-[640px]\">"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Dashboard has responsive spacing and typography for mobile. Minor deduction: KPI skeleton lacks responsive classes (grid-cols-4 hardcoded)",
+          "location": "src/pages/DashboardPage.tsx:27-31",
+          "snippet": "className=\"px-4 md:px-10 my-6 md:my-10\"\n<h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">"
+        }
+      ],
+      "confidence_aggregate": 0.92,
+      "is_bonus": false
+    },
+    {
+      "id": "tablet_layout_optimized",
+      "description": "Tablet (640-1024px): KPIs in 2x2 grid, navigation adapted",
+      "status": "CHECKED",
+      "points_awarded": 7,
+      "points_max": 10,
+      "evidence": [
+        {
+          "confidence": 0.85,
+          "reasoning": "KPIs display in 2x2 grid at sm breakpoint (640px+) as required for tablet layout",
+          "location": "src/components/KPI/index.tsx:13",
+          "snippet": "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
+        },
+        {
+          "confidence": 0.8,
+          "reasoning": "Navigation adapted for tablet with hamburger menu hidden at md breakpoint. However, desktop 4-column layout uses xl (1280px) instead of lg (1024px), creating suboptimal experience in 1024-1280px range",
+          "location": "src/components/Header/index.tsx:13-16",
+          "snippet": "<div className=\"hidden md:block\">\n  <Navigation />\n</div>"
+        }
+      ],
+      "confidence_aggregate": 0.83,
+      "is_bonus": false
+    },
+    {
+      "id": "desktop_layout_complete",
+      "description": "Desktop (>1024px): Full layout visible without scroll (KPIs + table)",
+      "status": "CHECKED",
+      "points_awarded": 8,
+      "points_max": 12,
+      "evidence": [
+        {
+          "confidence": 0.75,
+          "reasoning": "Desktop layout with 4 KPIs horizontal implemented, but uses xl breakpoint (1280px) instead of required lg (1024px). Requirement states >1024px but implementation requires >1280px",
+          "location": "src/components/KPI/index.tsx:13",
+          "snippet": "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Table displays complete without horizontal scroll on desktop with full width layout",
+          "location": "src/components/ToolsTable/index.tsx:122-123",
+          "snippet": "<div className=\"overflow-x-auto\">\n  <table className=\"w-full min-w-[640px]\">"
+        },
+        {
+          "confidence": 0.82,
+          "reasoning": "Full desktop layout visible with proper spacing. README confirms desktop breakpoint strategy but implementation has 256px gap (1024-1280px) where 4-column layout doesn't activate",
+          "location": "README.md",
+          "snippet": "| `lg+` | Full header | 4 cols KPI | Sidebar + 3 cols grid |"
+        }
+      ],
+      "confidence_aggregate": 0.82,
+      "is_bonus": false
+    }
+  ],
+  "score": 26,
+  "max_score": 34,
+  "percentage": 76.47058823529412,
+  "confidence": 0.8566666666666666,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "CSS",
+    "Markdown"
+  ],
+  "files_analyzed": [
+    "src/pages/DashboardPage.tsx",
+    "src/components/KPI/index.tsx",
+    "src/components/ToolsTable/index.tsx",
+    "src/components/Header/index.tsx",
+    "src/components/KPI/skeleton.tsx",
+    "README.md"
+  ],
+  "tool_calls_total": 8,
+  "duration_seconds": 68.99,
+  "reasoning": "The Dashboard implements responsive design across all three breakpoints with strong fundamentals. Mobile layout (<640px) fully complies with vertical KPI stacking and scrollable table. Tablet layout (640-1024px) shows 2x2 KPI grid and adapted navigation. However, there's a breakpoint alignment issue: the implementation uses xl (1280px) for desktop 4-column layout instead of lg (1024px) as specified, creating a 256px gap where the layout is suboptimal. All core responsive patterns are present (grid-cols responsive classes, overflow-x-auto, responsive spacing), but the breakpoint mismatch prevents full compliance with the >1024px desktop requirement. Total: 26/34 points.",
+  "is_bonus": false
+}

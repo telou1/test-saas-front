@@ -1,0 +1,14 @@
+{
+  "pass_id": "tools_analytics_pages",
+  "pass_name": "Pass 3 - Tools & Analytics Pages (Days 7-8)",
+  "pass_number": 3,
+  "started_at": "2026-05-28T13:07:56.123Z",
+  "rules_count": 5,
+  "conditional": false,
+  "dependencies": [],
+  "completed_at": "2026-05-28T13:10:19.567Z",
+  "duration_seconds": 143.444,
+  "score": 71,
+  "max_score": 170,
+  "percentage": 41.76470588235294
+}

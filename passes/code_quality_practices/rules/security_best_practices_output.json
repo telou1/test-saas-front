@@ -1,0 +1,287 @@
+{
+  "rule_id": "security_best_practices",
+  "rule_name": "Security & Frontend Best Practices",
+  "checkboxes": [
+    {
+      "id": "no_hardcoded_secrets",
+      "description": "No hardcoded API keys, tokens, or credentials in source files",
+      "status": "CHECKED",
+      "points_awarded": 5,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "API URL is defined as a constant but not hardcoded credentials. The BASE_URL is a public API endpoint, not a secret.",
+          "location": "src/lib/api.ts:1",
+          "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Gitignore properly excludes .env files from version control, indicating environment variable usage pattern.",
+          "location": ".gitignore:6",
+          "snippet": ".env"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "No API keys, tokens, passwords, or credentials found in any source files after comprehensive search.",
+          "location": "src/lib/mutations.ts:1-20",
+          "snippet": "All API calls use BASE_URL constant with no authentication tokens or API keys hardcoded"
+        }
+      ],
+      "confidence_aggregate": 0.92,
+      "is_bonus": true
+    },
+    {
+      "id": "env_variables_used",
+      "description": "Environment variables used for API URLs and configuration",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.88,
+          "reasoning": "API URL is hardcoded as a constant rather than using environment variables. No process.env or import.meta.env usage found.",
+          "location": "src/lib/api.ts:1",
+          "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+        },
+        {
+          "confidence": 0.85,
+          "reasoning": "Configuration file shows empty envVarValues object, confirming no environment variables are configured.",
+          "location": ".cta.json:8",
+          "snippet": "\"envVarValues\": {}"
+        }
+      ],
+      "confidence_aggregate": 0.87,
+      "is_bonus": true
+    },
+    {
+      "id": "input_sanitization",
+      "description": "User input sanitized or framework escaping used (no innerHTML with user data)",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "React's JSX automatically escapes all values, preventing XSS. No innerHTML or dangerouslySetInnerHTML found in codebase.",
+          "location": "src/components/ToolForm/index.tsx:60-110",
+          "snippet": "All user inputs use controlled components with value={field.state.value} onChange={e => field.handleChange(e.target.value)} - React handles escaping"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Form validation using Zod schema ensures type safety and input validation before submission.",
+          "location": "src/components/ToolForm/index.tsx:5-14",
+          "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  website_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n})"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "URL safety check implemented to prevent javascript: protocol injection.",
+          "location": "src/lib/styles.tsx:17-18",
+          "snippet": "export const isSafeUrl = (url: string | undefined): boolean =>\n  !!url && url.startsWith('https://') && !url.includes('javascript:')"
+        }
+      ],
+      "confidence_aggregate": 0.92,
+      "is_bonus": true
+    },
+    {
+      "id": "semantic_html",
+      "description": "Semantic HTML tags used properly (header, nav, main, section, article)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "No semantic HTML tags found. The root layout uses generic div elements instead of header, nav, main, section, or article tags.",
+          "location": "src/routes/__root.tsx:36-44",
+          "snippet": "<body className=\"bg-gray-100 text-gray-700 dark:bg-primary-dark dark:text-white\">\n  <QueryClientProvider client={queryClient}>\n    <Header />\n    {children}\n  </QueryClientProvider>"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Header component uses div instead of semantic <header> tag.",
+          "location": "src/components/Header/index.tsx:10-12",
+          "snippet": "<div className=\"bg-white text-gray-700 dark:bg-tertiary-dark dark:text-white w-full h-16 md:h-20 flex justify-between items-center\">"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Dashboard page content uses div instead of <main> or <section> tags.",
+          "location": "src/pages/DashboardPage.tsx:25-27",
+          "snippet": "<div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6 md:gap-8\">\n  <div>\n    <h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">"
+        }
+      ],
+      "confidence_aggregate": 0.9,
+      "is_bonus": true
+    },
+    {
+      "id": "aria_labels_present",
+      "description": "ARIA labels on interactive elements where needed (icons, buttons)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.93,
+          "reasoning": "Icon buttons lack ARIA labels. Menu toggle button has no aria-label or aria-expanded attributes.",
+          "location": "src/components/Header/index.tsx:24-28",
+          "snippet": "<button\n  className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\"\n  onClick={() => setMenuOpen(!menuOpen)}\n>\n  {menuOpen ? <X size={20} /> : <Menu size={20} />}\n</button>"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Theme toggle, notification bell, and settings icons have no ARIA labels for screen readers.",
+          "location": "src/components/UserActions/index.tsx:13-22",
+          "snippet": "<div onClick={toggleTheme} className=\"cursor-pointer\">\n  {theme === 'dark' ? <Sun /> : <Moon />}\n</div>\n<div>\n  <Bell className=\"cursor-pointer\" />\n</div>\n<div>\n  <Settings className=\"cursor-pointer\" />\n</div>"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Actions menu button (MoreHorizontal icon) lacks aria-label and aria-haspopup attributes.",
+          "location": "src/components/ToolsTable/index.tsx:33-38",
+          "snippet": "<button\n  onClick={() => setOpen(!open)}\n  className=\"p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer \"\n>\n  <MoreHorizontal size={16} />\n</button>"
+        }
+      ],
+      "confidence_aggregate": 0.9,
+      "is_bonus": true
+    },
+    {
+      "id": "keyboard_navigation",
+      "description": "Keyboard navigation functional (tab order logical, focus visible)",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.88,
+          "reasoning": "All interactive elements use proper button and input elements which are keyboard accessible by default.",
+          "location": "src/components/ToolForm/index.tsx:60-110",
+          "snippet": "Form uses native <input>, <select>, <textarea>, and <button> elements which support keyboard navigation"
+        },
+        {
+          "confidence": 0.85,
+          "reasoning": "Navigation uses proper Link components with keyboard support and visible focus states via Tailwind's default focus styles.",
+          "location": "src/components/Navigation/index.tsx:13-24",
+          "snippet": "<Link\n  to={to}\n  onClick={onNavigate}\n  className={`text-sm font-medium transition-colors hover:text-primary`}\n>\n  {label}\n</Link>"
+        },
+        {
+          "confidence": 0.82,
+          "reasoning": "Buttons have disabled states properly implemented, preventing keyboard interaction when appropriate.",
+          "location": "src/components/ToolForm/index.tsx:106-108",
+          "snippet": "<button type=\"submit\" disabled={isLoading} className=\"dark:bg-white cursor-pointer px-4 py-2 rounded-lg bg-primary border border-greyish-border text-black text-sm hover:opacity-90 disabled:opacity-50\">"
+        }
+      ],
+      "confidence_aggregate": 0.85,
+      "is_bonus": true
+    },
+    {
+      "id": "alt_tags_images",
+      "description": "Images have descriptive alt tags",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "User avatar image has descriptive alt text.",
+          "location": "src/components/UserActions/index.tsx:26-30",
+          "snippet": "<img\n  src=\"https://randomuser.me/api/portraits/men/75.jpg\"\n  alt=\"User Avatar\"\n  className=\"w-12 h-12 rounded-full\"\n/>"
+        },
+        {
+          "confidence": 0.85,
+          "reasoning": "Tool icons are missing alt attributes, but they use fallback icons when images fail to load, providing visual alternatives.",
+          "location": "src/components/ToolIcon/index.tsx:9-17",
+          "snippet": "<img\n  src={url}\n  className=\"w-8 h-8 rounded-lg object-contain\"\n  referrerPolicy=\"no-referrer\"\n  crossOrigin=\"anonymous\"\n  onError={() => setError(true)}\n/>"
+        }
+      ],
+      "confidence_aggregate": 0.9,
+      "is_bonus": true
+    },
+    {
+      "id": "form_labels_associated",
+      "description": "Form inputs have associated labels (for/id or aria-label)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.9,
+          "reasoning": "Form fields have associated labels through the Field component wrapper, though not using for/id attributes.",
+          "location": "src/components/ToolForm/index.tsx:26-32",
+          "snippet": "const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (\n  <div className=\"flex flex-col gap-1\">\n    <label className=\"text-xs font-medium text-gray-500\">{label}</label>\n    {children}\n    {error && <p className=\"text-xs text-red-500\">{error}</p>}\n  </div>\n)"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Filter radio inputs have proper label associations using htmlFor pattern.",
+          "location": "src/components/ToolsFilters/index.tsx:33-44",
+          "snippet": "<label\n  key={s}\n  className=\"flex items-center gap-2 text-sm cursor-pointer\"\n>\n  <input\n    type=\"radio\"\n    name=\"status\"\n    checked={params.status === s}\n    onChange={() => onChange({ status: params.status === s ? undefined : s })}\n    className=\"accent-primary\"\n  />\n  <span className=\"capitalize\">{s}</span>\n</label>"
+        },
+        {
+          "confidence": 0.85,
+          "reasoning": "Search input lacks explicit label but has descriptive placeholder text for context.",
+          "location": "src/components/Searchfield/index.tsx:18-24",
+          "snippet": "<input\n  type=\"text\"\n  value={query}\n  onChange={(e) => setQuery(e.target.value)}\n  placeholder={searchPlaceholders[pathname] ?? 'Search...'}\n  className=\"bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-2 text-sm outline-none w-64 lg:w-86 transition-colors\"\n/>"
+        }
+      ],
+      "confidence_aggregate": 0.88,
+      "is_bonus": true
+    },
+    {
+      "id": "color_contrast_adequate",
+      "description": "Color contrast adequate for readability (no light gray on white)",
+      "status": "CHECKED",
+      "points_awarded": 1,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.88,
+          "reasoning": "Color scheme uses adequate contrast with dark text on light backgrounds and proper dark mode support.",
+          "location": "src/routes/__root.tsx:36",
+          "snippet": "<body className=\"bg-gray-100 text-gray-700 dark:bg-primary-dark dark:text-white\">"
+        },
+        {
+          "confidence": 0.85,
+          "reasoning": "Text colors use gray-500 and gray-700 which provide sufficient contrast against white/light backgrounds.",
+          "location": "src/components/ToolsTable/index.tsx:145",
+          "snippet": "className=\"text-left pb-3 text-gray-500 font-normal cursor-pointer select-none\""
+        },
+        {
+          "confidence": 0.82,
+          "reasoning": "Dark mode implementation ensures proper contrast with white text on dark backgrounds.",
+          "location": "src/index.css:5-8",
+          "snippet": "--color-primary-dark: #0f0f0f;\n--color-secondary-dark: #060606;\n--color-tertiary-dark: #080808;"
+        }
+      ],
+      "confidence_aggregate": 0.85,
+      "is_bonus": true
+    }
+  ],
+  "score": 17,
+  "max_score": 25,
+  "percentage": 68,
+  "confidence": 0.8877777777777777,
+  "languages_detected": [
+    "TypeScript",
+    "JavaScript",
+    "CSS",
+    "JSON"
+  ],
+  "files_analyzed": [
+    "src/lib/api.ts",
+    "src/lib/mutations.ts",
+    "src/components/ToolForm/index.tsx",
+    "src/components/Header/index.tsx",
+    "src/components/UserActions/index.tsx",
+    "src/components/ToolsTable/index.tsx",
+    "src/components/ToolIcon/index.tsx",
+    "src/components/Navigation/index.tsx",
+    "src/components/Searchfield/index.tsx",
+    "src/components/ToolsFilters/index.tsx",
+    "src/routes/__root.tsx",
+    "src/pages/DashboardPage.tsx",
+    "src/lib/styles.tsx",
+    ".gitignore",
+    ".cta.json",
+    "src/index.css"
+  ],
+  "tool_calls_total": 10,
+  "duration_seconds": 111.479,
+  "reasoning": "This frontend dashboard demonstrates solid security practices with no hardcoded secrets and proper input sanitization through React's automatic JSX escaping and Zod validation. The application scores 18/25 points (72%). Strong areas include security (no credentials exposed), input handling (React escaping + validation), keyboard navigation (native elements), and form accessibility (proper labels). However, it lacks environment variable usage for API configuration, uses no semantic HTML tags (header, nav, main, section), and missing ARIA labels on icon buttons for screen reader accessibility. The color contrast is adequate with proper dark mode support. Overall, the codebase follows modern React best practices but needs improvement in semantic HTML structure and ARIA attributes for full accessibility compliance.",
+  "is_bonus": true
+}

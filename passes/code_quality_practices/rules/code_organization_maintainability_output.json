@@ -1,0 +1,228 @@
+{
+  "rule_id": "code_organization_maintainability",
+  "rule_name": "Code Organization & Maintainability",
+  "checkboxes": [
+    {
+      "id": "no_code_duplication",
+      "description": "No significant code duplication (similar logic factorized)",
+      "status": "UNCHECKED",
+      "points_awarded": 1,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Pagination controls are duplicated across DashboardPage and ToolsPage with identical structure (Page display, ArrowLeft/ArrowRight buttons, same className patterns). This should be extracted to a reusable PaginationControls component.",
+          "location": "src/pages/DashboardPage.tsx:62-79 vs src/pages/ToolsPage.tsx:82-99",
+          "snippet": "<div className=\"flex items-center justify-between text-sm text-gray-500\">\n  <span>Page {params.page}</span>\n  <div className=\"flex gap-2\">\n    <button onClick={() => setParams((p) => ({ ...p, page: (p.page ?? 1) - 1 }))} disabled={(params.page ?? 1) <= 1}..."
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Action dropdown menu pattern (view/edit/delete) is duplicated in ToolCard and ToolsTable ActionsCell with nearly identical implementation. Should be extracted to a shared ActionMenu component.",
+          "location": "src/components/ToolCard/index.tsx:40-56 vs src/components/ToolsTable/index.tsx:36-52",
+          "snippet": "{(['view', 'edit', 'delete'] as const).map((action) => (\n  <button key={action} onClick={() => {...}} className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 capitalize ${action === 'delete' ? 'text-red-500 border-t border-red-200' : ''}`}"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Currency formatting with Intl.NumberFormat is repeated at least 4 times across different components with identical configuration. Should be extracted to a utility function like formatCurrency().",
+          "location": "src/components/ToolCard/index.tsx:103-107, src/components/ToolsTable/index.tsx:82-86, src/components/ToolModal/index.tsx:89",
+          "snippet": "new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(tool.monthly_cost)"
+        }
+      ],
+      "confidence_aggregate": 0.92,
+      "is_bonus": false
+    },
+    {
+      "id": "functions_reusable",
+      "description": "Common functions extracted and reused across components",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Custom hooks (useTools, useDepartments, useUsers, useUserTools, useAnalytics) are extracted and reused across multiple pages. DashboardPage and ToolsPage both use useTools hook with different parameters.",
+          "location": "src/hooks/useApi.ts:1-57",
+          "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Mutation hooks (useCreateTool, useUpdateTool, useDeleteTool) are extracted and reused in ToolModal component for all CRUD operations with proper query invalidation.",
+          "location": "src/hooks/useMutations.ts:1-28",
+          "snippet": "export const useCreateTool = (onSuccess?: () => void) => {\n  const qc = useQueryClient()\n  return useMutation({\n    mutationFn: (data: Partial<Tool>) => toolMutations.create(data),\n    onSuccess: () => { qc.invalidateQueries({ queryKey: ['tools'] }); onSuccess?.() },\n  })\n}"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Utility functions like isSafeUrl and getFallbackIcon are extracted and reused across components for URL validation and icon fallback logic.",
+          "location": "src/lib/styles.tsx:15-17",
+          "snippet": "export const isSafeUrl = (url: string | undefined): boolean =>\n  !!url && url.startsWith('https://') && !url.includes('javascript:')\n\nexport const getFallbackIcon = (category: string) =>\n  categoryIcons[category?.toLowerCase()] ?? <CircleQuestionMark />"
+        }
+      ],
+      "confidence_aggregate": 0.92,
+      "is_bonus": false
+    },
+    {
+      "id": "constants_extracted",
+      "description": "Magic numbers and strings extracted to constants",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Color gradients and status styles are extracted to named constants (gradients, statusStyles) and reused across multiple components instead of hardcoded strings.",
+          "location": "src/lib/styles.tsx:3-13",
+          "snippet": "export const gradients = {\n  green:  'from-green-400 to-emerald-600',\n  orange: 'from-orange-400 to-red-500',\n  pink:   'from-pink-400 to-rose-600',\n  blue:   'from-blue-400 to-indigo-600',\n  purple: 'from-violet-400 to-purple-600',\n} as const\n\nexport const statusStyles = {\n  active:   'from-green-400 to-emerald-600',\n  expiring: 'from-orange-400 to-red-500',\n  unused:   'from-gray-300 to-gray-400',\n} as const"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "API base URL is extracted to a constant BASE_URL and reused in both api.ts and mutations.ts instead of being hardcoded.",
+          "location": "src/lib/api.ts:1",
+          "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Form options like CATEGORIES and DEPARTMENTS are extracted to constants at the top of the file instead of being inline in JSX.",
+          "location": "src/components/ToolForm/index.tsx:15-16",
+          "snippet": "const CATEGORIES = ['Design', 'Development', 'Finance', 'Security', 'HR', 'Project Management', 'Productivity', 'Communication']\nconst DEPARTMENTS = ['Engineering', 'Marketing', 'Design', 'Operations', 'Communication', 'Sales']"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "api_calls_centralized",
+      "description": "API calls centralized in services or utilities (not scattered in components)",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "All API calls are centralized in a single api object with a generic get method. No fetch calls are scattered in components.",
+          "location": "src/lib/api.ts:1-14",
+          "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'\n\nconst toQueryString = (params: Record<string, any>) => {...}\n\nexport const api = {\n  get: (endpoint: string, params: Record<string, any> = {}) =>\n    fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n      if (!r.ok) throw new Error(`API error ${r.status}`)\n      return r.json()\n    }),\n}"
+        },
+        {
+          "confidence": 0.96,
+          "reasoning": "All mutation operations (POST, PATCH, DELETE) are centralized in toolMutations object, separate from components. Uses BASE_URL constant for consistency.",
+          "location": "src/lib/mutations.ts:1-24",
+          "snippet": "export const toolMutations = {\n  create: (data: Partial<Tool>) =>\n    fetch(`${BASE_URL}/tools`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data),\n    }).then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() }),\n\n  update: (id: number, data: Partial<Tool>) => ...,\n  delete: (id: number) => ...\n}"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "API calls are wrapped in custom hooks that use the centralized api service. Components never call fetch directly - they use hooks like useTools(), useAnalytics(), etc.",
+          "location": "src/hooks/useApi.ts:1-57",
+          "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+        }
+      ],
+      "confidence_aggregate": 0.96,
+      "is_bonus": false
+    },
+    {
+      "id": "business_logic_separated",
+      "description": "Business logic separated from presentation (custom hooks, utilities)",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Data fetching logic is completely separated from presentation through custom hooks. Pages use useTools(), useAnalytics() etc. instead of mixing fetch logic with UI.",
+          "location": "src/hooks/useApi.ts:1-57",
+          "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "State management logic is separated into Zustand stores (useSearchStore, useThemeStore) instead of being mixed in components. Theme toggle logic is in the store, not in UI components.",
+          "location": "src/stores/useSearchStore.ts:1-11 and src/stores/useThemeStore.ts:1-19",
+          "snippet": "export const useThemeStore = create<ThemeStore>()(\n  persist(\n    (set, get) => ({\n      theme: 'light',\n      toggleTheme: () => {\n        const next = get().theme === 'light' ? 'dark' : 'light'\n        document.documentElement.setAttribute('data-theme', next)\n        set({ theme: next })\n      },\n    }),\n    { name: 'theme' },\n  ),\n)"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Business logic for URL validation and icon selection is extracted to utility functions (isSafeUrl, getFallbackIcon) separate from presentation components.",
+          "location": "src/lib/styles.tsx:15-25",
+          "snippet": "export const isSafeUrl = (url: string | undefined): boolean =>\n  !!url && url.startsWith('https://') && !url.includes('javascript:')\n\nexport const getFallbackIcon = (category: string) =>\n  categoryIcons[category?.toLowerCase()] ?? <CircleQuestionMark />"
+        }
+      ],
+      "confidence_aggregate": 0.92,
+      "is_bonus": false
+    },
+    {
+      "id": "styling_organized",
+      "description": "Styling organized (dedicated CSS files or styled-components, not inline chaos)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Global styles are organized in a dedicated CSS file (index.css) with Tailwind directives and custom CSS variables for theming. Not scattered inline.",
+          "location": "src/index.css:1-488",
+          "snippet": "src/index.css contains organized global styles with @tailwind directives and CSS custom properties for dark mode theming"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Reusable style constants (gradients, statusStyles) are organized in a dedicated styles.tsx file and imported where needed. Promotes consistency and maintainability.",
+          "location": "src/lib/styles.tsx:1-25",
+          "snippet": "export const gradients = {\n  green:  'from-green-400 to-emerald-600',\n  orange: 'from-orange-400 to-red-500',\n  pink:   'from-pink-400 to-rose-600',\n  blue:   'from-blue-400 to-indigo-600',\n  purple: 'from-violet-400 to-purple-600',\n} as const"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "file_structure_logical",
+      "description": "File structure logical and intuitive (components, pages, utils, etc.)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "File structure follows clear separation of concerns: components/, pages/, hooks/, lib/, stores/, types/, routes/. Each directory has a specific purpose and is logically organized.",
+          "location": "src/ directory structure",
+          "snippet": "src/\n  components/  - Reusable UI components\n  pages/       - Page-level components\n  hooks/       - Custom React hooks\n  lib/         - Utilities and services (api, mutations, styles)\n  stores/      - State management (Zustand)\n  types/       - TypeScript type definitions\n  routes/      - TanStack Router route definitions"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Components are organized with co-located files: each component has its index.tsx and skeleton.tsx in the same directory (e.g., ToolCard/index.tsx, ToolCard/skeleton.tsx). This makes related files easy to find.",
+          "location": "src/components/ structure",
+          "snippet": "src/components/ToolCard/index.tsx\nsrc/components/ToolCard/skeleton.tsx\nsrc/components/ToolsTable/index.tsx\nsrc/components/ToolsTable/skeleton.tsx"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    }
+  ],
+  "score": 17,
+  "max_score": 20,
+  "percentage": 85,
+  "confidence": 0.9328571428571427,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "CSS",
+    "JSON"
+  ],
+  "files_analyzed": [
+    "src/pages/DashboardPage.tsx",
+    "src/pages/ToolsPage.tsx",
+    "src/lib/api.ts",
+    "src/hooks/useApi.ts",
+    "src/lib/styles.tsx",
+    "src/lib/mutations.ts",
+    "src/hooks/useMutations.ts",
+    "src/stores/useSearchStore.ts",
+    "src/stores/useThemeStore.ts",
+    "src/types/index.ts",
+    "src/components/ToolCard/index.tsx",
+    "src/components/ToolsTable/index.tsx",
+    "src/components/ToolModal/index.tsx",
+    "src/components/ToolForm/index.tsx",
+    "src/index.css"
+  ],
+  "tool_calls_total": 8,
+  "duration_seconds": 147.007,
+  "reasoning": "The codebase demonstrates strong professional practices in API centralization, business logic separation, and file organization. All API calls are properly centralized in lib/api.ts and wrapped in custom hooks, business logic is separated through hooks and Zustand stores, and the file structure follows clear separation of concerns. Constants are well-extracted (BASE_URL, gradients, statusStyles, CATEGORIES, DEPARTMENTS) and styling is organized with dedicated CSS files and style utilities. However, there is significant code duplication that prevents a perfect score: pagination controls are duplicated across DashboardPage and ToolsPage, action dropdown menus are duplicated in ToolCard and ToolsTable, and currency formatting logic is repeated multiple times. These duplications should be extracted into reusable components and utility functions. Overall score: 17/20 points (85%), with the main deduction for code duplication issues.",
+  "is_bonus": false
+}

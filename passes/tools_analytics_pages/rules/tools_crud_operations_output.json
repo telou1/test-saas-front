@@ -1,0 +1,207 @@
+{
+  "rule_id": "tools_crud_operations",
+  "rule_name": "Tools Page - CRUD Functionality",
+  "checkboxes": [
+    {
+      "id": "add_tool_modal",
+      "description": "Add Tool button opens modal/form with all required fields",
+      "status": "CHECKED",
+      "points_awarded": 5,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Add Tool button present in ToolsPage header that triggers modal with mode='add', opening ToolForm with all required fields",
+          "location": "src/pages/ToolsPage.tsx:38-45",
+          "snippet": "<button\n  onClick={() => setAction({ mode: 'add' })}\n  className=\"flex items-center gap-2 px-3 md:px-4 py-2 shadow-sm rounded-xl bg-white text-black text-sm hover:opacity-90\"\n>\n  <Plus size={16} />\n  <span className=\"hidden sm:inline cursor-pointer \">Add Tool</span>\n</button>"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Modal renders ToolForm component when mode is 'add' with all required fields: name, vendor, category, department, cost, status, description, URLs",
+          "location": "src/components/ToolModal/index.tsx:33-38",
+          "snippet": "{mode === 'add' && (\n  <ToolForm\n    onSubmit={values => createTool.mutate(values)}\n    isLoading={createTool.isPending}\n    onCancel={onClose}\n  />\n)}"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "ToolForm includes all required fields with proper schema validation: name, vendor, description, category, owner_department, monthly_cost, status, website_url, icon_url",
+          "location": "src/components/ToolForm/index.tsx:5-14",
+          "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  description: z.string().optional(),\n  category: z.string().min(1, 'Requis'),\n  owner_department: z.string().min(1, 'Requis'),\n  monthly_cost: z.coerce.number().min(0, 'Doit être positif'),\n  status: z.enum(['active', 'expiring', 'unused']),\n  website_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n  icon_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n})"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "edit_tool_functionality",
+      "description": "Edit functionality implemented (modal/inline with pre-filled data)",
+      "status": "CHECKED",
+      "points_awarded": 5,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Edit mode implemented with ToolForm receiving defaultValues prop containing pre-filled data from selected tool, allowing modification of all fields",
+          "location": "src/components/ToolModal/index.tsx:41-47",
+          "snippet": "{mode === 'edit' && tool && (\n  <ToolForm\n    defaultValues={tool}\n    onSubmit={values => updateTool.mutate({ id: tool.id, data: values })}\n    isLoading={updateTool.isPending}\n    onCancel={onClose}\n  />\n)}"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Edit action available in dropdown menu on each ToolCard, triggers modal with edit mode and passes tool data for pre-filling form",
+          "location": "src/components/ToolCard/index.tsx:43-56",
+          "snippet": "{(['view', 'edit', 'delete'] as const).map((action) => (\n  <button\n    key={action}\n    onClick={() => {\n      onAction(action, tool)\n      setMenuOpen(false)\n    }}\n    className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 capitalize ${action === 'delete' ? 'text-red-500 border-t border-red-200' : ''}`}\n  >\n    {action === 'view' ? 'View' : action === 'edit' ? 'Edit' : 'Delete'}\n  </button>\n))}"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Update mutation properly implemented with query invalidation on success, ensuring UI refreshes with updated data",
+          "location": "src/hooks/useMutations.ts:12-18",
+          "snippet": "export const useUpdateTool = (onSuccess?: () => void) => {\n  const qc = useQueryClient()\n  return useMutation({\n    mutationFn: ({ id, data }: { id: number; data: Partial<Tool> }) => toolMutations.update(id, data),\n    onSuccess: () => { qc.invalidateQueries({ queryKey: ['tools'] }); onSuccess?.() },\n  })\n}"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "delete_confirmation",
+      "description": "Delete with confirmation dialog implemented (safety UX)",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Delete confirmation dialog implemented with warning message showing tool name, explicit irreversibility warning, and Cancel/Delete buttons - excellent safety UX pattern",
+          "location": "src/components/ToolModal/index.tsx:50-62",
+          "snippet": "{mode === 'delete' && tool && (\n  <div className=\"flex flex-col gap-4\">\n    <p className=\"text-sm text-gray-500\">Supprimer <strong>{tool.name}</strong> ? Cette action est irréversible.</p>\n    <div className=\"flex gap-2 justify-end\">\n      <button onClick={onClose} className=\"px-4 py-2 rounded-lg border text-sm hover:bg-gray-50 dark:hover:bg-gray-700\">Annuler</button>\n      <button\n        onClick={() => deleteTool.mutate(tool.id)}\n        disabled={deleteTool.isPending}\n        className=\"px-4 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 disabled:opacity-50\"\n      >\n        {deleteTool.isPending ? 'Suppression...' : 'Supprimer'}\n      </button>\n    </div>\n  </div>\n)}"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Confirmation message explicitly warns user that deletion is irreversible and displays the specific tool name being deleted for clarity",
+          "location": "src/components/ToolModal/index.tsx:51",
+          "snippet": "<p className=\"text-sm text-gray-500\">Supprimer <strong>{tool.name}</strong> ? Cette action est irréversible.</p>"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "table_extended_columns",
+      "description": "Tools table has more columns than Dashboard (Category, Last Updated, etc.)",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Tools page uses ToolCard grid layout displaying 10+ fields: name, vendor, description, status, active_users_count, owner_department, updated_at (Last Updated), website_url, category, monthly_cost - significantly more than Dashboard table's 5 columns",
+          "location": "src/components/ToolCard/index.tsx:68-87",
+          "snippet": "<div className=\"grid grid-cols-2 gap-2 text-xs text-gray-500 dark:text-gray-400\">\n  <div className=\"flex items-center gap-1\">\n    <Users size={12} />\n    {tool.active_users_count} users\n  </div>\n  <div className=\"flex items-center gap-1\">\n    <Building2 size={12} />\n    {tool.owner_department}\n  </div>\n  <div className=\"flex items-center gap-1\">\n    <Calendar size={12} />\n    {new Date(tool.updated_at).toLocaleDateString('fr-FR')}\n  </div>\n  {tool.website_url && (\n    <a href={tool.website_url} target=\"_blank\" rel=\"noopener noreferrer\" className=\"flex items-center gap-1 hover:text-primary\">\n      <ExternalLink size={12} />\n      Website\n    </a>\n  )}\n</div>"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Dashboard ToolsTable has only 5 data columns (name, department, users, cost, status) while Tools page cards display additional fields like category, updated_at, description, website_url - clearly extended",
+          "location": "src/components/ToolsTable/index.tsx:67-95",
+          "snippet": "const columns = [\n  columnHelper.accessor('name', {...}),\n  columnHelper.accessor('owner_department', { header: 'Department' }),\n  columnHelper.accessor('active_users_count', { header: 'Users' }),\n  columnHelper.accessor('monthly_cost', {...}),\n  columnHelper.accessor('status', {...}),\n  columnHelper.display({ id: 'actions', ... }),\n]"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "pagination_implemented",
+      "description": "Pagination present if >10 items (navigation, items per page selector)",
+      "status": "CHECKED",
+      "points_awarded": 5,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Pagination fully implemented with Previous/Next navigation buttons, current page number display, and proper disabled states when at boundaries",
+          "location": "src/pages/ToolsPage.tsx:73-91",
+          "snippet": "<div className=\"flex items-center justify-between text-sm text-gray-500\">\n  <span>Page {params.page}</span>\n  <div className=\"flex gap-2\">\n    <button\n      onClick={() => setParams((p) => ({ ...p, page: (p.page ?? 1) - 1 }))}\n      disabled={(params.page ?? 1) <= 1}\n      className=\"px-3 py-1 cursor-pointer rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-700\"\n    >\n      <ArrowLeft />\n    </button>\n    <button\n      onClick={() => setParams((p) => ({ ...p, page: (p.page ?? 1) + 1 }))}\n      disabled={(tools?.length ?? 0) < (params.limit ?? 12)}\n      className=\"px-3 py-1 cursor-pointer rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-700\"\n    >\n      <ArrowRight />\n    </button>\n  </div>\n</div>"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Pagination configured with limit of 12 items per page, exceeding the >10 items requirement for pagination implementation",
+          "location": "src/pages/ToolsPage.tsx:14",
+          "snippet": "const [params, setParams] = useState<ToolsParams>({ page: 1, limit: 12 })"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "crud_form_validation",
+      "description": "Form validation present for Add/Edit operations",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Comprehensive Zod schema validation covering all fields with min length requirements, required field validation, number constraints, enum validation, and URL format validation",
+          "location": "src/components/ToolForm/index.tsx:5-14",
+          "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  description: z.string().optional(),\n  category: z.string().min(1, 'Requis'),\n  owner_department: z.string().min(1, 'Requis'),\n  monthly_cost: z.coerce.number().min(0, 'Doit être positif'),\n  status: z.enum(['active', 'expiring', 'unused']),\n  website_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n  icon_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n})"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "TanStack Form configured with Zod validator adapter and onChange validation, ensuring real-time validation as user types",
+          "location": "src/components/ToolForm/index.tsx:36-40",
+          "snippet": "const form = useForm({\n  defaultValues: {...},\n  validatorAdapter: standardSchemaValidators,\n  validators: { onChange: toolSchema },\n  onSubmit: ({ value }) => onSubmit(value),\n})"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Field component displays validation errors in red text below inputs, providing clear visual feedback to users about validation failures",
+          "location": "src/components/ToolForm/index.tsx:24-30",
+          "snippet": "const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (\n  <div className=\"flex flex-col gap-1\">\n    <label className=\"text-xs font-medium text-gray-500\">{label}</label>\n    {children}\n    {error && <p className=\"text-xs text-red-500\">{error}</p>}\n  </div>\n)"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "success_feedback",
+      "description": "Success feedback shown after CRUD operations (toast, alert, message)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.9,
+          "reasoning": "Mutations only invalidate queries and close modal on success. No toast notification, alert component, or success message implementation found anywhere in codebase. Modal simply closes without explicit user feedback confirming operation succeeded.",
+          "location": "src/hooks/useMutations.ts:5-11",
+          "snippet": "export const useCreateTool = (onSuccess?: () => void) => {\n  const qc = useQueryClient()\n  return useMutation({\n    mutationFn: (data: Partial<Tool>) => toolMutations.create(data),\n    onSuccess: () => { qc.invalidateQueries({ queryKey: ['tools'] }); onSuccess?.() },\n  })\n}"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "onClose callback is the only success handler passed to mutations - no success message, toast notification library, or visual feedback mechanism present in implementation",
+          "location": "src/components/ToolModal/index.tsx:14-16",
+          "snippet": "const createTool = useCreateTool(onClose)\nconst updateTool = useUpdateTool(onClose)\nconst deleteTool = useDeleteTool(onClose)"
+        }
+      ],
+      "confidence_aggregate": 0.89,
+      "is_bonus": false
+    }
+  ],
+  "score": 27,
+  "max_score": 30,
+  "percentage": 90,
+  "confidence": 0.9299999999999998,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "JavaScript"
+  ],
+  "files_analyzed": [
+    "src/pages/ToolsPage.tsx",
+    "src/components/ToolModal/index.tsx",
+    "src/components/ToolForm/index.tsx",
+    "src/hooks/useMutations.ts",
+    "src/components/ToolsTable/index.tsx",
+    "src/components/ToolCard/index.tsx",
+    "src/lib/mutations.ts"
+  ],
+  "tool_calls_total": 8,
+  "duration_seconds": 128.82,
+  "reasoning": "Comprehensive evaluation of Tools page CRUD functionality reveals excellent implementation across 6 of 7 checkboxes. Add Tool modal opens with complete form containing all required fields (name, vendor, category, department, cost, status, URLs) with robust Zod validation. Edit functionality properly pre-fills form with existing tool data via defaultValues prop. Delete operation includes safety-first confirmation dialog with explicit warning and tool name display. Tools page displays significantly more data than Dashboard table (10+ fields vs 5 columns) including category, updated_at, description, and website_url. Pagination fully implemented with Previous/Next navigation, page indicators, and proper disabled states for 12 items per page. Form validation comprehensive with real-time onChange validation, error display, and constraints on all fields. However, success feedback is completely missing - no toast notifications, alerts, or success messages after CRUD operations complete. Modal simply closes without confirming to user that create/update/delete succeeded, which is a UX gap. Total score: 27/30 points (90%).",
+  "is_bonus": false
+}

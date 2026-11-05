@@ -1,0 +1,220 @@
+{
+  "rule_id": "json_server_integration",
+  "rule_name": "JSON Server - API Integration",
+  "checkboxes": [
+    {
+      "id": "api_integration_detected",
+      "description": "API calls detected in code (fetch, axios, etc.)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "Native fetch API used for GET requests with proper URL construction, query string handling, and JSON parsing in centralized API module",
+          "location": "src/lib/api.ts:11-15",
+          "snippet": "export const api = {\n  get: (endpoint: string, params: Record<string, any> = {}) =>\n    fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n      if (!r.ok) throw new Error(`API error ${r.status}`)\n      return r.json()\n    }),\n}"
+        },
+        {
+          "confidence": 0.98,
+          "reasoning": "Fetch API used for POST mutations with proper Content-Type headers and JSON body serialization for creating tools",
+          "location": "src/lib/mutations.ts:5-10",
+          "snippet": "create: (data: Partial<Tool>) =>\n    fetch(`${BASE_URL}/tools`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data),\n    }).then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Base URL configured pointing to JSON Server instance at tt-jsonserver-01.alt-tools.tech, confirming API integration setup",
+          "location": "src/lib/api.ts:1",
+          "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+        }
+      ],
+      "confidence_aggregate": 0.97,
+      "is_bonus": false
+    },
+    {
+      "id": "tools_endpoint_used",
+      "description": "GET /tools endpoint used for listing tools",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "GET /tools endpoint implemented via useTools hook with React Query, supporting pagination (_page, _limit) and filtering (status, department, category, name_like)",
+          "location": "src/hooks/useApi.ts:16-21",
+          "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "useTools hook actively used in Dashboard page to fetch and display tools list with search functionality",
+          "location": "src/pages/DashboardPage.tsx:15-18",
+          "snippet": "const { data: refToolsData, isLoading: toolsLoading } = useTools({\n    ...params,\n    name_like: query || undefined,\n  })"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "useTools hook used in Tools catalog page for listing with pagination, search, and filter support",
+          "location": "src/pages/ToolsPage.tsx:16-22",
+          "snippet": "const {\n    data: tools,\n    isLoading,\n    isFetching,\n  } = useTools({\n    ...params,\n    name_like: query || undefined,\n  })"
+        }
+      ],
+      "confidence_aggregate": 0.96,
+      "is_bonus": false
+    },
+    {
+      "id": "departments_endpoint_used",
+      "description": "GET /departments endpoint used for filters (department list)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "useDepartments hook exists and correctly calls GET /departments endpoint, BUT is never imported or used in any component. Department filters use hardcoded array instead of API data.",
+          "location": "src/hooks/useApi.ts:24-28",
+          "snippet": "export const useDepartments = () =>\n  useQuery<Department[]>({\n    queryKey: ['departments'],\n    queryFn: () => api.get('/departments'),\n  })"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "ToolsFilters component uses hardcoded DEPARTMENTS array instead of fetching from API. The department filter section is commented out, indicating incomplete implementation.",
+          "location": "src/components/ToolsFilters/index.tsx:16-23",
+          "snippet": "const DEPARTMENTS = [\n  'Engineering',\n  'Marketing',\n  'Design',\n  'Operations',\n  'Communication',\n  'Sales',\n]\n\n{/* <div>\n      <p className=\"text-xs font-semibold text-gray-400 uppercase mb-2\">\n        Department\n      </p>"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "users_endpoint_used",
+      "description": "GET /users endpoint used (user data integration)",
+      "status": "CHECKED",
+      "points_awarded": 1,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "GET /users endpoint implemented via useUsers hook with pagination and filtering support (department_id, active status). Hook is properly defined and available for use.",
+          "location": "src/hooks/useApi.ts:31-42",
+          "snippet": "export const useUsers = (params: UsersParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<User[]>({\n    queryKey: ['users', { page, limit, ...rest }],\n    queryFn: () => api.get('/users', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "User type definition exists with proper structure matching expected API response schema, including department_id for relational data",
+          "location": "src/types/index.ts:8-16",
+          "snippet": "export type User = {\n  id: number\n  name: string\n  email: string\n  department_id: number\n  role: string\n  active: boolean\n  joined_at: string\n}"
+        }
+      ],
+      "confidence_aggregate": 0.9,
+      "is_bonus": false
+    },
+    {
+      "id": "crud_operations_implemented",
+      "description": "CRUD operations implemented (POST, PUT, DELETE detected)",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "POST /tools endpoint implemented for creating new tools with proper Content-Type headers, JSON serialization, and error handling",
+          "location": "src/lib/mutations.ts:5-10",
+          "snippet": "create: (data: Partial<Tool>) =>\n    fetch(`${BASE_URL}/tools`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data),\n    }).then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+        },
+        {
+          "confidence": 0.98,
+          "reasoning": "PATCH /tools/:id endpoint implemented for updating existing tools with proper headers and error handling. Uses PATCH instead of PUT for partial updates.",
+          "location": "src/lib/mutations.ts:12-17",
+          "snippet": "update: (id: number, data: Partial<Tool>) =>\n    fetch(`${BASE_URL}/tools/${id}`, {\n      method: 'PATCH',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data),\n    }).then(r => { if (!r.ok) throw new Error('Update failed'); return r.json() })"
+        },
+        {
+          "confidence": 0.98,
+          "reasoning": "DELETE /tools/:id endpoint implemented for removing tools with proper error handling. All three mutation operations (Create, Update, Delete) are fully implemented.",
+          "location": "src/lib/mutations.ts:19-21",
+          "snippet": "delete: (id: number) =>\n    fetch(`${BASE_URL}/tools/${id}`, { method: 'DELETE' })\n      .then(r => { if (!r.ok) throw new Error('Delete failed') })"
+        }
+      ],
+      "confidence_aggregate": 0.98,
+      "is_bonus": false
+    },
+    {
+      "id": "analytics_endpoint_used",
+      "description": "GET /analytics or equivalent used for metrics",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "GET /analytics endpoint implemented via useAnalytics hook with proper TypeScript typing for Analytics response structure",
+          "location": "src/hooks/useApi.ts:50-54",
+          "snippet": "export const useAnalytics = () =>\n  useQuery<Analytics>({\n    queryKey: ['analytics'],\n    queryFn: () => api.get('/analytics'),\n  })"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "useAnalytics hook actively used in Dashboard page to fetch and display KPI metrics including budget overview, trends, and cost analytics",
+          "location": "src/pages/DashboardPage.tsx:14",
+          "snippet": "const { data: analytics, isLoading: analyticsLoading } = useAnalytics()"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Analytics type definition matches expected API response structure with budget_overview, kpi_trends, and cost_analytics sections for comprehensive dashboard metrics",
+          "location": "src/types/index.ts:33-53",
+          "snippet": "export type Analytics = {\n  budget_overview: {\n    monthly_limit: number\n    current_month_total: number\n    previous_month_total: number\n    budget_utilization: string\n    trend_percentage: string\n  }\n  kpi_trends: {\n    budget_change: string\n    tools_change: string\n    departments_change: string\n    cost_per_user_change: string\n  }\n  cost_analytics: {\n    cost_per_user: number\n    previous_cost_per_user: number\n    active_users: number\n    total_users: number\n  }\n}"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "error_handling_present",
+      "description": "API error handling implemented (try/catch, error states)",
+      "status": "CHECKED",
+      "points_awarded": 1,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Error handling implemented in API layer - checks response.ok status and throws descriptive error with HTTP status code for all GET requests",
+          "location": "src/lib/api.ts:13-14",
+          "snippet": "fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n      if (!r.ok) throw new Error(`API error ${r.status}`)\n      return r.json()\n    })"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Error handling in POST mutation - throws descriptive error message on failure, allowing React Query to catch and handle errors appropriately",
+          "location": "src/lib/mutations.ts:9",
+          "snippet": ".then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Consistent error handling pattern across all mutation operations (POST, PATCH, DELETE) with descriptive error messages for debugging",
+          "location": "src/lib/mutations.ts:16",
+          "snippet": ".then(r => { if (!r.ok) throw new Error('Update failed'); return r.json() })"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    }
+  ],
+  "score": 11,
+  "max_score": 12,
+  "percentage": 91.66666666666666,
+  "confidence": 0.9514285714285714,
+  "languages_detected": [
+    "TypeScript",
+    "TSX"
+  ],
+  "files_analyzed": [
+    "src/lib/api.ts",
+    "src/lib/mutations.ts",
+    "src/hooks/useApi.ts",
+    "src/hooks/useMutations.ts",
+    "src/pages/DashboardPage.tsx",
+    "src/pages/ToolsPage.tsx",
+    "src/components/ToolsFilters/index.tsx",
+    "src/components/ToolModal/index.tsx",
+    "src/types/index.ts"
+  ],
+  "tool_calls_total": 8,
+  "duration_seconds": 101.617,
+  "reasoning": "The codebase demonstrates comprehensive JSON Server API integration with 11 out of 12 points awarded. All required endpoints are implemented except for departments endpoint usage. The API layer uses native fetch with proper error handling, React Query for state management, and TypeScript for type safety. CRUD operations are fully implemented with POST, PATCH, and DELETE methods. The analytics endpoint is actively used for dashboard KPIs. However, the departments endpoint, while implemented as a hook, is never actually used - components rely on hardcoded arrays instead. Error handling is present throughout the API layer with response.ok checks and descriptive error messages. The implementation follows modern React patterns with custom hooks, proper separation of concerns, and comprehensive TypeScript typing.",
+  "is_bonus": false
+}

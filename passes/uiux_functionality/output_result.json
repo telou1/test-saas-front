@@ -1,0 +1,872 @@
+{
+  "pass_id": "uiux_functionality",
+  "pass_name": "Pass 4 - UI/UX Functionality & Interactions",
+  "score": 53.2,
+  "max_score": 100,
+  "percentage": 53.2,
+  "scoring_breakdown": {
+    "score": 53.2,
+    "score_standard": 64,
+    "score_bonus": 28,
+    "score_agrege": 53.2,
+    "obligatory": {
+      "points_obtained": 48,
+      "points_max": 75,
+      "count": 0
+    },
+    "bonus": {
+      "points_obtained": 7,
+      "points_max": 25,
+      "count": 0
+    },
+    "aggregation_weights": {
+      "standard": 0.7,
+      "bonus": 0.3
+    }
+  },
+  "rules": [
+    {
+      "rule_id": "dashboard_interactions",
+      "rule_name": "Dashboard - Interactive Elements & States",
+      "checkboxes": [
+        {
+          "id": "navigation_links_functional",
+          "description": "Navigation links clickable with proper routing/navigation",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Navigation uses TanStack Router Link component with proper routing to 4 pages (Dashboard, Tools, Analytics, Settings). Links are clickable with onClick handlers.",
+              "location": "src/components/Navigation/index.tsx:16-22",
+              "snippet": "<Link to={to} onClick={onNavigate} className={`text-sm font-medium transition-colors hover:text-primary ${pathname === to ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`}>{label}</Link>"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "All navigation items properly configured with routes and labels in navItems array, ensuring complete navigation functionality.",
+              "location": "src/components/Navigation/index.tsx:3-7",
+              "snippet": "const navItems = [{ to: '/', label: 'Dashboard' }, { to: '/tools', label: 'Tools' }, { to: '/analytics', label: 'Analytics' }, { to: '/settings', label: 'Settings' }]"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "hover_states_present",
+          "description": "Hover states on interactive elements (buttons, links, cards)",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Navigation links have hover:text-primary with transition-colors for smooth color change on hover.",
+              "location": "src/components/Navigation/index.tsx:19",
+              "snippet": "className={`text-sm font-medium transition-colors hover:text-primary ${...}`}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Mobile menu button has hover:bg-gray-100 dark:hover:bg-gray-700 state for visual feedback.",
+              "location": "src/components/Header/index.tsx:24",
+              "snippet": "className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\""
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Tool cards have hover:shadow-md with transition-shadow effect, providing clear visual feedback on interactive elements.",
+              "location": "src/components/ToolCard/index.tsx:20",
+              "snippet": "className=\"bg-white dark:bg-secondary-dark rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow dark:shadow-gray-700 flex flex-col gap-4 relative\""
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "active_page_indication",
+          "description": "Active page visually indicated in navigation",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Active page indicated by comparing pathname === to, applying text-primary class to active link for clear visual distinction.",
+              "location": "src/components/Navigation/index.tsx:19-20",
+              "snippet": "className={`text-sm font-medium transition-colors hover:text-primary ${pathname === to ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Uses useLocation hook from TanStack Router to get current pathname for active state comparison.",
+              "location": "src/components/Navigation/index.tsx:12",
+              "snippet": "const { pathname } = useLocation()"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "search_input_functional",
+          "description": "Search input accepts text and has functional search icon",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Search input accepts text with onChange handler updating Zustand store, includes Search icon from lucide-react for visual clarity.",
+              "location": "src/components/Searchfield/index.tsx:17-23",
+              "snippet": "<Search className='text-greyish-border' />\n<input type=\"text\" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={searchPlaceholders[pathname] ?? 'Search...'} className=\"bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-2 text-sm outline-none w-64 lg:w-86 transition-colors\" />"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Search state managed with Zustand store (useSearchStore), properly integrated with global state for cross-component functionality.",
+              "location": "src/components/Searchfield/index.tsx:13",
+              "snippet": "const { query, setQuery } = useSearchStore()"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "user_menu_dropdown",
+          "description": "User menu dropdown opens on click and closes properly",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "User avatar has onClick handler with state management (isDropdownOpen, toggleDropdown), but NO dropdown menu is rendered. The isDropdownOpen state is set but never used to conditionally render dropdown content. Only theme toggle, bell, and settings icons are present without dropdown functionality.",
+              "location": "src/components/UserActions/index.tsx:10-23",
+              "snippet": "const [isDropdownOpen, setIsDropdownOpen] = useState(false)\nconst toggleDropdown = () => { setIsDropdownOpen(!isDropdownOpen) }\n...\n<div onClick={toggleDropdown} className=\"cursor-pointer\"><img src=\"https://randomuser.me/api/portraits/men/75.jpg\" alt=\"User Avatar\" className=\"w-12 h-12 rounded-full\" /></div>"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "kpis_hover_effects",
+          "description": "KPI cards have hover effects (shadow, scale, etc.)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.85,
+              "reasoning": "Tool cards (similar to KPI cards) have hover:shadow-md with transition-shadow effect providing visual feedback.",
+              "location": "src/components/ToolCard/index.tsx:20",
+              "snippet": "className=\"bg-white dark:bg-secondary-dark rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow dark:shadow-gray-700\""
+            },
+            {
+              "confidence": 0.8,
+              "reasoning": "KPICard component exists with shadow-sm but NO explicit hover effects found in className. However, cards are interactive and have basic shadow styling. Partial implementation warrants reduced points.",
+              "location": "src/components/KPICard/index.tsx:11-21",
+              "snippet": "<div className=\"p-6 rounded-xl bg-white text-gray-700 shadow-sm dark:bg-tertiary-dark dark:text-white dark:shadow-gray-700\">"
+            }
+          ],
+          "confidence_aggregate": 0.83,
+          "is_bonus": false
+        },
+        {
+          "id": "loading_states_present",
+          "description": "Loading indicators shown during data fetch (spinner, skeleton)",
+          "status": "CHECKED",
+          "points_awarded": 5,
+          "points_max": 5,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Dashboard shows KPISkeleton component during loading when analyticsLoading or toolsLoading is true, providing clear loading feedback.",
+              "location": "src/pages/DashboardPage.tsx:33-37",
+              "snippet": "{!analyticsLoading && !toolsLoading && analytics ? (<KPI analytics={analytics} tools={tools} />) : (<KPISkeleton />)}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Table shows ToolsTableSkeleton during loading state with animate-pulse animation for visual feedback.",
+              "location": "src/pages/DashboardPage.tsx:39-45",
+              "snippet": "{!toolsLoading ? (<ToolsTable data={tools} _sort={params._sort} _order={params._order} onSort={handleSort} />) : (<ToolsTableSkeleton />)}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Tools page shows ToolsSkeletons component with animate-pulse during data fetch, comprehensive skeleton implementation across all pages.",
+              "location": "src/pages/ToolsPage.tsx:59-61",
+              "snippet": "{isLoading ? (<ToolsSkeletons />) : tools?.length === 0 ? (...) : (...)}"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "error_states_handled",
+          "description": "Error states displayed if data loading fails",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 5,
+          "evidence": [
+            {
+              "confidence": 0.9,
+              "reasoning": "React Query hooks (useTools, useAnalytics) return error states but NO UI components display error messages. No error boundaries, no error state rendering in pages, no toasts or alerts for failed requests.",
+              "location": "src/hooks/useApi.ts:13-17",
+              "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Mutations throw errors (Create failed, Update failed, Delete failed) but no error UI feedback (toasts, alerts, error messages) found in ToolModal or other components.",
+              "location": "src/lib/mutations.ts:6-10",
+              "snippet": "create: (data: Partial<Tool>) => fetch(`${BASE_URL}/tools`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), }).then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+            }
+          ],
+          "confidence_aggregate": 0.9,
+          "is_bonus": false
+        },
+        {
+          "id": "table_sorting_functional",
+          "description": "Table columns sortable (at least 2 columns) with visual indicators",
+          "status": "CHECKED",
+          "points_awarded": 6,
+          "points_max": 6,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "All table headers (except actions column) are sortable with onClick handlers. Visual indicators show ArrowUp/ArrowDown for active sort direction, ArrowUpDown for inactive columns.",
+              "location": "src/components/ToolsTable/index.tsx:127-142",
+              "snippet": "<th onClick={() => { onSort(h.id, nextOrder) }} className=\"text-left pb-3 text-gray-500 font-normal cursor-pointer select-none\">\n  <div className=\"flex items-center gap-1\">\n    {flexRender(h.column.columnDef.header, h.getContext())}\n    {_sort === h.id ? (_order === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />) : (<ArrowUpDown size={16} />)}\n  </div>\n</th>"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "5 sortable columns defined: name, owner_department, active_users_count, monthly_cost, status. Far exceeds minimum requirement of 2 sortable columns.",
+              "location": "src/components/ToolsTable/index.tsx:60-75",
+              "snippet": "columnHelper.accessor('name', { header: 'Tool', ... }),\ncolumnHelper.accessor('owner_department', { header: 'Department' }),\ncolumnHelper.accessor('active_users_count', { header: 'Users' }),\ncolumnHelper.accessor('monthly_cost', { header: 'Monthly Cost', ... }),\ncolumnHelper.accessor('status', { header: 'Status', ... })"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Sort handler updates params state with _sort field and _order direction, resets to page 1 for consistent UX.",
+              "location": "src/pages/DashboardPage.tsx:20-22",
+              "snippet": "const handleSort = (field: string, order: 'asc' | 'desc') => {\n  setParams((p) => ({ ...p, _sort: field, _order: order, page: 1 }))\n}"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "table_row_hover",
+          "description": "Table rows highlighted on hover for better UX",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Table rows have hover:bg-gray-50 (light mode) and dark:hover:bg-primary-dark (dark mode) for clear visual feedback on row interaction.",
+              "location": "src/components/ToolsTable/index.tsx:148-150",
+              "snippet": "<tr key={row.id} className=\"border-b border-gray-200 last:border-0 hover:bg-gray-50 dark:hover:bg-primary-dark\">"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "action_buttons_responsive",
+          "description": "Action buttons (Edit, View, Delete) properly sized for touch (44px min)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.9,
+              "reasoning": "Action button in ToolsTable uses p-1 padding with 16px icon. Total size approximately 16px + 2*4px = 24px, which is BELOW the 44px minimum touch target size recommended for mobile accessibility (WCAG 2.1 Level AAA).",
+              "location": "src/components/ToolsTable/index.tsx:33-36",
+              "snippet": "<button onClick={() => setOpen(!open)} className=\"p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer \"><MoreHorizontal size={16} /></button>"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "ToolCard action button also uses p-1 with 16px icon, resulting in ~24px total size, insufficient for touch targets. No min-height or min-width constraints found.",
+              "location": "src/components/ToolCard/index.tsx:39-43",
+              "snippet": "<button onClick={() => setMenuOpen(!menuOpen)} className=\"p-1 cursor-pointer rounded-full hover:bg-gray-100 dark:hover:bg-gray-700\"><MoreHorizontal size={16} /></button>"
+            }
+          ],
+          "confidence_aggregate": 0.9,
+          "is_bonus": false
+        },
+        {
+          "id": "pagination_working",
+          "description": "Pagination functional if implemented (Previous/Next navigation)",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Pagination fully functional with Previous/Next buttons, proper disabled states (page <= 1 for prev, tools.length < limit for next), visual feedback with disabled:opacity-40 and hover states.",
+              "location": "src/pages/DashboardPage.tsx:50-68",
+              "snippet": "<button onClick={() => setParams((p) => ({ ...p, page: (p.page ?? 1) - 1 }))} disabled={(params.page ?? 1) <= 1} className=\"px-3 py-1 cursor-pointer rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-700\"><ArrowLeft /></button>\n<button onClick={() => setParams((p) => ({ ...p, page: (p.page ?? 1) + 1 }))} disabled={(tools.length ? tools.length : 0) < (params.limit ?? 10)} className=\"px-3 py-1 cursor-pointer rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-700\"><ArrowRight /></button>"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Pagination consistently implemented across multiple pages (Dashboard and Tools) with identical functionality and UX patterns.",
+              "location": "src/pages/ToolsPage.tsx:75-91",
+              "snippet": "Similar pagination implementation in ToolsPage with ArrowLeft/ArrowRight buttons, disabled states, and page state management"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        }
+      ],
+      "score": 31,
+      "max_score": 50,
+      "percentage": 62,
+      "confidence": 0.9299999999999998,
+      "languages_detected": [
+        "TypeScript",
+        "TSX",
+        "JavaScript"
+      ],
+      "files_analyzed": [
+        "src/components/Navigation/index.tsx",
+        "src/components/Header/index.tsx",
+        "src/components/UserActions/index.tsx",
+        "src/components/ToolsTable/index.tsx",
+        "src/components/KPI/index.tsx",
+        "src/components/KPICard/index.tsx",
+        "src/components/Searchfield/index.tsx",
+        "src/components/ToolCard/index.tsx",
+        "src/components/ToolModal/index.tsx",
+        "src/pages/DashboardPage.tsx",
+        "src/pages/ToolsPage.tsx",
+        "src/hooks/useApi.ts",
+        "src/hooks/useMutations.ts",
+        "src/lib/mutations.ts",
+        "src/components/KPI/skeleton.tsx",
+        "src/components/ToolCard/skeleton.tsx",
+        "src/components/ToolsTable/skeleton.tsx"
+      ],
+      "tool_calls_total": 8,
+      "duration_seconds": 134.891,
+      "reasoning": "The dashboard application demonstrates strong interactive functionality with comprehensive implementation of navigation, hover states, loading indicators, table sorting, and pagination. Navigation uses TanStack Router with proper active state indication. All interactive elements have hover states with transitions. Loading states are implemented with skeleton components across all pages. Table sorting is fully functional with 5 sortable columns and visual indicators. Pagination works correctly with disabled states. However, critical gaps exist: no user menu dropdown is rendered despite state management being present, no error state UI for failed data fetches (mutations throw errors but no toasts/alerts shown), action buttons are undersized for touch targets (24px vs 44px minimum), and KPI cards lack explicit hover effects. Overall score: 37/50 points (74%), reflecting strong core functionality but missing key UX elements for error handling, touch accessibility, and complete dropdown implementation.",
+      "is_bonus": false
+    },
+    {
+      "rule_id": "tools_page_interactions",
+      "rule_name": "Tools Page - Filters & CRUD UX",
+      "checkboxes": [
+        {
+          "id": "filters_all_functional",
+          "description": "All filter types functional (department, status, cost range, category, search)",
+          "status": "UNCHECKED",
+          "points_awarded": 3,
+          "points_max": 8,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Status filter is functional with radio buttons and onChange handlers that update params state",
+              "location": "src/components/ToolsFilters/index.tsx:33-50",
+              "snippet": "STATUSES.map((s) => (\n  <input type=\"radio\" name=\"status\" checked={params.status === s}\n    onChange={() => onChange({ status: params.status === s ? undefined : s })}\n    className=\"accent-primary\" />\n))"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Category filter is functional with radio buttons and onChange handlers",
+              "location": "src/components/ToolsFilters/index.tsx:95-110",
+              "snippet": "CATEGORIES.map((c) => (\n  <input type=\"radio\" name=\"category\" checked={params.category === c}\n    onChange={() => onChange({ category: params.category === c ? undefined : c })}\n    className=\"accent-primary\" />\n))"
+            },
+            {
+              "confidence": 0.98,
+              "reasoning": "Department filter is COMMENTED OUT - not functional. This is a critical missing filter type.",
+              "location": "src/components/ToolsFilters/index.tsx:53-80",
+              "snippet": "/* <div>\n  <p className=\"text-xs font-semibold text-gray-400 uppercase mb-2\">Department</p>\n  <div className=\"flex flex-col gap-1\">\n    {DEPARTMENTS.map((d) => (\n      <input type=\"radio\" name=\"department\" checked={params.department === d}\n        onChange={() => onChange({ department: params.department === d ? undefined : d })} />\n    ))}\n  </div>\n</div> */"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Cost range filter is completely missing - no slider, no min/max inputs, no cost filtering logic found in component",
+              "location": "src/components/ToolsFilters/index.tsx:1-130",
+              "snippet": "// Entire component searched - no cost range filter implementation"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Search exists but uses separate Zustand store, not integrated as a filter in ToolsFilters component",
+              "location": "src/pages/ToolsPage.tsx:15-22",
+              "snippet": "const { query, setQuery } = useSearchStore()\nconst { data: tools } = useTools({ ...params, name_like: query || undefined })"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "filters_visual_feedback",
+          "description": "Active filters show visual indication (badges, count, highlights)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.92,
+              "reasoning": "Only visual feedback is radio button checked state. No badges, no count display, no highlights or visual indicators showing which filters are active beyond basic radio button state.",
+              "location": "src/components/ToolsFilters/index.tsx:33-110",
+              "snippet": "<input type=\"radio\" checked={params.status === s} className=\"accent-primary\" />\n<span className=\"capitalize\">{s}</span>"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Searched entire ToolsFilters component - no implementation of badges, count indicators, or special highlighting for active filters. No visual summary of applied filters.",
+              "location": "src/components/ToolsFilters/index.tsx:1-130"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        },
+        {
+          "id": "clear_filters_works",
+          "description": "Clear/Reset filters button resets all filters to default",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Individual clear button for status filter that resets status to undefined when clicked",
+              "location": "src/components/ToolsFilters/index.tsx:51-58",
+              "snippet": "{params.status && (\n  <button onClick={() => onChange({ status: undefined })}\n    className=\"text-xs text-primary hover:underline text-left mt-1\">\n    Clear\n  </button>\n)}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Global 'Reset all filters' button that clears all filter states (status, department, category) simultaneously",
+              "location": "src/components/ToolsFilters/index.tsx:113-125",
+              "snippet": "{(params.status || params.department || params.category) && (\n  <button onClick={() => onChange({ status: undefined, department: undefined, category: undefined })}\n    className=\"text-xs text-red-400 hover:underline text-left\">\n    Reset all filters\n  </button>\n)}"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "add_modal_smooth",
+          "description": "Add Tool modal/form opens with smooth animation and proper focus",
+          "status": "UNCHECKED",
+          "points_awarded": 1,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.9,
+              "reasoning": "Modal opens but has NO animation classes (no transition, no transform, no animate-in). Modal just appears instantly without smooth animation or transition effects.",
+              "location": "src/components/ToolModal/index.tsx:18-23",
+              "snippet": "<div className=\"fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm\" onClick={onClose}>\n  <div className=\"bg-white dark:bg-secondary-dark rounded-2xl shadow-xl w-full max-w-lg p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto\""
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "No proper focus management found - no autoFocus attribute on first input, no useEffect for focus handling, no focus trap implementation for accessibility",
+              "location": "src/components/ToolModal/index.tsx:1-130"
+            }
+          ],
+          "confidence_aggregate": 0.89,
+          "is_bonus": false
+        },
+        {
+          "id": "edit_prefills_data",
+          "description": "Edit operation pre-fills form with existing tool data",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Edit mode passes entire tool object as defaultValues prop to ToolForm component",
+              "location": "src/components/ToolModal/index.tsx:45-50",
+              "snippet": "{mode === 'edit' && tool && (\n  <ToolForm\n    defaultValues={tool}\n    onSubmit={values => updateTool.mutate({ id: tool.id, data: values })}\n    isLoading={updateTool.isPending}\n    onCancel={onClose}\n  />\n)}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "ToolForm properly extracts all fields from defaultValues and pre-fills form inputs with existing tool data",
+              "location": "src/components/ToolForm/index.tsx:38-48",
+              "snippet": "const form = useForm({\n  defaultValues: {\n    name: defaultValues?.name ?? '',\n    vendor: defaultValues?.vendor ?? '',\n    description: defaultValues?.description ?? '',\n    category: defaultValues?.category ?? '',\n    owner_department: defaultValues?.owner_department ?? '',\n    monthly_cost: defaultValues?.monthly_cost ?? 0,\n    status: defaultValues?.status ?? 'active',\n    website_url: defaultValues?.website_url ?? '',\n    icon_url: defaultValues?.icon_url ?? ''\n  }"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "delete_confirmation_safe",
+          "description": "Delete shows confirmation with clear warning and cancel option",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Delete confirmation dialog with clear warning message ('Cette action est irréversible'), tool name highlighted in bold, and explicit Cancel button to prevent accidental deletion",
+              "location": "src/components/ToolModal/index.tsx:53-65",
+              "snippet": "{mode === 'delete' && tool && (\n  <div className=\"flex flex-col gap-4\">\n    <p className=\"text-sm text-gray-500\">Supprimer <strong>{tool.name}</strong> ? Cette action est irréversible.</p>\n    <div className=\"flex gap-2 justify-end\">\n      <button onClick={onClose} className=\"px-4 py-2 rounded-lg border text-sm hover:bg-gray-50 dark:hover:bg-gray-700\">Annuler</button>\n      <button onClick={() => deleteTool.mutate(tool.id)} disabled={deleteTool.isPending}\n        className=\"px-4 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 disabled:opacity-50\">\n        {deleteTool.isPending ? 'Suppression...' : 'Supprimer'}\n      </button>\n    </div>\n  </div>\n)}"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Delete button is disabled during mutation to prevent double-clicks and shows loading state with 'Suppression...' text",
+              "location": "src/components/ToolModal/index.tsx:61"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "crud_success_feedback",
+          "description": "Success feedback shown after create/update/delete (toast, message)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Mutations only invalidate queries and call onSuccess callback which closes modal. NO toast, alert, notification, or success message shown to user after create/update/delete operations.",
+              "location": "src/hooks/useMutations.ts:6-11",
+              "snippet": "export const useCreateTool = (onSuccess?: () => void) => {\n  const qc = useQueryClient()\n  return useMutation({\n    mutationFn: (data: Partial<Tool>) => toolMutations.create(data),\n    onSuccess: () => { qc.invalidateQueries({ queryKey: ['tools'] }); onSuccess?.() }\n  })\n}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "onSuccess callback only closes modal - no success feedback mechanism implemented. User has no confirmation that operation succeeded.",
+              "location": "src/components/ToolModal/index.tsx:14-16",
+              "snippet": "const createTool = useCreateTool(onClose)\nconst updateTool = useUpdateTool(onClose)\nconst deleteTool = useDeleteTool(onClose)"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "crud_error_handling",
+          "description": "Error feedback shown if CRUD operation fails with clear message",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "All three mutation hooks (create, update, delete) have NO onError callback. Errors are silently swallowed with no user feedback.",
+              "location": "src/hooks/useMutations.ts:6-28",
+              "snippet": "return useMutation({\n  mutationFn: (data: Partial<Tool>) => toolMutations.create(data),\n  onSuccess: () => { qc.invalidateQueries({ queryKey: ['tools'] }); onSuccess?.() }\n  // NO onError callback\n})"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Mutations throw generic errors but no UI feedback mechanism exists to display them to users. Failed operations provide no error message.",
+              "location": "src/lib/mutations.ts:6-10",
+              "snippet": "create: (data: Partial<Tool>) =>\n  fetch(`${BASE_URL}/tools`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })\n    .then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "form_validation_ui",
+          "description": "Form validation provides real-time feedback with error messages",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Zod schema with custom error messages for validation rules on all required fields",
+              "location": "src/components/ToolForm/index.tsx:6-15",
+              "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  category: z.string().min(1, 'Requis'),\n  owner_department: z.string().min(1, 'Requis'),\n  monthly_cost: z.coerce.number().min(0, 'Doit être positif'),\n  website_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n  icon_url: z.string().url('URL invalide').or(z.literal('')).optional()\n})"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Field component displays validation errors in real-time with red text styling below each input",
+              "location": "src/components/ToolForm/index.tsx:24-29",
+              "snippet": "const Field = ({ label, error, children }) => (\n  <div className=\"flex flex-col gap-1\">\n    <label className=\"text-xs font-medium text-gray-500\">{label}</label>\n    {children}\n    {error && <p className=\"text-xs text-red-500\">{error}</p>}\n  </div>\n)"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "TanStack Form configured with onChange validation for real-time feedback as user types in form fields",
+              "location": "src/components/ToolForm/index.tsx:44-48",
+              "snippet": "validatorAdapter: standardSchemaValidators,\nvalidators: { onChange: toolSchema },\nonSubmit: ({ value }) => onSubmit(value)"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        }
+      ],
+      "score": 17,
+      "max_score": 25,
+      "percentage": 68,
+      "confidence": 0.9377777777777777,
+      "languages_detected": [
+        "TypeScript",
+        "TSX",
+        "JavaScript"
+      ],
+      "files_analyzed": [
+        "src/components/ToolsFilters/index.tsx",
+        "src/components/ToolForm/index.tsx",
+        "src/components/ToolModal/index.tsx",
+        "src/hooks/useMutations.ts",
+        "src/lib/mutations.ts",
+        "src/pages/ToolsPage.tsx",
+        "src/hooks/useApi.ts",
+        "src/types/index.ts"
+      ],
+      "tool_calls_total": 9,
+      "duration_seconds": 122.758,
+      "reasoning": "Evaluated Tools Page filters and CRUD UX interactions. Found partial implementation: Status and Category filters work (3/8 pts), but Department is commented out and cost range filter is missing entirely. Clear filters functionality is complete (2/2 pts). CRUD modals exist but lack smooth animations and focus management (1/3 pts). Edit properly pre-fills data (4/4 pts) and delete has safe confirmation (4/4 pts). Critical gaps: NO success/error feedback after CRUD operations (0/4 pts each) - mutations only close modal without toast/alert. Form validation UI is excellent with real-time Zod validation (3/3 pts). Total: 17/35 points (48.6%). Main issues: incomplete filters, missing user feedback system, no animations.",
+      "is_bonus": false
+    },
+    {
+      "rule_id": "analytics_interactions",
+      "rule_name": "Analytics Page - Charts Interactivity",
+      "checkboxes": [
+        {
+          "id": "charts_hover_tooltips",
+          "description": "Charts show detailed tooltips on hover with data values",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 5,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "Analytics page is a placeholder stub with no chart implementation. File contains only a basic div with text 'AnalyticsPage' - no chart library imports, no tooltip configuration, no data visualization components.",
+              "location": "src/pages/AnalyticsPage.tsx:1-9",
+              "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "No chart libraries installed in dependencies. Package.json shows TanStack libraries, Lucide icons, Zustand, but no Recharts, ApexCharts, Chart.js, or any data visualization library.",
+              "location": "package.json:13-30",
+              "snippet": "\"dependencies\": {\n    \"@tanstack/react-devtools\": \"latest\",\n    \"@tanstack/react-form\": \"^1.32.0\",\n    \"@tanstack/react-query\": \"^5.100.11\",\n    \"lucide-react\": \"^0.545.0\",\n    \"react\": \"^19.2.0\",\n    \"react-dom\": \"^19.2.0\",\n    \"zod\": \"^3.25.76\",\n    \"zustand\": \"^5.0.13\"\n  }"
+            }
+          ],
+          "confidence_aggregate": 0.97,
+          "is_bonus": true
+        },
+        {
+          "id": "charts_legend_interactive",
+          "description": "Chart legends interactive (click to show/hide data series)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "No chart legends exist because no charts are implemented. Analytics page is a placeholder with no interactive elements, no chart components, and no legend click handlers.",
+              "location": "src/pages/AnalyticsPage.tsx:1-9",
+              "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+            }
+          ],
+          "confidence_aggregate": 0.98,
+          "is_bonus": true
+        },
+        {
+          "id": "charts_touch_friendly",
+          "description": "Charts responsive and usable on touch devices (mobile/tablet)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "No charts exist to be touch-friendly. Analytics page contains only a placeholder div with no responsive chart implementations, no touch event handlers, and no mobile-optimized data visualizations.",
+              "location": "src/pages/AnalyticsPage.tsx:1-9",
+              "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+            }
+          ],
+          "confidence_aggregate": 0.98,
+          "is_bonus": true
+        },
+        {
+          "id": "date_picker_functional",
+          "description": "Date range picker or period selector functional if present",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "No date picker or period selector implemented. Analytics page is a placeholder with no date selection UI, no date range filtering, and no temporal data controls.",
+              "location": "src/pages/AnalyticsPage.tsx:1-9",
+              "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+            }
+          ],
+          "confidence_aggregate": 0.98,
+          "is_bonus": true
+        },
+        {
+          "id": "insights_interactive",
+          "description": "Insights/alerts clickable for more details if applicable",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "No insights or alerts functionality exists. Analytics page is a placeholder with no interactive insights, no alert components, no clickable data points, and no detail views.",
+              "location": "src/pages/AnalyticsPage.tsx:1-9",
+              "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+            }
+          ],
+          "confidence_aggregate": 0.98,
+          "is_bonus": true
+        }
+      ],
+      "score": 0,
+      "max_score": 15,
+      "percentage": 0,
+      "confidence": 0.978,
+      "languages_detected": [
+        "TypeScript",
+        "JavaScript",
+        "JSON"
+      ],
+      "files_analyzed": [
+        "src/pages/AnalyticsPage.tsx",
+        "src/routes/analytics.tsx",
+        "package.json"
+      ],
+      "tool_calls_total": 9,
+      "duration_seconds": 57.799,
+      "reasoning": "The Analytics page is completely unimplemented - it exists only as a placeholder stub containing a single div with the text 'AnalyticsPage'. No chart libraries are installed in package.json (no Recharts, ApexCharts, Chart.js, D3, or any visualization library). There are no chart components, no interactive tooltips, no legends, no date pickers, no insights functionality, and no touch-optimized visualizations. All 5 checkboxes receive 0 points due to complete absence of any analytics visualization implementation.",
+      "is_bonus": true
+    },
+    {
+      "rule_id": "mobile_responsive_ux",
+      "rule_name": "Mobile UX - Touch Interactions & Adaptation",
+      "checkboxes": [
+        {
+          "id": "touch_targets_adequate",
+          "description": "All interactive elements minimum 44px for touch (buttons, links, icons)",
+          "status": "UNCHECKED",
+          "points_awarded": 2,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.85,
+              "reasoning": "Most buttons have adequate touch targets (44px+) like form buttons (px-4 py-2), user avatar (w-12 h-12 = 48px), and hamburger menu (p-2 + icon = ~36px). However, several interactive elements fall short: MoreHorizontal action buttons use p-1 with size={16} (~32px), pagination arrow buttons use px-3 py-1 (~32-36px), and table action cells use p-1 rounded-full (~32px). These are below the 44px minimum touch target guideline.",
+              "location": "src/components/Header/index.tsx:26-30",
+              "snippet": "<button className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\" onClick={() => setMenuOpen(!menuOpen)}>\n  {menuOpen ? <X size={20} /> : <Menu size={20} />}\n</button>"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Form buttons and primary CTAs meet the 44px requirement with px-4 py-2 padding, providing adequate touch targets for mobile users.",
+              "location": "src/components/ToolForm/index.tsx:120-126",
+              "snippet": "<button type=\"button\" onClick={onCancel} className=\"dark:bg-red-500 dark:text-white cursor-pointer px-4 py-2 rounded-lg border text-red-500 border-red-300 text-sm hover:bg-gray-50 dark:hover:bg-gray-700\">\n  Annuler\n</button>\n<button type=\"submit\" disabled={isLoading} className=\"dark:bg-white cursor-pointer px-4 py-2 rounded-lg bg-primary border border-greyish-border text-black text-sm hover:opacity-90 disabled:opacity-50\">\n  {isLoading ? 'Enregistrement...' : 'Enregistrer'}\n</button>"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "Action dropdown buttons in ToolCard and ToolsTable components use p-1 padding with 16px icons, resulting in approximately 32px touch targets which fall below the 44px accessibility guideline for mobile touch interfaces.",
+              "location": "src/components/ToolCard/index.tsx:38-40",
+              "snippet": "<button\n  onClick={() => setMenuOpen(!menuOpen)}\n  className=\"p-1 cursor-pointer rounded-full hover:bg-gray-100 dark:hover:bg-gray-700\"\n>\n  <MoreHorizontal size={16} />\n</button>"
+            }
+          ],
+          "confidence_aggregate": 0.88,
+          "is_bonus": true
+        },
+        {
+          "id": "hamburger_menu_mobile",
+          "description": "Hamburger menu implemented for mobile navigation (<768px)",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Hamburger menu fully implemented in Header component with lg:hidden breakpoint (<1024px). Uses Menu/X icons from lucide-react that toggle menuOpen state. When open, displays mobile navigation, search field, and user actions in a collapsible panel.",
+              "location": "src/components/Header/index.tsx:9-40",
+              "snippet": "const [menuOpen, setMenuOpen] = useState(false)\n\nreturn (\n  <>\n    <div className=\"bg-white text-gray-700 dark:bg-tertiary-dark dark:text-white w-full h-16 md:h-20 flex justify-between items-center px-4 md:px-10 py-2 shadow-sm dark:shadow-gray-700\">\n      <button\n        className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\"\n        onClick={() => setMenuOpen(!menuOpen)}\n      >\n        {menuOpen ? <X size={20} /> : <Menu size={20} />}\n      </button>\n    </div>\n\n    {menuOpen && (\n      <div className=\" bg-white dark:bg-tertiary-dark border-t dark:border-gray-700 px-4 py-4 flex flex-col gap-4 shadow-md\">\n        <div className=\"lg:hidden border-b border-b-gray-200 pb-4 w-full\">\n          <SearchField />\n        </div>\n        <div className=\"md:hidden border-b border-b-gray-200 pb-4\">\n          <Navigation onNavigate={() => setMenuOpen(false)} />\n        </div>\n        <UserActions />\n      </div>\n    )}\n  </>\n)"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Navigation component accepts onNavigate callback that closes the mobile menu when a link is clicked, providing proper mobile UX with menu auto-close on navigation.",
+              "location": "src/components/Navigation/index.tsx:10-24",
+              "snippet": "type Props = { onNavigate?: () => void }\n\nconst Navigation = ({ onNavigate }: Props) => {\n  const { pathname } = useLocation()\n\n  return (\n    <ul className=\"flex flex-col md:flex-row gap-2 md:gap-4\">\n      {navItems.map(({ to, label }) => (\n        <li key={to}>\n          <Link\n            to={to}\n            onClick={onNavigate}\n            className={`text-sm font-medium transition-colors hover:text-primary ${\n              pathname === to ? 'text-primary' : 'text-gray-500 dark:text-gray-400'\n            }`}\n          >\n            {label}\n          </Link>\n        </li>\n      ))}\n    </ul>\n  )\n}"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": true
+        },
+        {
+          "id": "scroll_performance_smooth",
+          "description": "Scroll performance smooth on lists/tables without lag",
+          "status": "UNCHECKED",
+          "points_awarded": 1,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.8,
+              "reasoning": "Basic scroll implementation exists with overflow-x-auto for tables and overflow-y-auto for modals. However, no performance optimizations are implemented: no virtual scrolling for long lists, no scroll throttling/debouncing, no will-change CSS properties, and no lazy loading. The table uses min-w-[640px] which forces horizontal scroll on mobile but provides no smooth scroll behavior optimization. For small datasets this may work, but performance could degrade with larger lists.",
+              "location": "src/components/ToolsTable/index.tsx:130-132",
+              "snippet": "<div className=\"overflow-x-auto\">\n  <table className=\"w-full min-w-[640px]\">\n    <thead>\n      {table.getHeaderGroups().map((hg) => (\n        <tr key={hg.id} className=\"border-b border-gray-200\">"
+            },
+            {
+              "confidence": 0.78,
+              "reasoning": "Modal scroll uses basic overflow-y-auto with max-h-[90vh] constraint but lacks performance optimizations like momentum scrolling properties or scroll snap for smooth mobile experience.",
+              "location": "src/components/ToolModal/index.tsx:20-23",
+              "snippet": "<div\n  className=\"bg-white dark:bg-secondary-dark rounded-2xl shadow-xl w-full max-w-lg p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto shadow-xs shadow-greyish-border\"\n  onClick={e => e.stopPropagation()}\n>"
+            }
+          ],
+          "confidence_aggregate": 0.79,
+          "is_bonus": true
+        },
+        {
+          "id": "mobile_forms_optimized",
+          "description": "Forms optimized for mobile (appropriate input types, sizes)",
+          "status": "UNCHECKED",
+          "points_awarded": 1,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.85,
+              "reasoning": "Forms use appropriate input type='number' for numeric fields (monthly_cost), which triggers numeric keyboard on mobile. However, missing mobile-optimized input types: no type='url' for website_url/icon_url fields (uses generic text input), no type='email' if email fields exist, no type='tel' for phone numbers. Form layout uses grid-cols-2 which may be cramped on small mobile screens without responsive adjustment to single column.",
+              "location": "src/components/ToolForm/index.tsx:88-90",
+              "snippet": "<form.Field name=\"monthly_cost\" children={field => (\n  <Field label=\"Coût mensuel (€) *\" error={field.state.meta.errors?.[0]?.message}>\n    <input type=\"number\" className={inputClass} value={field.state.value} onChange={e => field.handleChange(Number(e.target.value))} />\n  </Field>\n)} />"
+            },
+            {
+              "confidence": 0.82,
+              "reasoning": "URL input fields use generic text type instead of type='url', missing mobile keyboard optimization that would provide URL-specific keyboard with .com and / shortcuts on mobile devices.",
+              "location": "src/components/ToolForm/index.tsx:108-112",
+              "snippet": "<form.Field name=\"website_url\" children={field => (\n  <Field label=\"Website URL\" error={field.state.meta.errors?.[0]?.message}>\n    <input className={inputClass} value={field.state.value} onChange={e => field.handleChange(e.target.value)} placeholder=\"https://...\" />\n  </Field>\n)} />"
+            }
+          ],
+          "confidence_aggregate": 0.84,
+          "is_bonus": true
+        },
+        {
+          "id": "swipe_gestures_present",
+          "description": "Swipe gestures implemented if applicable (drawer, carousel) - optional feature",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 1,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "No swipe gesture implementation found in the codebase. No touch event handlers (onTouchStart, onTouchMove, onTouchEnd), no swipe gesture libraries (react-swipeable, framer-motion gestures), no carousel or drawer components that would benefit from swipe interactions. The mobile menu uses click/tap only, and there are no swipeable cards or galleries. This is an optional feature and its absence is acceptable.",
+              "location": "src/components/Header/index.tsx:26-30",
+              "snippet": "<button\n  className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\"\n  onClick={() => setMenuOpen(!menuOpen)}\n>\n  {menuOpen ? <X size={20} /> : <Menu size={20} />}\n</button>"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": true
+        }
+      ],
+      "score": 7,
+      "max_score": 10,
+      "percentage": 70,
+      "confidence": 0.8799999999999999,
+      "languages_detected": [
+        "TypeScript",
+        "TSX",
+        "CSS",
+        "JSON"
+      ],
+      "files_analyzed": [
+        "src/components/Header/index.tsx",
+        "src/components/Navigation/index.tsx",
+        "src/components/ToolCard/index.tsx",
+        "src/components/ToolsTable/index.tsx",
+        "src/components/ToolForm/index.tsx",
+        "src/components/ToolModal/index.tsx",
+        "src/components/Searchfield/index.tsx",
+        "src/pages/ToolsPage.tsx",
+        "src/pages/DashboardPage.tsx",
+        "src/index.css",
+        "README.md"
+      ],
+      "tool_calls_total": 8,
+      "duration_seconds": 106.564,
+      "reasoning": "Mobile UX evaluation reveals partial implementation of mobile-friendly patterns. The hamburger menu is fully functional with proper state management and navigation callbacks (3/3 points). Touch targets are mostly adequate for primary actions but several secondary interactive elements (action dropdowns, pagination buttons) fall below the 44px guideline (2/4 points). Scroll performance uses basic CSS overflow properties without optimization techniques like virtual scrolling or momentum scrolling (1/2 points). Forms use type='number' appropriately but miss type='url' for URL fields and use non-responsive grid-cols-2 layout (1/2 points). No swipe gestures are implemented, which is acceptable as an optional feature (0/1 points). Total: 7/12 points (58%). The application demonstrates mobile awareness with responsive breakpoints and hamburger navigation, but lacks polish in touch target sizing, input type optimization, and performance enhancements for smooth mobile scrolling.",
+      "is_bonus": true
+    }
+  ],
+  "started_at": "2026-05-28T13:10:19.569Z",
+  "completed_at": "2026-05-28T13:12:34.492Z",
+  "duration_seconds": 134.923
+}

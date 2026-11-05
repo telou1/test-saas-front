@@ -1,0 +1,14 @@
+{
+  "pass_id": "uiux_functionality",
+  "pass_name": "Pass 4 - UI/UX Functionality & Interactions",
+  "pass_number": 4,
+  "started_at": "2026-05-28T13:10:19.569Z",
+  "rules_count": 4,
+  "conditional": false,
+  "dependencies": [],
+  "completed_at": "2026-05-28T13:12:34.492Z",
+  "duration_seconds": 134.923,
+  "score": 53.2,
+  "max_score": 100,
+  "percentage": 53.2
+}

@@ -1,0 +1,526 @@
+{
+  "pass_id": "technical_stack_constraints",
+  "pass_name": "Pass 1 - Technical Stack & Mandatory Constraints",
+  "score": 37,
+  "max_score": 41,
+  "percentage": 90.2439024390244,
+  "rules": [
+    {
+      "rule_id": "css_framework_compliance",
+      "rule_name": "CSS Framework - Tailwind CSS Required",
+      "checkboxes": [
+        {
+          "id": "framework_identified",
+          "description": "CSS framework correctly identified from package.json and usage patterns",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 1,
+              "reasoning": "Tailwind CSS v4.3.0 explicitly declared in package.json devDependencies along with official Tailwind plugins (@tailwindcss/vite and @tailwindcss/typography)",
+              "location": "package.json:38-39",
+              "snippet": "\"devDependencies\": {\n    \"@tailwindcss/typography\": \"^0.5.16\",\n    \"@tailwindcss/vite\": \"^4.3.0\",\n    \"tailwindcss\": \"^4.3.0\""
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Tailwind CSS integrated into Vite build pipeline via official @tailwindcss/vite plugin, confirming active framework usage",
+              "location": "vite.config.ts:6-11",
+              "snippet": "import tailwindcss from '@tailwindcss/vite'\n\nconst config = defineConfig({\n  resolve: { tsconfigPaths: true },\n  plugins: [devtools(), tailwindcss(), tanstackStart(), viteReact()],\n})"
+            },
+            {
+              "confidence": 0.98,
+              "reasoning": "Tailwind CSS imported in main stylesheet using Tailwind v4 syntax with @import directive",
+              "location": "src/index.css:1-2",
+              "snippet": "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');\n@import 'tailwindcss';"
+            }
+          ],
+          "confidence_aggregate": 0.98,
+          "is_bonus": false
+        },
+        {
+          "id": "tailwind_usage",
+          "description": "Tailwind CSS used (utility classes detected, tailwind.config present)",
+          "status": "CHECKED",
+          "points_awarded": 5,
+          "points_max": 5,
+          "evidence": [
+            {
+              "confidence": 1,
+              "reasoning": "Tailwind v4 @theme directive used for custom design tokens - this is the new v4 configuration approach replacing traditional tailwind.config.js files",
+              "location": "src/index.css:4-10",
+              "snippet": "@theme {\n  --font-sans: 'Inter', sans-serif;\n  --color-primary-dark: #0f0f0f;\n  --color-secondary-dark: #060606;\n  --color-tertiary-dark: #080808;\n  --color-greyish-border: #9C9C9C;\n}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Extensive Tailwind utility classes used throughout components with responsive modifiers (md:, lg:) and dark mode variants (dark:) demonstrating comprehensive framework adoption",
+              "location": "src/components/Header/index.tsx:13",
+              "snippet": "<div className=\"bg-white text-gray-700 dark:bg-tertiary-dark dark:text-white w-full h-16 md:h-20 flex justify-between items-center px-4 md:px-10 py-2 shadow-sm dark:shadow-gray-700\">"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "Complex Tailwind utility class combinations with state variants (hover:), dark mode, and layout utilities demonstrating full framework adoption across all component types",
+              "location": "src/components/ToolCard/index.tsx:17",
+              "snippet": "<div className=\"bg-white dark:bg-secondary-dark rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow dark:shadow-gray-700 flex flex-col gap-4 relative\">"
+            }
+          ],
+          "confidence_aggregate": 0.96,
+          "is_bonus": false
+        },
+        {
+          "id": "framework_consistency",
+          "description": "Single framework used consistently across all pages (no mixing)",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "All 16 component files examined use identical Tailwind utility class patterns with consistent naming conventions, dark mode implementation, and responsive design approach",
+              "location": "src/components/* (16 files analyzed)",
+              "snippet": "Consistent patterns across all components:\n- Header: className=\"bg-white dark:bg-tertiary-dark...\"\n- ToolCard: className=\"bg-white dark:bg-secondary-dark rounded-xl...\"\n- ToolModal: className=\"bg-white dark:bg-secondary-dark rounded-2xl...\"\n- ToolForm: inputClass=\"w-full px-3 py-2 text-sm rounded-lg border...\""
+            },
+            {
+              "confidence": 0.98,
+              "reasoning": "No CSS modules or SCSS files found in codebase - confirms exclusive use of Tailwind without alternative styling approaches or mixed methodologies",
+              "location": "File system search results",
+              "snippet": "list_files('**/*.module.css') → []\nlist_files('**/*.scss') → []"
+            }
+          ],
+          "confidence_aggregate": 0.97,
+          "is_bonus": false
+        },
+        {
+          "id": "no_framework_mixing",
+          "description": "No mixing of multiple CSS frameworks detected",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 1,
+              "reasoning": "No other CSS frameworks detected in package.json dependencies - no Bootstrap, Material-UI, Chakra-UI, Ant Design, styled-components, emotion, or any competing CSS framework found",
+              "location": "package.json:13-28",
+              "snippet": "\"dependencies\": {\n    \"@tanstack/react-devtools\": \"latest\",\n    \"@tanstack/react-form\": \"^1.32.0\",\n    \"lucide-react\": \"^0.545.0\",\n    \"react\": \"^19.2.0\",\n    \"react-dom\": \"^19.2.0\"\n  }"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Even skeleton loading states use pure Tailwind utilities (animate-pulse, spacing, colors) - no framework mixing detected even in edge cases or specialized components",
+              "location": "src/components/ToolsTable/skeleton.tsx:1-5",
+              "snippet": "const ToolsTableSkeleton = () => (\n  <div className=\"bg-white dark:bg-secondary-dark rounded-xl p-6 shadow-sm animate-pulse\">\n    <div className=\"w-32 h-4 rounded bg-gray-200 dark:bg-gray-700 mb-6\" />"
+            }
+          ],
+          "confidence_aggregate": 0.96,
+          "is_bonus": false
+        }
+      ],
+      "score": 15,
+      "max_score": 15,
+      "percentage": 100,
+      "confidence": 0.9675,
+      "languages_detected": [
+        "TypeScript",
+        "TSX",
+        "CSS",
+        "JSON"
+      ],
+      "files_analyzed": [
+        "package.json",
+        "vite.config.ts",
+        "src/index.css",
+        "src/components/Header/index.tsx",
+        "src/components/ToolCard/index.tsx",
+        "src/components/ToolModal/index.tsx",
+        "src/components/ToolsFilters/index.tsx",
+        "src/components/ToolForm/index.tsx",
+        "src/components/KPI/index.tsx",
+        "src/components/ToolCard/skeleton.tsx",
+        "src/components/ToolsTable/skeleton.tsx",
+        "src/components/ToolsTable/index.tsx"
+      ],
+      "tool_calls_total": 10,
+      "duration_seconds": 77.568,
+      "reasoning": "The codebase demonstrates complete compliance with Tailwind CSS requirements. Tailwind v4.3.0 is properly installed and configured using the modern @theme directive approach in index.css. All 16 analyzed components consistently use Tailwind utility classes with responsive modifiers, dark mode variants, and state-based styling. No alternative CSS frameworks, CSS modules, or SCSS files were found, confirming exclusive Tailwind usage without any framework mixing. The implementation follows Tailwind v4 best practices with custom design tokens and the @custom-variant directive for dark mode.",
+      "is_bonus": false
+    },
+    {
+      "rule_id": "icons_library_compliance",
+      "rule_name": "Icons Library - Single Source Requirement",
+      "checkboxes": [
+        {
+          "id": "icons_library_detected",
+          "description": "Icons library identified from package.json and imports",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "Lucide React is explicitly declared as the icons library dependency in package.json with version 0.545.0, confirming the project uses an authorized icons library",
+              "location": "package.json:23",
+              "snippet": "\"lucide-react\": \"^0.545.0\""
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Multiple icon imports from lucide-react found across components, demonstrating active usage throughout the application",
+              "location": "src/pages/DashboardPage.tsx:8",
+              "snippet": "import { ArrowLeft, ArrowRight } from 'lucide-react'"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Comprehensive icon set imported in styles library for category icons, showing systematic and organized usage of lucide-react",
+              "location": "src/lib/styles.tsx:1",
+              "snippet": "import { Palette, Code, BarChart, MessageSquare, FileText, Shield, Users, CircleQuestionMark } from 'lucide-react'"
+            }
+          ],
+          "confidence_aggregate": 0.96,
+          "is_bonus": false
+        },
+        {
+          "id": "single_library_used",
+          "description": "Only one icons library used throughout project",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.97,
+              "reasoning": "Package.json analysis confirms only lucide-react is present as icons library dependency - no heroicons, react-icons, bootstrap-icons, or other icon libraries found in dependencies or devDependencies",
+              "location": "package.json:1-48",
+              "snippet": "\"dependencies\": {\"lucide-react\": \"^0.545.0\"} // No other icon libraries present"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "AST analysis of 6 key components (Header, ToolCard, ToolsTable, DashboardPage, ToolsPage, styles.tsx) shows consistent lucide-react imports only across the entire codebase with no mixed library usage",
+              "location": "src/components/Header/index.tsx, src/components/ToolCard/index.tsx, src/components/ToolsTable/index.tsx",
+              "snippet": "imports: [\"lucide-react\"] // All analyzed components import icons exclusively from lucide-react"
+            }
+          ],
+          "confidence_aggregate": 0.96,
+          "is_bonus": false
+        }
+      ],
+      "score": 7,
+      "max_score": 7,
+      "percentage": 100,
+      "confidence": 0.96,
+      "languages_detected": [
+        "TypeScript",
+        "TSX"
+      ],
+      "files_analyzed": [
+        "package.json",
+        "src/pages/DashboardPage.tsx",
+        "src/pages/ToolsPage.tsx",
+        "src/routes/__root.tsx",
+        "src/lib/styles.tsx",
+        "src/components/Header/index.tsx",
+        "src/components/ToolCard/index.tsx",
+        "src/components/ToolsTable/index.tsx"
+      ],
+      "tool_calls_total": 14,
+      "duration_seconds": 108.019,
+      "reasoning": "The project demonstrates full compliance with icons library requirements. Lucide React (v0.545.0) is the sole icons library installed and used throughout the application. Package.json analysis confirms no competing icon libraries are present. Code examination across 8 files and AST analysis of multiple components reveals consistent lucide-react imports with no mixed library usage. Icons are imported systematically across pages (DashboardPage, ToolsPage), components (Header, ToolCard, ToolsTable), and utility files (styles.tsx), demonstrating organized and exclusive use of the single authorized library.",
+      "is_bonus": false
+    },
+    {
+      "rule_id": "typography_system",
+      "rule_name": "Typography - Consistency Requirements",
+      "checkboxes": [
+        {
+          "id": "single_font_family",
+          "description": "Single font family used consistently (no mixing fonts)",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Inter font family is imported from Google Fonts and configured as the default sans-serif font in Tailwind v4 theme configuration. This ensures consistent font usage across the entire application.",
+              "location": "src/index.css:1-5",
+              "snippet": "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');\n@import 'tailwindcss';\n\n@theme {\n  --font-sans: 'Inter', sans-serif;"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "No other font-family declarations found in any component files. All text elements rely on Tailwind's default font-sans which is set to Inter, ensuring single font family consistency.",
+              "location": "src/components/KPICard/index.tsx:13-24",
+              "snippet": "<div className=\"p-6 rounded-xl bg-white text-gray-700 shadow-sm dark:bg-tertiary-dark dark:text-white dark:shadow-gray-700\">\n      <div className=\"flex items-center justify-between gap-6 mb-16\">\n        {props.cardname}\n        <div\n          className={`${props.tailwindBgColor ? props.tailwindBgColor : 'bg-gray-300'} text-white w-10 h-10 rounded-lg flex items-center justify-center`}\n        >\n          {props.cardlogo}\n        </div>\n      </div>\n      <h2 className=\"text-xl font-bold\">{props.value}</h2>"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        },
+        {
+          "id": "typography_hierarchy",
+          "description": "Clear typographic hierarchy with h1-h6, body, caption defined",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.9,
+              "reasoning": "No proper typographic hierarchy defined. Only h2 and h3 tags are used sporadically with utility classes (text-xl, text-lg, text-sm). Missing h1, h4, h5, h6 semantic tags. No centralized typography scale or hierarchy system exists - just ad-hoc utility class usage.",
+              "location": "src/components/ToolsTable/index.tsx:122",
+              "snippet": "<h2 className=\"text-lg font-bold\">Recent Tools</h2>"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "README confirms typography is limited to 'Inter via Google Fonts' with no mention of a hierarchy system. The design system section lists colors, gradients, and transitions but omits any typography scale or semantic heading definitions.",
+              "location": "README.md",
+              "snippet": "## 🎨 Design System\n\nDéfini dans `src/lib/styles.ts` et `styles.css` :\n\n- **Typographie** : Inter via Google Fonts"
+            }
+          ],
+          "confidence_aggregate": 0.89,
+          "is_bonus": false
+        }
+      ],
+      "score": 4,
+      "max_score": 7,
+      "percentage": 57.14285714285714,
+      "confidence": 0.915,
+      "languages_detected": [
+        "TypeScript",
+        "CSS",
+        "JSON"
+      ],
+      "files_analyzed": [
+        "src/index.css",
+        "src/components/KPICard/index.tsx",
+        "src/components/ToolCard/index.tsx",
+        "src/components/Header/index.tsx",
+        "src/components/ToolsTable/index.tsx",
+        "src/components/ToolModal/index.tsx",
+        "src/components/ToolForm/index.tsx",
+        "README.md",
+        "package.json"
+      ],
+      "tool_calls_total": 8,
+      "duration_seconds": 59.581,
+      "reasoning": "The codebase demonstrates consistent use of a single font family (Inter) through Tailwind v4 configuration, earning full points for single_font_family. However, it lacks a proper typographic hierarchy system - only h2 and h3 tags are used with utility classes, missing h1, h4, h5, h6 semantic elements and a centralized typography scale definition. The typography_hierarchy checkbox remains unchecked due to absence of a clear, systematic approach to heading levels and text sizing beyond ad-hoc utility class application.",
+      "is_bonus": false
+    },
+    {
+      "rule_id": "json_server_integration",
+      "rule_name": "JSON Server - API Integration",
+      "checkboxes": [
+        {
+          "id": "api_integration_detected",
+          "description": "API calls detected in code (fetch, axios, etc.)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "Native fetch API used for GET requests with proper URL construction, query string handling, and JSON parsing in centralized API module",
+              "location": "src/lib/api.ts:11-15",
+              "snippet": "export const api = {\n  get: (endpoint: string, params: Record<string, any> = {}) =>\n    fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n      if (!r.ok) throw new Error(`API error ${r.status}`)\n      return r.json()\n    }),\n}"
+            },
+            {
+              "confidence": 0.98,
+              "reasoning": "Fetch API used for POST mutations with proper Content-Type headers and JSON body serialization for creating tools",
+              "location": "src/lib/mutations.ts:5-10",
+              "snippet": "create: (data: Partial<Tool>) =>\n    fetch(`${BASE_URL}/tools`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data),\n    }).then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Base URL configured pointing to JSON Server instance at tt-jsonserver-01.alt-tools.tech, confirming API integration setup",
+              "location": "src/lib/api.ts:1",
+              "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+            }
+          ],
+          "confidence_aggregate": 0.97,
+          "is_bonus": false
+        },
+        {
+          "id": "tools_endpoint_used",
+          "description": "GET /tools endpoint used for listing tools",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "GET /tools endpoint implemented via useTools hook with React Query, supporting pagination (_page, _limit) and filtering (status, department, category, name_like)",
+              "location": "src/hooks/useApi.ts:16-21",
+              "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "useTools hook actively used in Dashboard page to fetch and display tools list with search functionality",
+              "location": "src/pages/DashboardPage.tsx:15-18",
+              "snippet": "const { data: refToolsData, isLoading: toolsLoading } = useTools({\n    ...params,\n    name_like: query || undefined,\n  })"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "useTools hook used in Tools catalog page for listing with pagination, search, and filter support",
+              "location": "src/pages/ToolsPage.tsx:16-22",
+              "snippet": "const {\n    data: tools,\n    isLoading,\n    isFetching,\n  } = useTools({\n    ...params,\n    name_like: query || undefined,\n  })"
+            }
+          ],
+          "confidence_aggregate": 0.96,
+          "is_bonus": false
+        },
+        {
+          "id": "departments_endpoint_used",
+          "description": "GET /departments endpoint used for filters (department list)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 1,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "useDepartments hook exists and correctly calls GET /departments endpoint, BUT is never imported or used in any component. Department filters use hardcoded array instead of API data.",
+              "location": "src/hooks/useApi.ts:24-28",
+              "snippet": "export const useDepartments = () =>\n  useQuery<Department[]>({\n    queryKey: ['departments'],\n    queryFn: () => api.get('/departments'),\n  })"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "ToolsFilters component uses hardcoded DEPARTMENTS array instead of fetching from API. The department filter section is commented out, indicating incomplete implementation.",
+              "location": "src/components/ToolsFilters/index.tsx:16-23",
+              "snippet": "const DEPARTMENTS = [\n  'Engineering',\n  'Marketing',\n  'Design',\n  'Operations',\n  'Communication',\n  'Sales',\n]\n\n{/* <div>\n      <p className=\"text-xs font-semibold text-gray-400 uppercase mb-2\">\n        Department\n      </p>"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "users_endpoint_used",
+          "description": "GET /users endpoint used (user data integration)",
+          "status": "CHECKED",
+          "points_awarded": 1,
+          "points_max": 1,
+          "evidence": [
+            {
+              "confidence": 0.92,
+              "reasoning": "GET /users endpoint implemented via useUsers hook with pagination and filtering support (department_id, active status). Hook is properly defined and available for use.",
+              "location": "src/hooks/useApi.ts:31-42",
+              "snippet": "export const useUsers = (params: UsersParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<User[]>({\n    queryKey: ['users', { page, limit, ...rest }],\n    queryFn: () => api.get('/users', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "User type definition exists with proper structure matching expected API response schema, including department_id for relational data",
+              "location": "src/types/index.ts:8-16",
+              "snippet": "export type User = {\n  id: number\n  name: string\n  email: string\n  department_id: number\n  role: string\n  active: boolean\n  joined_at: string\n}"
+            }
+          ],
+          "confidence_aggregate": 0.9,
+          "is_bonus": false
+        },
+        {
+          "id": "crud_operations_implemented",
+          "description": "CRUD operations implemented (POST, PUT, DELETE detected)",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "POST /tools endpoint implemented for creating new tools with proper Content-Type headers, JSON serialization, and error handling",
+              "location": "src/lib/mutations.ts:5-10",
+              "snippet": "create: (data: Partial<Tool>) =>\n    fetch(`${BASE_URL}/tools`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data),\n    }).then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+            },
+            {
+              "confidence": 0.98,
+              "reasoning": "PATCH /tools/:id endpoint implemented for updating existing tools with proper headers and error handling. Uses PATCH instead of PUT for partial updates.",
+              "location": "src/lib/mutations.ts:12-17",
+              "snippet": "update: (id: number, data: Partial<Tool>) =>\n    fetch(`${BASE_URL}/tools/${id}`, {\n      method: 'PATCH',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data),\n    }).then(r => { if (!r.ok) throw new Error('Update failed'); return r.json() })"
+            },
+            {
+              "confidence": 0.98,
+              "reasoning": "DELETE /tools/:id endpoint implemented for removing tools with proper error handling. All three mutation operations (Create, Update, Delete) are fully implemented.",
+              "location": "src/lib/mutations.ts:19-21",
+              "snippet": "delete: (id: number) =>\n    fetch(`${BASE_URL}/tools/${id}`, { method: 'DELETE' })\n      .then(r => { if (!r.ok) throw new Error('Delete failed') })"
+            }
+          ],
+          "confidence_aggregate": 0.98,
+          "is_bonus": false
+        },
+        {
+          "id": "analytics_endpoint_used",
+          "description": "GET /analytics or equivalent used for metrics",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "GET /analytics endpoint implemented via useAnalytics hook with proper TypeScript typing for Analytics response structure",
+              "location": "src/hooks/useApi.ts:50-54",
+              "snippet": "export const useAnalytics = () =>\n  useQuery<Analytics>({\n    queryKey: ['analytics'],\n    queryFn: () => api.get('/analytics'),\n  })"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "useAnalytics hook actively used in Dashboard page to fetch and display KPI metrics including budget overview, trends, and cost analytics",
+              "location": "src/pages/DashboardPage.tsx:14",
+              "snippet": "const { data: analytics, isLoading: analyticsLoading } = useAnalytics()"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Analytics type definition matches expected API response structure with budget_overview, kpi_trends, and cost_analytics sections for comprehensive dashboard metrics",
+              "location": "src/types/index.ts:33-53",
+              "snippet": "export type Analytics = {\n  budget_overview: {\n    monthly_limit: number\n    current_month_total: number\n    previous_month_total: number\n    budget_utilization: string\n    trend_percentage: string\n  }\n  kpi_trends: {\n    budget_change: string\n    tools_change: string\n    departments_change: string\n    cost_per_user_change: string\n  }\n  cost_analytics: {\n    cost_per_user: number\n    previous_cost_per_user: number\n    active_users: number\n    total_users: number\n  }\n}"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "error_handling_present",
+          "description": "API error handling implemented (try/catch, error states)",
+          "status": "CHECKED",
+          "points_awarded": 1,
+          "points_max": 1,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Error handling implemented in API layer - checks response.ok status and throws descriptive error with HTTP status code for all GET requests",
+              "location": "src/lib/api.ts:13-14",
+              "snippet": "fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n      if (!r.ok) throw new Error(`API error ${r.status}`)\n      return r.json()\n    })"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Error handling in POST mutation - throws descriptive error message on failure, allowing React Query to catch and handle errors appropriately",
+              "location": "src/lib/mutations.ts:9",
+              "snippet": ".then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Consistent error handling pattern across all mutation operations (POST, PATCH, DELETE) with descriptive error messages for debugging",
+              "location": "src/lib/mutations.ts:16",
+              "snippet": ".then(r => { if (!r.ok) throw new Error('Update failed'); return r.json() })"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        }
+      ],
+      "score": 11,
+      "max_score": 12,
+      "percentage": 91.66666666666666,
+      "confidence": 0.9514285714285714,
+      "languages_detected": [
+        "TypeScript",
+        "TSX"
+      ],
+      "files_analyzed": [
+        "src/lib/api.ts",
+        "src/lib/mutations.ts",
+        "src/hooks/useApi.ts",
+        "src/hooks/useMutations.ts",
+        "src/pages/DashboardPage.tsx",
+        "src/pages/ToolsPage.tsx",
+        "src/components/ToolsFilters/index.tsx",
+        "src/components/ToolModal/index.tsx",
+        "src/types/index.ts"
+      ],
+      "tool_calls_total": 8,
+      "duration_seconds": 101.617,
+      "reasoning": "The codebase demonstrates comprehensive JSON Server API integration with 11 out of 12 points awarded. All required endpoints are implemented except for departments endpoint usage. The API layer uses native fetch with proper error handling, React Query for state management, and TypeScript for type safety. CRUD operations are fully implemented with POST, PATCH, and DELETE methods. The analytics endpoint is actively used for dashboard KPIs. However, the departments endpoint, while implemented as a hook, is never actually used - components rely on hardcoded arrays instead. Error handling is present throughout the API layer with response.ok checks and descriptive error messages. The implementation follows modern React patterns with custom hooks, proper separation of concerns, and comprehensive TypeScript typing.",
+      "is_bonus": false
+    }
+  ],
+  "started_at": "2026-05-28T13:04:14.509Z",
+  "completed_at": "2026-05-28T13:06:02.564Z",
+  "duration_seconds": 108.055
+}

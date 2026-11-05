@@ -1,0 +1,168 @@
+{
+  "rule_id": "documentation_quality",
+  "rule_name": "Documentation Quality",
+  "checkboxes": [
+    {
+      "id": "readme_complete",
+      "description": "README with clear project description and purpose",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "README contains clear project title 'P4 Frontend — Internal Tools Dashboard' with comprehensive description and tech stack listing. Project purpose is explicitly stated as monitoring and managing organization's software tools and expenses.",
+          "location": "README.md:1-10",
+          "snippet": "# P4 Frontend — Internal Tools Dashboard\n\nStack : React + TypeScript · TanStack Start / Router / Query / Table / Form · Zustand · Tailwind v4 · Vite · json-server"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Detailed architecture section explains project structure, component organization, and page descriptions providing clear overview of application purpose and features.",
+          "location": "README.md:15-50",
+          "snippet": "## 🏗️ Architecture\n\nsrc/\n├── components/        # UI réutilisables (KPICard, ToolsTable, ToolCard, ToolModal…)\n├── pages/             # Composants de page (Dashboard, ToolsPage)\n├── routes/            # File-based routing TanStack Router\n**3 pages :**\n- `/` — Dashboard : KPIs + tableau récent paginé\n- `/tools` — Catalogue complet : grid + filtres sidebar + CRUD"
+        }
+      ],
+      "confidence_aggregate": 0.97,
+      "is_bonus": false
+    },
+    {
+      "id": "setup_instructions_clear",
+      "description": "Setup/installation instructions step-by-step (npm install, npm run dev)",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Clear step-by-step setup instructions with exact commands (npm install && npm run dev) and expected result (localhost:3000). Instructions are concise and actionable.",
+          "location": "README.md:7-13",
+          "snippet": "## 🚀 Quick Start\n\n```bash\n# Lancer le front\nnpm install && npm run dev\n```\n\nApp disponible sur `http://localhost:3000`"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Package.json confirms dev script exists and matches README instructions. Additional development commands (build, test, lint) are available and documented.",
+          "location": "package.json:8-16",
+          "snippet": "\"scripts\": {\n    \"dev\": \"vite dev --port 3000\",\n    \"build\": \"vite build\",\n    \"preview\": \"vite preview\",\n    \"test\": \"vitest run\",\n    \"lint\": \"eslint\",\n    \"format\": \"prettier --write . && eslint --fix\"\n  }"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "tech_stack_documented",
+      "description": "Tech stack listed in README (React/Vue, Tailwind, libraries used)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "Complete tech stack listed in README header: React, TypeScript, TanStack ecosystem (Start/Router/Query/Table/Form), Zustand for state management, Tailwind v4 for styling, Vite as build tool, json-server for backend.",
+          "location": "README.md:3",
+          "snippet": "Stack : React + TypeScript · TanStack Start / Router / Query / Table / Form · Zustand · Tailwind v4 · Vite · json-server"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Package.json dependencies confirm all major libraries mentioned in README tech stack documentation including React 19, TanStack libraries, Zustand, Tailwind, and development tools.",
+          "location": "package.json:17-35",
+          "snippet": "\"dependencies\": {\n    \"@tanstack/react-query\": \"^5.100.11\",\n    \"@tanstack/react-router\": \"latest\",\n    \"@tanstack/react-table\": \"^8.21.3\",\n    \"react\": \"^19.2.0\",\n    \"zustand\": \"^5.0.13\"\n  }"
+        }
+      ],
+      "confidence_aggregate": 0.97,
+      "is_bonus": false
+    },
+    {
+      "id": "env_variables_documented",
+      "description": "Environment variables documented if present (.env.example with descriptions)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "No .env.example or .env.template file found in repository root after listing all files matching .env* pattern. Environment variables are not documented.",
+          "location": "",
+          "snippet": ""
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "API URL is hardcoded in source code rather than using environment variables. No environment variable configuration exists or is documented anywhere in the project.",
+          "location": "src/lib/api.ts:1",
+          "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "component_documentation",
+      "description": "Complex components have JSDoc or comments explaining purpose",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "Complex ToolModal component with multiple modes (view/edit/add/delete) has TypeScript types but no JSDoc comments explaining its purpose, behavior, or usage patterns. No documentation of modal's different modes or expected props.",
+          "location": "src/components/ToolModal/index.tsx:1-15",
+          "snippet": "type Props = {\n  tool?: Tool\n  mode: 'view' | 'edit' | 'add' | 'delete'\n  onClose: () => void\n}\n\nconst ToolModal = ({ tool, mode, onClose }: Props) => {"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Complex ToolForm component with validation schema and multiple fields lacks JSDoc documentation. No comments explaining form behavior, validation rules, or usage patterns despite significant complexity.",
+          "location": "src/components/ToolForm/index.tsx:1-26",
+          "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  description: z.string().optional(),\n  category: z.string().min(1, 'Requis')\n})\n\ntype Props = {\n  defaultValues?: Partial<Tool>\n  onSubmit: (values: Partial<Tool>) => void\n}"
+        }
+      ],
+      "confidence_aggregate": 0.91,
+      "is_bonus": false
+    },
+    {
+      "id": "api_integration_documented",
+      "description": "API endpoints and integration approach documented",
+      "status": "CHECKED",
+      "points_awarded": 1,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "README contains dedicated 'Data Integration' section documenting API client implementation, hooks usage, pagination approach, sorting mechanism, and mutation patterns with clear explanation of integration strategy.",
+          "location": "README.md:60-75",
+          "snippet": "## 📊 Data Integration\n\n- **Client HTTP** : `api.get(endpoint, params)` dans `src/lib/api.ts`\n- **Hooks** : `useTools(params)`, `useAnalytics()` via TanStack Query\n- **Pagination serveur** : `_page` + `_limit` → json-server\n- **Mutations** : `useCreateTool`, `useUpdateTool`, `useDeleteTool`"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "API implementation in src/lib/api.ts shows BASE_URL endpoint and api.get() method structure, confirming the documented integration approach with query string building and error handling.",
+          "location": "src/lib/api.ts:1-16",
+          "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'\n\nexport const api = {\n  get: (endpoint: string, params: Record<string, any> = {}) =>\n    fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n      if (!r.ok) throw new Error(`API error ${r.status}`)\n      return r.json()\n    })\n}"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    }
+  ],
+  "score": 10,
+  "max_score": 15,
+  "percentage": 66.66666666666666,
+  "confidence": 0.9433333333333334,
+  "languages_detected": [
+    "TypeScript",
+    "JavaScript",
+    "JSON"
+  ],
+  "files_analyzed": [
+    "README.md",
+    "package.json",
+    "src/lib/api.ts",
+    "src/lib/mutations.ts",
+    "src/components/ToolModal/index.tsx",
+    "src/components/ToolForm/index.tsx",
+    "src/hooks/useApi.ts",
+    "vite.config.ts",
+    "tsconfig.json"
+  ],
+  "tool_calls_total": 9,
+  "duration_seconds": 102.524,
+  "reasoning": "The project demonstrates strong documentation in README with comprehensive setup instructions, architecture overview, and tech stack listing (10/15 points awarded). However, it lacks environment variable documentation (no .env.example file, hardcoded API URL) and component-level documentation (no JSDoc comments on complex components like ToolModal and ToolForm). The README excels with detailed sections on Quick Start, Architecture, Design System, Data Integration, and Responsive Design. API integration is well-documented with clear explanation of hooks, pagination, and mutation patterns. To achieve full points, the project needs .env.example file and JSDoc documentation for complex components.",
+  "is_bonus": false
+}

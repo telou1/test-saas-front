@@ -1,0 +1,206 @@
+{
+  "rule_id": "design_system_consistency",
+  "rule_name": "Design System Consistency - Evolution Without Guide",
+  "checkboxes": [
+    {
+      "id": "colors_reused_exactly",
+      "description": "Same color codes reused across all pages (no new arbitrary colors added)",
+      "status": "CHECKED",
+      "points_awarded": 6,
+      "points_max": 6,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Centralized gradient colors defined in styles.tsx and reused across Dashboard (KPI cards) and Tools page (status badges). No new arbitrary color codes introduced in Tools or Analytics pages.",
+          "location": "src/lib/styles.tsx:4-10",
+          "snippet": "export const gradients = {\n  green:  'from-green-400 to-emerald-600',\n  orange: 'from-orange-400 to-red-500',\n  pink:   'from-pink-400 to-rose-600',\n  blue:   'from-blue-400 to-indigo-600',\n  purple: 'from-violet-400 to-purple-600',\n} as const"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Status badge colors centralized and reused identically in ToolsTable (Dashboard) and ToolCard (Tools page). Same gradient values maintained across all pages.",
+          "location": "src/lib/styles.tsx:12-16",
+          "snippet": "export const statusStyles = {\n  active:   'from-green-400 to-emerald-600',\n  expiring: 'from-orange-400 to-red-500',\n  unused:   'from-gray-300 to-gray-400',\n} as const"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "CSS custom properties defined once and used consistently across all pages via Tailwind classes (dark:bg-primary-dark, dark:bg-secondary-dark, dark:bg-tertiary-dark). No new color codes added.",
+          "location": "src/index.css:5-9",
+          "snippet": "@theme {\n  --font-sans: 'Inter', sans-serif;\n  --color-primary-dark: #0f0f0f;\n  --color-secondary-dark: #060606;\n  --color-tertiary-dark: #080808;\n  --color-greyish-border: #9C9C9C;\n}"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "typography_maintained",
+      "description": "Typography (sizes, weights, line-heights) identical across pages",
+      "status": "CHECKED",
+      "points_awarded": 5,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Dashboard page uses text-2xl md:text-3xl font-bold for main heading with consistent responsive sizing pattern.",
+          "location": "src/pages/DashboardPage.tsx:29-31",
+          "snippet": "<h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">\n  Internal Tools Dashboard\n</h1>"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Tools page maintains identical typography pattern: text-2xl md:text-3xl font-bold for main heading. Same font sizes and weights as Dashboard.",
+          "location": "src/pages/ToolsPage.tsx:37",
+          "snippet": "<h1 className=\"text-2xl md:text-3xl font-bold\">Tools Catalog</h1>"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Inter font family defined globally and used consistently across all pages. Font weights (400, 500, 600, 700) maintained throughout without introducing new fonts.",
+          "location": "src/index.css:1-5",
+          "snippet": "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');\n@theme {\n  --font-sans: 'Inter', sans-serif;"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "spacing_consistent_evolution",
+      "description": "Spacing values from Day 6 maintained in Tools/Analytics pages",
+      "status": "UNCHECKED",
+      "points_awarded": 2,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Dashboard uses responsive spacing: px-4 md:px-10 (mobile-first padding) and my-6 md:my-10 (responsive vertical margins) establishing the baseline pattern.",
+          "location": "src/pages/DashboardPage.tsx:27",
+          "snippet": "<div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6 md:gap-8\">"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Tools page maintains identical spacing pattern from Dashboard: px-4 md:px-10 my-6 md:my-10. Consistent gap-6 spacing shows proper evolution.",
+          "location": "src/pages/ToolsPage.tsx:36",
+          "snippet": "<div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6\">"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Analytics page breaks spacing consistency: uses px-10 my-10 (desktop-only) instead of responsive px-4 md:px-10 my-6 md:my-10 pattern. Missing mobile breakpoints that Dashboard and Tools have. Partial compliance - awarded 2/4 points for maintaining some spacing values but losing responsive evolution.",
+          "location": "src/pages/AnalyticsPage.tsx:7",
+          "snippet": "<div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "components_strictly_reused",
+      "description": "Components (buttons, cards, badges) reused without modifications",
+      "status": "CHECKED",
+      "points_awarded": 5,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Header component defined once and reused across all pages via __root.tsx layout. No modifications or duplications between pages - strict reuse maintained.",
+          "location": "src/components/Header/index.tsx:8-30",
+          "snippet": "const Header = () => {\n  return (\n    <div className=\"bg-white text-gray-700 dark:bg-tertiary-dark dark:text-white w-full h-16 md:h-20 flex justify-between items-center px-4 md:px-10 py-2 shadow-sm dark:shadow-gray-700\">"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "ToolIcon component reused identically in ToolsTable (Dashboard) and ToolCard (Tools page). Same props interface, same styling (w-8 h-8 rounded-lg), no modifications.",
+          "location": "src/components/ToolIcon/index.tsx:5-22",
+          "snippet": "export const ToolIcon = ({ url, category }: Props) => {\n  const [error, setError] = useState(false)\n  if (!error && isSafeUrl(url)) {\n    return (\n      <img src={url} className=\"w-8 h-8 rounded-lg object-contain\""
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Pagination buttons use identical styling pattern across Dashboard and Tools pages: same classes (px-3 py-1 cursor-pointer rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-700), same hover states, same disabled states. Component pattern strictly reused.",
+          "location": "src/pages/DashboardPage.tsx:60-68",
+          "snippet": "<button className=\"px-3 py-1 cursor-pointer rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-700\">\n  <ArrowLeft />\n</button>"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "layout_patterns_consistent",
+      "description": "Grid layouts and structural patterns consistent with Dashboard",
+      "status": "CHECKED",
+      "points_awarded": 5,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Both Dashboard and Tools pages use identical container layout pattern: flex flex-col with consistent padding (px-4 md:px-10) and margins (my-6 md:my-10). Same responsive breakpoints (md:) maintained.",
+          "location": "src/pages/DashboardPage.tsx:27",
+          "snippet": "<div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6 md:gap-8\">"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Dashboard KPI section uses responsive grid: 1 col mobile, 2 cols tablet (sm:), 4 cols desktop (xl:). Establishes grid pattern that Tools page follows.",
+          "location": "src/components/KPI/index.tsx:11",
+          "snippet": "<div className=\"grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6\">"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Tools page grid follows same responsive pattern: 1 col mobile, 2 cols tablet (sm:), 3 cols desktop (lg:). Consistent grid structure with Dashboard - same breakpoint strategy, same gap spacing.",
+          "location": "src/pages/ToolsPage.tsx:73",
+          "snippet": "<div className=\"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4\">"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "no_visual_breaks",
+      "description": "No visual ruptures or inconsistencies between pages (smooth experience)",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.9,
+          "reasoning": "Cards maintain consistent visual patterns: rounded-xl, shadow-sm, dark mode variants. Smooth transition between Dashboard KPI cards and Tools catalog cards. Minor variation: p-6 vs p-5 padding, but overall visual consistency maintained without jarring breaks.",
+          "location": "src/components/KPICard/index.tsx:10",
+          "snippet": "className=\"p-6 rounded-xl bg-white text-gray-700 shadow-sm dark:bg-tertiary-dark dark:text-white dark:shadow-gray-700\""
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Page headers follow consistent pattern: same typography (text-2xl md:text-3xl font-bold), same spacing. Tools page adds action button but maintains visual hierarchy. No jarring transitions between pages.",
+          "location": "src/pages/DashboardPage.tsx:29-34",
+          "snippet": "<h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">\n  Internal Tools Dashboard\n</h1>\n<p className=\"text-sm md:text-base\">"
+        },
+        {
+          "confidence": 0.75,
+          "reasoning": "Analytics page is minimal (placeholder only) but uses similar container structure (flex flex-col gap-6). However, missing responsive breakpoints (px-10 my-10 instead of px-4 md:px-10 my-6 md:my-10) creates slight visual break from Dashboard/Tools pattern. Deducted 1 point for this inconsistency.",
+          "location": "src/pages/AnalyticsPage.tsx:7",
+          "snippet": "<div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>"
+        }
+      ],
+      "confidence_aggregate": 0.84,
+      "is_bonus": false
+    }
+  ],
+  "score": 27,
+  "max_score": 30,
+  "percentage": 90,
+  "confidence": 0.9199999999999999,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "CSS"
+  ],
+  "files_analyzed": [
+    "src/index.css",
+    "src/lib/styles.tsx",
+    "src/pages/DashboardPage.tsx",
+    "src/pages/ToolsPage.tsx",
+    "src/pages/AnalyticsPage.tsx",
+    "src/components/KPICard/index.tsx",
+    "src/components/Header/index.tsx",
+    "src/components/ToolIcon/index.tsx",
+    "src/components/KPI/index.tsx",
+    "src/components/ToolsTable/index.tsx",
+    "src/components/ToolCard/index.tsx"
+  ],
+  "tool_calls_total": 8,
+  "duration_seconds": 120.876,
+  "reasoning": "The candidate demonstrated strong design system consistency across Dashboard and Tools pages by centralizing colors, gradients, and status styles in src/lib/styles.tsx and reusing them without modification. Typography remained consistent with Inter font and identical heading patterns (text-2xl md:text-3xl font-bold). Components like Header, ToolIcon, and pagination buttons were strictly reused without modifications. Layout patterns followed consistent responsive grid structures. However, the Analytics page introduced a spacing inconsistency by using desktop-only values (px-10 my-10) instead of the responsive pattern (px-4 md:px-10 my-6 md:my-10) established in Dashboard and Tools, breaking the mobile-first approach. This resulted in a minor visual break and partial compliance on spacing evolution. Overall, the candidate maintained excellent design consistency on Days 6-7 and mostly on Day 8, with only the spacing regression on Analytics page preventing full marks.",
+  "is_bonus": false
+}

@@ -1,0 +1,76 @@
+{
+  "rule_id": "typography_system",
+  "rule_name": "Typography - Consistency Requirements",
+  "checkboxes": [
+    {
+      "id": "single_font_family",
+      "description": "Single font family used consistently (no mixing fonts)",
+      "status": "CHECKED",
+      "points_awarded": 4,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Inter font family is imported from Google Fonts and configured as the default sans-serif font in Tailwind v4 theme configuration. This ensures consistent font usage across the entire application.",
+          "location": "src/index.css:1-5",
+          "snippet": "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');\n@import 'tailwindcss';\n\n@theme {\n  --font-sans: 'Inter', sans-serif;"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "No other font-family declarations found in any component files. All text elements rely on Tailwind's default font-sans which is set to Inter, ensuring single font family consistency.",
+          "location": "src/components/KPICard/index.tsx:13-24",
+          "snippet": "<div className=\"p-6 rounded-xl bg-white text-gray-700 shadow-sm dark:bg-tertiary-dark dark:text-white dark:shadow-gray-700\">\n      <div className=\"flex items-center justify-between gap-6 mb-16\">\n        {props.cardname}\n        <div\n          className={`${props.tailwindBgColor ? props.tailwindBgColor : 'bg-gray-300'} text-white w-10 h-10 rounded-lg flex items-center justify-center`}\n        >\n          {props.cardlogo}\n        </div>\n      </div>\n      <h2 className=\"text-xl font-bold\">{props.value}</h2>"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "typography_hierarchy",
+      "description": "Clear typographic hierarchy with h1-h6, body, caption defined",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.9,
+          "reasoning": "No proper typographic hierarchy defined. Only h2 and h3 tags are used sporadically with utility classes (text-xl, text-lg, text-sm). Missing h1, h4, h5, h6 semantic tags. No centralized typography scale or hierarchy system exists - just ad-hoc utility class usage.",
+          "location": "src/components/ToolsTable/index.tsx:122",
+          "snippet": "<h2 className=\"text-lg font-bold\">Recent Tools</h2>"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "README confirms typography is limited to 'Inter via Google Fonts' with no mention of a hierarchy system. The design system section lists colors, gradients, and transitions but omits any typography scale or semantic heading definitions.",
+          "location": "README.md",
+          "snippet": "## 🎨 Design System\n\nDéfini dans `src/lib/styles.ts` et `styles.css` :\n\n- **Typographie** : Inter via Google Fonts"
+        }
+      ],
+      "confidence_aggregate": 0.89,
+      "is_bonus": false
+    }
+  ],
+  "score": 4,
+  "max_score": 7,
+  "percentage": 57.14285714285714,
+  "confidence": 0.915,
+  "languages_detected": [
+    "TypeScript",
+    "CSS",
+    "JSON"
+  ],
+  "files_analyzed": [
+    "src/index.css",
+    "src/components/KPICard/index.tsx",
+    "src/components/ToolCard/index.tsx",
+    "src/components/Header/index.tsx",
+    "src/components/ToolsTable/index.tsx",
+    "src/components/ToolModal/index.tsx",
+    "src/components/ToolForm/index.tsx",
+    "README.md",
+    "package.json"
+  ],
+  "tool_calls_total": 8,
+  "duration_seconds": 59.581,
+  "reasoning": "The codebase demonstrates consistent use of a single font family (Inter) through Tailwind v4 configuration, earning full points for single_font_family. However, it lacks a proper typographic hierarchy system - only h2 and h3 tags are used with utility classes, missing h1, h4, h5, h6 semantic elements and a centralized typography scale definition. The typography_hierarchy checkbox remains unchecked due to absence of a clear, systematic approach to heading levels and text sizing beyond ad-hoc utility class application.",
+  "is_bonus": false
+}

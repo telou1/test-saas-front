@@ -1,0 +1,115 @@
+{
+  "rule_id": "analytics_interactions",
+  "rule_name": "Analytics Page - Charts Interactivity",
+  "checkboxes": [
+    {
+      "id": "charts_hover_tooltips",
+      "description": "Charts show detailed tooltips on hover with data values",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 5,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "Analytics page is a placeholder stub with no chart implementation. File contains only a basic div with text 'AnalyticsPage' - no chart library imports, no tooltip configuration, no data visualization components.",
+          "location": "src/pages/AnalyticsPage.tsx:1-9",
+          "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "No chart libraries installed in dependencies. Package.json shows TanStack libraries, Lucide icons, Zustand, but no Recharts, ApexCharts, Chart.js, or any data visualization library.",
+          "location": "package.json:13-30",
+          "snippet": "\"dependencies\": {\n    \"@tanstack/react-devtools\": \"latest\",\n    \"@tanstack/react-form\": \"^1.32.0\",\n    \"@tanstack/react-query\": \"^5.100.11\",\n    \"lucide-react\": \"^0.545.0\",\n    \"react\": \"^19.2.0\",\n    \"react-dom\": \"^19.2.0\",\n    \"zod\": \"^3.25.76\",\n    \"zustand\": \"^5.0.13\"\n  }"
+        }
+      ],
+      "confidence_aggregate": 0.97,
+      "is_bonus": true
+    },
+    {
+      "id": "charts_legend_interactive",
+      "description": "Chart legends interactive (click to show/hide data series)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "No chart legends exist because no charts are implemented. Analytics page is a placeholder with no interactive elements, no chart components, and no legend click handlers.",
+          "location": "src/pages/AnalyticsPage.tsx:1-9",
+          "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+        }
+      ],
+      "confidence_aggregate": 0.98,
+      "is_bonus": true
+    },
+    {
+      "id": "charts_touch_friendly",
+      "description": "Charts responsive and usable on touch devices (mobile/tablet)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "No charts exist to be touch-friendly. Analytics page contains only a placeholder div with no responsive chart implementations, no touch event handlers, and no mobile-optimized data visualizations.",
+          "location": "src/pages/AnalyticsPage.tsx:1-9",
+          "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+        }
+      ],
+      "confidence_aggregate": 0.98,
+      "is_bonus": true
+    },
+    {
+      "id": "date_picker_functional",
+      "description": "Date range picker or period selector functional if present",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "No date picker or period selector implemented. Analytics page is a placeholder with no date selection UI, no date range filtering, and no temporal data controls.",
+          "location": "src/pages/AnalyticsPage.tsx:1-9",
+          "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+        }
+      ],
+      "confidence_aggregate": 0.98,
+      "is_bonus": true
+    },
+    {
+      "id": "insights_interactive",
+      "description": "Insights/alerts clickable for more details if applicable",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "No insights or alerts functionality exists. Analytics page is a placeholder with no interactive insights, no alert components, no clickable data points, and no detail views.",
+          "location": "src/pages/AnalyticsPage.tsx:1-9",
+          "snippet": "import React from 'react'\n\ntype Props = {}\n\nconst AnalyticsPage = (props: Props) => {\n  return <div className=\"px-10 my-10 flex flex-col gap-6\">AnalyticsPage</div>\n}\n\nexport default AnalyticsPage"
+        }
+      ],
+      "confidence_aggregate": 0.98,
+      "is_bonus": true
+    }
+  ],
+  "score": 0,
+  "max_score": 15,
+  "percentage": 0,
+  "confidence": 0.978,
+  "languages_detected": [
+    "TypeScript",
+    "JavaScript",
+    "JSON"
+  ],
+  "files_analyzed": [
+    "src/pages/AnalyticsPage.tsx",
+    "src/routes/analytics.tsx",
+    "package.json"
+  ],
+  "tool_calls_total": 9,
+  "duration_seconds": 57.799,
+  "reasoning": "The Analytics page is completely unimplemented - it exists only as a placeholder stub containing a single div with the text 'AnalyticsPage'. No chart libraries are installed in package.json (no Recharts, ApexCharts, Chart.js, D3, or any visualization library). There are no chart components, no interactive tooltips, no legends, no date pickers, no insights functionality, and no touch-optimized visualizations. All 5 checkboxes receive 0 points due to complete absence of any analytics visualization implementation.",
+  "is_bonus": true
+}

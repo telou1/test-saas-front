@@ -1,0 +1,148 @@
+{
+  "rule_id": "mobile_responsive_ux",
+  "rule_name": "Mobile UX - Touch Interactions & Adaptation",
+  "checkboxes": [
+    {
+      "id": "touch_targets_adequate",
+      "description": "All interactive elements minimum 44px for touch (buttons, links, icons)",
+      "status": "UNCHECKED",
+      "points_awarded": 2,
+      "points_max": 4,
+      "evidence": [
+        {
+          "confidence": 0.85,
+          "reasoning": "Most buttons have adequate touch targets (44px+) like form buttons (px-4 py-2), user avatar (w-12 h-12 = 48px), and hamburger menu (p-2 + icon = ~36px). However, several interactive elements fall short: MoreHorizontal action buttons use p-1 with size={16} (~32px), pagination arrow buttons use px-3 py-1 (~32-36px), and table action cells use p-1 rounded-full (~32px). These are below the 44px minimum touch target guideline.",
+          "location": "src/components/Header/index.tsx:26-30",
+          "snippet": "<button className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\" onClick={() => setMenuOpen(!menuOpen)}>\n  {menuOpen ? <X size={20} /> : <Menu size={20} />}\n</button>"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Form buttons and primary CTAs meet the 44px requirement with px-4 py-2 padding, providing adequate touch targets for mobile users.",
+          "location": "src/components/ToolForm/index.tsx:120-126",
+          "snippet": "<button type=\"button\" onClick={onCancel} className=\"dark:bg-red-500 dark:text-white cursor-pointer px-4 py-2 rounded-lg border text-red-500 border-red-300 text-sm hover:bg-gray-50 dark:hover:bg-gray-700\">\n  Annuler\n</button>\n<button type=\"submit\" disabled={isLoading} className=\"dark:bg-white cursor-pointer px-4 py-2 rounded-lg bg-primary border border-greyish-border text-black text-sm hover:opacity-90 disabled:opacity-50\">\n  {isLoading ? 'Enregistrement...' : 'Enregistrer'}\n</button>"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Action dropdown buttons in ToolCard and ToolsTable components use p-1 padding with 16px icons, resulting in approximately 32px touch targets which fall below the 44px accessibility guideline for mobile touch interfaces.",
+          "location": "src/components/ToolCard/index.tsx:38-40",
+          "snippet": "<button\n  onClick={() => setMenuOpen(!menuOpen)}\n  className=\"p-1 cursor-pointer rounded-full hover:bg-gray-100 dark:hover:bg-gray-700\"\n>\n  <MoreHorizontal size={16} />\n</button>"
+        }
+      ],
+      "confidence_aggregate": 0.88,
+      "is_bonus": true
+    },
+    {
+      "id": "hamburger_menu_mobile",
+      "description": "Hamburger menu implemented for mobile navigation (<768px)",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Hamburger menu fully implemented in Header component with lg:hidden breakpoint (<1024px). Uses Menu/X icons from lucide-react that toggle menuOpen state. When open, displays mobile navigation, search field, and user actions in a collapsible panel.",
+          "location": "src/components/Header/index.tsx:9-40",
+          "snippet": "const [menuOpen, setMenuOpen] = useState(false)\n\nreturn (\n  <>\n    <div className=\"bg-white text-gray-700 dark:bg-tertiary-dark dark:text-white w-full h-16 md:h-20 flex justify-between items-center px-4 md:px-10 py-2 shadow-sm dark:shadow-gray-700\">\n      <button\n        className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\"\n        onClick={() => setMenuOpen(!menuOpen)}\n      >\n        {menuOpen ? <X size={20} /> : <Menu size={20} />}\n      </button>\n    </div>\n\n    {menuOpen && (\n      <div className=\" bg-white dark:bg-tertiary-dark border-t dark:border-gray-700 px-4 py-4 flex flex-col gap-4 shadow-md\">\n        <div className=\"lg:hidden border-b border-b-gray-200 pb-4 w-full\">\n          <SearchField />\n        </div>\n        <div className=\"md:hidden border-b border-b-gray-200 pb-4\">\n          <Navigation onNavigate={() => setMenuOpen(false)} />\n        </div>\n        <UserActions />\n      </div>\n    )}\n  </>\n)"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Navigation component accepts onNavigate callback that closes the mobile menu when a link is clicked, providing proper mobile UX with menu auto-close on navigation.",
+          "location": "src/components/Navigation/index.tsx:10-24",
+          "snippet": "type Props = { onNavigate?: () => void }\n\nconst Navigation = ({ onNavigate }: Props) => {\n  const { pathname } = useLocation()\n\n  return (\n    <ul className=\"flex flex-col md:flex-row gap-2 md:gap-4\">\n      {navItems.map(({ to, label }) => (\n        <li key={to}>\n          <Link\n            to={to}\n            onClick={onNavigate}\n            className={`text-sm font-medium transition-colors hover:text-primary ${\n              pathname === to ? 'text-primary' : 'text-gray-500 dark:text-gray-400'\n            }`}\n          >\n            {label}\n          </Link>\n        </li>\n      ))}\n    </ul>\n  )\n}"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": true
+    },
+    {
+      "id": "scroll_performance_smooth",
+      "description": "Scroll performance smooth on lists/tables without lag",
+      "status": "UNCHECKED",
+      "points_awarded": 1,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.8,
+          "reasoning": "Basic scroll implementation exists with overflow-x-auto for tables and overflow-y-auto for modals. However, no performance optimizations are implemented: no virtual scrolling for long lists, no scroll throttling/debouncing, no will-change CSS properties, and no lazy loading. The table uses min-w-[640px] which forces horizontal scroll on mobile but provides no smooth scroll behavior optimization. For small datasets this may work, but performance could degrade with larger lists.",
+          "location": "src/components/ToolsTable/index.tsx:130-132",
+          "snippet": "<div className=\"overflow-x-auto\">\n  <table className=\"w-full min-w-[640px]\">\n    <thead>\n      {table.getHeaderGroups().map((hg) => (\n        <tr key={hg.id} className=\"border-b border-gray-200\">"
+        },
+        {
+          "confidence": 0.78,
+          "reasoning": "Modal scroll uses basic overflow-y-auto with max-h-[90vh] constraint but lacks performance optimizations like momentum scrolling properties or scroll snap for smooth mobile experience.",
+          "location": "src/components/ToolModal/index.tsx:20-23",
+          "snippet": "<div\n  className=\"bg-white dark:bg-secondary-dark rounded-2xl shadow-xl w-full max-w-lg p-6 flex flex-col gap-4 max-h-[90vh] overflow-y-auto shadow-xs shadow-greyish-border\"\n  onClick={e => e.stopPropagation()}\n>"
+        }
+      ],
+      "confidence_aggregate": 0.79,
+      "is_bonus": true
+    },
+    {
+      "id": "mobile_forms_optimized",
+      "description": "Forms optimized for mobile (appropriate input types, sizes)",
+      "status": "UNCHECKED",
+      "points_awarded": 1,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.85,
+          "reasoning": "Forms use appropriate input type='number' for numeric fields (monthly_cost), which triggers numeric keyboard on mobile. However, missing mobile-optimized input types: no type='url' for website_url/icon_url fields (uses generic text input), no type='email' if email fields exist, no type='tel' for phone numbers. Form layout uses grid-cols-2 which may be cramped on small mobile screens without responsive adjustment to single column.",
+          "location": "src/components/ToolForm/index.tsx:88-90",
+          "snippet": "<form.Field name=\"monthly_cost\" children={field => (\n  <Field label=\"Coût mensuel (€) *\" error={field.state.meta.errors?.[0]?.message}>\n    <input type=\"number\" className={inputClass} value={field.state.value} onChange={e => field.handleChange(Number(e.target.value))} />\n  </Field>\n)} />"
+        },
+        {
+          "confidence": 0.82,
+          "reasoning": "URL input fields use generic text type instead of type='url', missing mobile keyboard optimization that would provide URL-specific keyboard with .com and / shortcuts on mobile devices.",
+          "location": "src/components/ToolForm/index.tsx:108-112",
+          "snippet": "<form.Field name=\"website_url\" children={field => (\n  <Field label=\"Website URL\" error={field.state.meta.errors?.[0]?.message}>\n    <input className={inputClass} value={field.state.value} onChange={e => field.handleChange(e.target.value)} placeholder=\"https://...\" />\n  </Field>\n)} />"
+        }
+      ],
+      "confidence_aggregate": 0.84,
+      "is_bonus": true
+    },
+    {
+      "id": "swipe_gestures_present",
+      "description": "Swipe gestures implemented if applicable (drawer, carousel) - optional feature",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "No swipe gesture implementation found in the codebase. No touch event handlers (onTouchStart, onTouchMove, onTouchEnd), no swipe gesture libraries (react-swipeable, framer-motion gestures), no carousel or drawer components that would benefit from swipe interactions. The mobile menu uses click/tap only, and there are no swipeable cards or galleries. This is an optional feature and its absence is acceptable.",
+          "location": "src/components/Header/index.tsx:26-30",
+          "snippet": "<button\n  className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\"\n  onClick={() => setMenuOpen(!menuOpen)}\n>\n  {menuOpen ? <X size={20} /> : <Menu size={20} />}\n</button>"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": true
+    }
+  ],
+  "score": 7,
+  "max_score": 10,
+  "percentage": 70,
+  "confidence": 0.8799999999999999,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "CSS",
+    "JSON"
+  ],
+  "files_analyzed": [
+    "src/components/Header/index.tsx",
+    "src/components/Navigation/index.tsx",
+    "src/components/ToolCard/index.tsx",
+    "src/components/ToolsTable/index.tsx",
+    "src/components/ToolForm/index.tsx",
+    "src/components/ToolModal/index.tsx",
+    "src/components/Searchfield/index.tsx",
+    "src/pages/ToolsPage.tsx",
+    "src/pages/DashboardPage.tsx",
+    "src/index.css",
+    "README.md"
+  ],
+  "tool_calls_total": 8,
+  "duration_seconds": 106.564,
+  "reasoning": "Mobile UX evaluation reveals partial implementation of mobile-friendly patterns. The hamburger menu is fully functional with proper state management and navigation callbacks (3/3 points). Touch targets are mostly adequate for primary actions but several secondary interactive elements (action dropdowns, pagination buttons) fall below the 44px guideline (2/4 points). Scroll performance uses basic CSS overflow properties without optimization techniques like virtual scrolling or momentum scrolling (1/2 points). Forms use type='number' appropriately but miss type='url' for URL fields and use non-responsive grid-cols-2 layout (1/2 points). No swipe gestures are implemented, which is acceptable as an optional feature (0/1 points). Total: 7/12 points (58%). The application demonstrates mobile awareness with responsive breakpoints and hamburger navigation, but lacks polish in touch target sizing, input type optimization, and performance enhancements for smooth mobile scrolling.",
+  "is_bonus": true
+}

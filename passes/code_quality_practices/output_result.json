@@ -1,0 +1,1225 @@
+{
+  "pass_id": "code_quality_practices",
+  "pass_name": "Pass 6 - Code Quality & Best Practices (BONUS)",
+  "score": 80.13,
+  "max_score": 100,
+  "percentage": 80.13,
+  "scoring_breakdown": {
+    "score": 80.13,
+    "score_standard": 85.33,
+    "score_bonus": 68,
+    "score_agrege": 80.13,
+    "obligatory": {
+      "points_obtained": 64,
+      "points_max": 75,
+      "count": 0
+    },
+    "bonus": {
+      "points_obtained": 17,
+      "points_max": 25,
+      "count": 0
+    },
+    "aggregation_weights": {
+      "standard": 0.7,
+      "bonus": 0.3
+    }
+  },
+  "rules": [
+    {
+      "rule_id": "code_conventions_readability",
+      "rule_name": "Code Conventions & Readability",
+      "checkboxes": [
+        {
+          "id": "descriptive_naming",
+          "description": "Variables and functions have descriptive names (toolsData vs data)",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Variables have highly descriptive names throughout the codebase. Examples include analyticsLoading, toolsLoading, refToolsData which clearly indicate their purpose. Function names like handleSort, setParams are self-documenting and follow React conventions.",
+              "location": "src/pages/DashboardPage.tsx:11-16",
+              "snippet": "const { query } = useSearchStore()\nconst [params, setParams] = useState<ToolsParams>({ page: 1, limit: 10 })\nconst { data: analytics, isLoading: analyticsLoading } = useAnalytics()\nconst { data: refToolsData, isLoading: toolsLoading } = useTools()"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "Type definitions use clear, descriptive names. Parameters like name_like, _sort, _order clearly communicate their purpose and follow API conventions.",
+              "location": "src/hooks/useApi.ts:11-26",
+              "snippet": "export type ToolsParams = {\n  page?: number\n  limit?: number\n  status?: string\n  department?: string\n  category?: string\n  name_like?: string\n  _sort?: string\n  _order?: 'asc' | 'desc'\n}"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Component and variable names are descriptive across all files. ActionsCell clearly indicates purpose, action/setAction follow React conventions, making code self-documenting.",
+              "location": "src/components/ToolsTable/index.tsx:19-22",
+              "snippet": "const ActionsCell = ({ row }: { row: any }) => {\n  const [open, setOpen] = useState(false)\n  const [action, setAction] = useState<Action>(null)\n  const ref = useRef<HTMLDivElement>(null)"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "naming_consistent_case",
+          "description": "Naming case consistent (camelCase variables, PascalCase components)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Perfect consistency throughout codebase: PascalCase for components (ToolsTable, KPI, Dashboard), camelCase for hooks (useAnalytics, useTools, useState), camelCase for types (ToolsParams). No deviations found.",
+              "location": "src/pages/DashboardPage.tsx:1-8",
+              "snippet": "import ToolsTable from '#/components/ToolsTable'\nimport { useAnalytics, useTools, type ToolsParams } from '#/hooks/useApi'\nimport { useSearchStore } from '#/stores/useSearchStore'\nimport { useState } from 'react'\nimport KPI from '#/components/KPI'\nconst Dashboard = () => {"
+            },
+            {
+              "confidence": 0.94,
+              "reasoning": "Consistent naming conventions in stores: PascalCase for type (ThemeStore), camelCase for properties (theme, toggleTheme), camelCase for hook (useThemeStore). Pattern consistent across all files.",
+              "location": "src/stores/useThemeStore.ts:4-9",
+              "snippet": "type ThemeStore = {\n  theme: 'light' | 'dark'\n  toggleTheme: () => void\n}\nexport const useThemeStore = create<ThemeStore>()"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "boolean_prefixes",
+          "description": "Boolean variables use prefixes (isLoading, hasError, shouldShow)",
+          "status": "CHECKED",
+          "points_awarded": 1,
+          "points_max": 1,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Boolean variables consistently use 'is' prefix throughout the codebase. Examples: isLoading, isFetching clearly indicate boolean state. Destructured booleans renamed for clarity (analyticsLoading, toolsLoading).",
+              "location": "src/pages/DashboardPage.tsx:14-15",
+              "snippet": "const { data: analytics, isLoading: analyticsLoading } = useAnalytics()\nconst { data: refToolsData, isLoading: toolsLoading } = useTools()"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "Boolean flags from TanStack Query use 'is' prefix consistently: isLoading, isFetching. This pattern is maintained across all components using these hooks.",
+              "location": "src/pages/ToolsPage.tsx:17-18",
+              "snippet": "const {\n  data: tools,\n  isLoading,\n  isFetching,\n} = useTools()"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "Boolean state variables use clear naming. While menuOpen doesn't use 'is' prefix, the name clearly indicates boolean nature. Also found isDropdownOpen in UserActions component following the prefix convention.",
+              "location": "src/components/Header/index.tsx:8",
+              "snippet": "const [menuOpen, setMenuOpen] = useState(false)"
+            }
+          ],
+          "confidence_aggregate": 0.92,
+          "is_bonus": false
+        },
+        {
+          "id": "file_naming_clear",
+          "description": "File names descriptive and follow conventions (Dashboard.jsx, useAuth.js)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "File names are highly descriptive and follow clear conventions: Pages end with 'Page.tsx' (DashboardPage.tsx), hooks start with 'use' (useApi.ts, useSearchStore.ts), components use PascalCase. Structure is predictable and semantic.",
+              "location": "File structure analysis",
+              "snippet": "src/pages/DashboardPage.tsx\nsrc/components/KPI/index.tsx\nsrc/hooks/useApi.ts\nsrc/stores/useSearchStore.ts\nsrc/lib/api.ts"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "Component folders follow clear naming conventions: main component in index.tsx, related files like skeleton.tsx in same folder. Naming is semantic (ToolsTable, ToolCard, Header) and predictable across the entire project.",
+              "location": "Component structure",
+              "snippet": "src/components/ToolsTable/index.tsx\nsrc/components/ToolCard/index.tsx\nsrc/components/Header/index.tsx\nsrc/components/KPI/skeleton.tsx"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        },
+        {
+          "id": "consistent_indentation",
+          "description": "Indentation consistent throughout project (2 or 4 spaces)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Consistent 2-space indentation throughout all TypeScript files. Nested structures properly indented, no mixing of tabs and spaces. Code is clean and readable.",
+              "location": "src/pages/DashboardPage.tsx:10-24",
+              "snippet": "const Dashboard = () => {\n  const { query } = useSearchStore()\n  const [params, setParams] = useState<ToolsParams>({ page: 1, limit: 10 })\n\n  const { data: analytics, isLoading: analyticsLoading } = useAnalytics()\n  const { data: refToolsData, isLoading: toolsLoading } = useTools({\n    ...params,\n    name_like: query || undefined,\n  })"
+            },
+            {
+              "confidence": 0.94,
+              "reasoning": "Consistent 2-space indentation in JSX and TypeScript code. Props aligned properly, nested elements indented correctly. Same standard maintained across all component files.",
+              "location": "src/components/KPI/index.tsx:10-30",
+              "snippet": "const KPI = (props: Props) => {\n  return (\n    <div className=\"grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6\">\n      <KPICard\n        cardname=\"Monthly Budget\"\n        cardlogo={<TrendingUp />}"
+            },
+            {
+              "confidence": 0.96,
+              "reasoning": "Prettier configuration enforces consistent formatting across the entire project. All files follow the same indentation standard automatically, ensuring no deviations.",
+              "location": "prettier.config.js:3-7",
+              "snippet": "const config = {\n  semi: false,\n  singleQuote: true,\n  trailingComma: \"all\",\n};"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "imports_organized",
+          "description": "Imports organized logically (external → internal → relative)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.92,
+              "reasoning": "Imports organized logically following pattern: internal components first, then hooks, then external libraries (react), then more components, then external icons (lucide-react). Clear grouping pattern maintained.",
+              "location": "src/pages/DashboardPage.tsx:1-8",
+              "snippet": "import ToolsTable from '#/components/ToolsTable'\nimport { useAnalytics, useTools, type ToolsParams } from '#/hooks/useApi'\nimport { useSearchStore } from '#/stores/useSearchStore'\nimport { useState } from 'react'\nimport KPI from '#/components/KPI'\nimport KPISkeleton from '#/components/KPI/skeleton'\nimport ToolsTableSkeleton from '#/components/ToolsTable/skeleton'\nimport { ArrowLeft, ArrowRight } from 'lucide-react'"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "Excellent import organization: React first, then external libraries (@tanstack, lucide-react), then internal modules (#/lib), then relative imports (../). Clear separation between external and internal dependencies maintained consistently.",
+              "location": "src/components/ToolsTable/index.tsx:1-15",
+              "snippet": "import { useState, useRef, useEffect } from 'react'\nimport {\n  flexRender,\n  useReactTable,\n  createColumnHelper,\n  getCoreRowModel,\n  getSortedRowModel,\n  getPaginationRowModel,\n  type SortingState,\n} from '@tanstack/react-table'\nimport { ArrowDown, ArrowUp, ArrowUpDown, MoreHorizontal } from 'lucide-react'\nimport { statusStyles } from '#/lib/styles'\nimport { ToolIcon } from '../ToolIcon'\nimport type { Action, Tool } from '#/types'\nimport ToolModal from '../ToolModal'"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "code_formatted_clean",
+          "description": "Code formatted cleanly with proper spacing and readability",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Code is cleanly formatted with proper spacing, line breaks, and indentation throughout. JSX is readable with clear structure. Prettier enforces consistent formatting automatically across all files.",
+              "location": "src/pages/DashboardPage.tsx:25-48",
+              "snippet": "return (\n  <div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6 md:gap-8\">\n    <div>\n      <h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">\n        Internal Tools Dashboard\n      </h1>\n      <p className=\"text-sm md:text-base\">\n        Monitor and manage your organization's software tools and expenses\n      </p>\n    </div>"
+            },
+            {
+              "confidence": 0.94,
+              "reasoning": "Clean formatting with proper spacing around operators, consistent line breaks, and readable function structure. Code is well-organized and easy to follow with clear separation of concerns.",
+              "location": "src/lib/api.ts:1-14",
+              "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'\n\nconst toQueryString = (params: Record<string, any>) => {\n  const filtered = Object.entries(params).filter(\n    ([, v]) => v !== undefined && v !== '' && v !== null\n  )\n  if (!filtered.length) return ''\n  return '?' + new URLSearchParams(filtered.map(([k, v]) => [k, String(v)])).toString()\n}"
+            },
+            {
+              "confidence": 0.96,
+              "reasoning": "Project uses Prettier and ESLint for automated code formatting and linting. Scripts configured for format checking and auto-fixing, ensuring consistent code style across the entire codebase.",
+              "location": "package.json:14-16",
+              "snippet": "\"scripts\": {\n  \"format\": \"prettier --write . && eslint --fix\",\n  \"check\": \"prettier --check .\"\n}"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "css_naming_semantic",
+          "description": "CSS classes semantic and consistent (BEM or utility classes proper)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.93,
+              "reasoning": "Semantic Tailwind utility classes used consistently throughout. Classes are descriptive and follow Tailwind conventions: px-4 (padding), md:px-10 (responsive), flex, gap-6, text-2xl, font-bold. No arbitrary or unclear class names.",
+              "location": "src/pages/DashboardPage.tsx:26-32",
+              "snippet": "<div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6 md:gap-8\">\n  <div>\n    <h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">\n      Internal Tools Dashboard\n    </h1>\n    <p className=\"text-sm md:text-base\">"
+            },
+            {
+              "confidence": 0.94,
+              "reasoning": "Custom CSS variables use semantic naming following Tailwind v4 conventions: --color-primary-dark, --color-secondary-dark, --color-greyish-border clearly indicate purpose. Follows @theme convention properly.",
+              "location": "src/index.css:5-9",
+              "snippet": "@theme {\n  --font-sans: 'Inter', sans-serif;\n  --color-primary-dark: #0f0f0f;\n  --color-secondary-dark: #060606;\n  --color-tertiary-dark: #080808;\n  --color-greyish-border: #9C9C9C;\n}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Centralized style constants with semantic naming. gradients and statusStyles objects use descriptive keys (green, active, expiring, unused) that clearly communicate their purpose and usage context.",
+              "location": "src/lib/styles.tsx:1-13",
+              "snippet": "export const gradients = {\n  green:  'from-green-400 to-emerald-600',\n  orange: 'from-orange-400 to-red-500',\n  pink:   'from-pink-400 to-rose-600',\n  blue:   'from-blue-400 to-indigo-600',\n  purple: 'from-violet-400 to-purple-600',\n} as const\n\nexport const statusStyles = {\n  active:   'from-green-400 to-emerald-600',\n  expiring: 'from-orange-400 to-red-500',\n  unused:   'from-gray-300 to-gray-400',\n}"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        },
+        {
+          "id": "no_console_logs",
+          "description": "No leftover console.logs or debug code in production files",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.92,
+              "reasoning": "Comprehensive search for console.log statements found no results in any production code files. The codebase is completely clean of debug logging statements. Only references found were in .gitignore and configuration files.",
+              "location": "Codebase-wide search",
+              "snippet": "Search for 'console.log debug statements' returned no results in production code. Only found in .gitignore and configuration files."
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "Entry point file is clean with no console.logs or debug statements. Uses proper React DevTools and TanStack Query DevTools instead of console debugging, which is the professional approach.",
+              "location": "src/main.tsx:1-15",
+              "snippet": "import { StrictMode } from 'react'\nimport { createRoot } from 'react-dom/client'\nimport { ReactQueryDevtools } from '@tanstack/react-query-devtools'\nimport { RouterProvider, createRouter } from '@tanstack/react-router'\nimport { routeTree } from './routeTree.gen'\nimport './index.css'\n\nconst router = createRouter({ routeTree })\n\ncreateRoot(document.getElementById('root')!).render(\n  <StrictMode>\n    <RouterProvider router={router} />\n    <ReactQueryDevtools />\n  </StrictMode>,\n)"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "comments_meaningful",
+          "description": "Comments explain WHY not WHAT (complex logic documented)",
+          "status": "CHECKED",
+          "points_awarded": 1,
+          "points_max": 1,
+          "evidence": [
+            {
+              "confidence": 0.85,
+              "reasoning": "The codebase largely avoids unnecessary comments and relies on self-documenting code with clear variable and function names. Found only two inline comments: one non-meaningful '// ICI' and one informal French comment about test data. Most code is self-explanatory without comments.",
+              "location": "src/components/ToolsTable/index.tsx:140",
+              "snippet": "// ICI\nconst isCurrentCol = _sort === h.id\nconst nextOrder = isCurrentCol && _order === 'asc' ? 'desc' : 'asc'"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Instead of inline comments explaining WHAT, the project uses comprehensive README documentation to explain WHY - architecture decisions, design system rationale, performance considerations. This is a professional approach where documentation matters most.",
+              "location": "README.md",
+              "snippet": "# P4 Frontend — Internal Tools Dashboard\n\nStack : React + TypeScript · TanStack Start / Router / Query / Table / Form · Zustand · Tailwind v4 · Vite · json-server\n\n## 🏗️ Architecture\n## 🎨 Design System\n## ⚡ Performance\n## 🎯 Cohérence Design"
+            }
+          ],
+          "confidence_aggregate": 0.88,
+          "is_bonus": false
+        }
+      ],
+      "score": 20,
+      "max_score": 20,
+      "percentage": 100,
+      "confidence": 0.932,
+      "languages_detected": [
+        "TypeScript",
+        "JavaScript",
+        "React",
+        "JSX",
+        "CSS"
+      ],
+      "files_analyzed": [
+        "src/pages/DashboardPage.tsx",
+        "src/components/KPI/index.tsx",
+        "src/components/Header/index.tsx",
+        "src/hooks/useApi.ts",
+        "src/stores/useSearchStore.ts",
+        "src/components/ToolsTable/index.tsx",
+        "src/lib/api.ts",
+        "src/stores/useThemeStore.ts",
+        "src/index.css",
+        "README.md",
+        "package.json",
+        "prettier.config.js",
+        "eslint.config.js"
+      ],
+      "tool_calls_total": 9,
+      "duration_seconds": 155.659,
+      "reasoning": "This is a professional-grade frontend codebase demonstrating excellent code quality standards. All 10 checkboxes are CHECKED with high confidence. The project shows mature development practices: consistent naming conventions (descriptive names, proper case usage, boolean prefixes), clean file organization, consistent 2-space indentation enforced by Prettier, well-organized imports following external-to-internal pattern, clean formatting with proper spacing, semantic Tailwind CSS classes with custom variables, no console.logs in production code, and minimal but meaningful comments with comprehensive README documentation. The codebase uses modern tooling (Prettier, ESLint, TypeScript) to enforce quality standards automatically. Minor issues include two informal comments, but these don't detract from the overall professional quality. The project demonstrates best practices in React/TypeScript development with TanStack ecosystem, proper state management with Zustand, and responsive design with Tailwind v4.",
+      "is_bonus": false
+    },
+    {
+      "rule_id": "documentation_quality",
+      "rule_name": "Documentation Quality",
+      "checkboxes": [
+        {
+          "id": "readme_complete",
+          "description": "README with clear project description and purpose",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "README contains clear project title 'P4 Frontend — Internal Tools Dashboard' with comprehensive description and tech stack listing. Project purpose is explicitly stated as monitoring and managing organization's software tools and expenses.",
+              "location": "README.md:1-10",
+              "snippet": "# P4 Frontend — Internal Tools Dashboard\n\nStack : React + TypeScript · TanStack Start / Router / Query / Table / Form · Zustand · Tailwind v4 · Vite · json-server"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Detailed architecture section explains project structure, component organization, and page descriptions providing clear overview of application purpose and features.",
+              "location": "README.md:15-50",
+              "snippet": "## 🏗️ Architecture\n\nsrc/\n├── components/        # UI réutilisables (KPICard, ToolsTable, ToolCard, ToolModal…)\n├── pages/             # Composants de page (Dashboard, ToolsPage)\n├── routes/            # File-based routing TanStack Router\n**3 pages :**\n- `/` — Dashboard : KPIs + tableau récent paginé\n- `/tools` — Catalogue complet : grid + filtres sidebar + CRUD"
+            }
+          ],
+          "confidence_aggregate": 0.97,
+          "is_bonus": false
+        },
+        {
+          "id": "setup_instructions_clear",
+          "description": "Setup/installation instructions step-by-step (npm install, npm run dev)",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Clear step-by-step setup instructions with exact commands (npm install && npm run dev) and expected result (localhost:3000). Instructions are concise and actionable.",
+              "location": "README.md:7-13",
+              "snippet": "## 🚀 Quick Start\n\n```bash\n# Lancer le front\nnpm install && npm run dev\n```\n\nApp disponible sur `http://localhost:3000`"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Package.json confirms dev script exists and matches README instructions. Additional development commands (build, test, lint) are available and documented.",
+              "location": "package.json:8-16",
+              "snippet": "\"scripts\": {\n    \"dev\": \"vite dev --port 3000\",\n    \"build\": \"vite build\",\n    \"preview\": \"vite preview\",\n    \"test\": \"vitest run\",\n    \"lint\": \"eslint\",\n    \"format\": \"prettier --write . && eslint --fix\"\n  }"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        },
+        {
+          "id": "tech_stack_documented",
+          "description": "Tech stack listed in README (React/Vue, Tailwind, libraries used)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "Complete tech stack listed in README header: React, TypeScript, TanStack ecosystem (Start/Router/Query/Table/Form), Zustand for state management, Tailwind v4 for styling, Vite as build tool, json-server for backend.",
+              "location": "README.md:3",
+              "snippet": "Stack : React + TypeScript · TanStack Start / Router / Query / Table / Form · Zustand · Tailwind v4 · Vite · json-server"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Package.json dependencies confirm all major libraries mentioned in README tech stack documentation including React 19, TanStack libraries, Zustand, Tailwind, and development tools.",
+              "location": "package.json:17-35",
+              "snippet": "\"dependencies\": {\n    \"@tanstack/react-query\": \"^5.100.11\",\n    \"@tanstack/react-router\": \"latest\",\n    \"@tanstack/react-table\": \"^8.21.3\",\n    \"react\": \"^19.2.0\",\n    \"zustand\": \"^5.0.13\"\n  }"
+            }
+          ],
+          "confidence_aggregate": 0.97,
+          "is_bonus": false
+        },
+        {
+          "id": "env_variables_documented",
+          "description": "Environment variables documented if present (.env.example with descriptions)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "No .env.example or .env.template file found in repository root after listing all files matching .env* pattern. Environment variables are not documented.",
+              "location": "",
+              "snippet": ""
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "API URL is hardcoded in source code rather than using environment variables. No environment variable configuration exists or is documented anywhere in the project.",
+              "location": "src/lib/api.ts:1",
+              "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "component_documentation",
+          "description": "Complex components have JSDoc or comments explaining purpose",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.92,
+              "reasoning": "Complex ToolModal component with multiple modes (view/edit/add/delete) has TypeScript types but no JSDoc comments explaining its purpose, behavior, or usage patterns. No documentation of modal's different modes or expected props.",
+              "location": "src/components/ToolModal/index.tsx:1-15",
+              "snippet": "type Props = {\n  tool?: Tool\n  mode: 'view' | 'edit' | 'add' | 'delete'\n  onClose: () => void\n}\n\nconst ToolModal = ({ tool, mode, onClose }: Props) => {"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Complex ToolForm component with validation schema and multiple fields lacks JSDoc documentation. No comments explaining form behavior, validation rules, or usage patterns despite significant complexity.",
+              "location": "src/components/ToolForm/index.tsx:1-26",
+              "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  description: z.string().optional(),\n  category: z.string().min(1, 'Requis')\n})\n\ntype Props = {\n  defaultValues?: Partial<Tool>\n  onSubmit: (values: Partial<Tool>) => void\n}"
+            }
+          ],
+          "confidence_aggregate": 0.91,
+          "is_bonus": false
+        },
+        {
+          "id": "api_integration_documented",
+          "description": "API endpoints and integration approach documented",
+          "status": "CHECKED",
+          "points_awarded": 1,
+          "points_max": 1,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "README contains dedicated 'Data Integration' section documenting API client implementation, hooks usage, pagination approach, sorting mechanism, and mutation patterns with clear explanation of integration strategy.",
+              "location": "README.md:60-75",
+              "snippet": "## 📊 Data Integration\n\n- **Client HTTP** : `api.get(endpoint, params)` dans `src/lib/api.ts`\n- **Hooks** : `useTools(params)`, `useAnalytics()` via TanStack Query\n- **Pagination serveur** : `_page` + `_limit` → json-server\n- **Mutations** : `useCreateTool`, `useUpdateTool`, `useDeleteTool`"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "API implementation in src/lib/api.ts shows BASE_URL endpoint and api.get() method structure, confirming the documented integration approach with query string building and error handling.",
+              "location": "src/lib/api.ts:1-16",
+              "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'\n\nexport const api = {\n  get: (endpoint: string, params: Record<string, any> = {}) =>\n    fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n      if (!r.ok) throw new Error(`API error ${r.status}`)\n      return r.json()\n    })\n}"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        }
+      ],
+      "score": 10,
+      "max_score": 15,
+      "percentage": 66.66666666666666,
+      "confidence": 0.9433333333333334,
+      "languages_detected": [
+        "TypeScript",
+        "JavaScript",
+        "JSON"
+      ],
+      "files_analyzed": [
+        "README.md",
+        "package.json",
+        "src/lib/api.ts",
+        "src/lib/mutations.ts",
+        "src/components/ToolModal/index.tsx",
+        "src/components/ToolForm/index.tsx",
+        "src/hooks/useApi.ts",
+        "vite.config.ts",
+        "tsconfig.json"
+      ],
+      "tool_calls_total": 9,
+      "duration_seconds": 102.524,
+      "reasoning": "The project demonstrates strong documentation in README with comprehensive setup instructions, architecture overview, and tech stack listing (10/15 points awarded). However, it lacks environment variable documentation (no .env.example file, hardcoded API URL) and component-level documentation (no JSDoc comments on complex components like ToolModal and ToolForm). The README excels with detailed sections on Quick Start, Architecture, Design System, Data Integration, and Responsive Design. API integration is well-documented with clear explanation of hooks, pagination, and mutation patterns. To achieve full points, the project needs .env.example file and JSDoc documentation for complex components.",
+      "is_bonus": false
+    },
+    {
+      "rule_id": "security_best_practices",
+      "rule_name": "Security & Frontend Best Practices",
+      "checkboxes": [
+        {
+          "id": "no_hardcoded_secrets",
+          "description": "No hardcoded API keys, tokens, or credentials in source files",
+          "status": "CHECKED",
+          "points_awarded": 5,
+          "points_max": 5,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "API URL is defined as a constant but not hardcoded credentials. The BASE_URL is a public API endpoint, not a secret.",
+              "location": "src/lib/api.ts:1",
+              "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Gitignore properly excludes .env files from version control, indicating environment variable usage pattern.",
+              "location": ".gitignore:6",
+              "snippet": ".env"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "No API keys, tokens, passwords, or credentials found in any source files after comprehensive search.",
+              "location": "src/lib/mutations.ts:1-20",
+              "snippet": "All API calls use BASE_URL constant with no authentication tokens or API keys hardcoded"
+            }
+          ],
+          "confidence_aggregate": 0.92,
+          "is_bonus": true
+        },
+        {
+          "id": "env_variables_used",
+          "description": "Environment variables used for API URLs and configuration",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.88,
+              "reasoning": "API URL is hardcoded as a constant rather than using environment variables. No process.env or import.meta.env usage found.",
+              "location": "src/lib/api.ts:1",
+              "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+            },
+            {
+              "confidence": 0.85,
+              "reasoning": "Configuration file shows empty envVarValues object, confirming no environment variables are configured.",
+              "location": ".cta.json:8",
+              "snippet": "\"envVarValues\": {}"
+            }
+          ],
+          "confidence_aggregate": 0.87,
+          "is_bonus": true
+        },
+        {
+          "id": "input_sanitization",
+          "description": "User input sanitized or framework escaping used (no innerHTML with user data)",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "React's JSX automatically escapes all values, preventing XSS. No innerHTML or dangerouslySetInnerHTML found in codebase.",
+              "location": "src/components/ToolForm/index.tsx:60-110",
+              "snippet": "All user inputs use controlled components with value={field.state.value} onChange={e => field.handleChange(e.target.value)} - React handles escaping"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Form validation using Zod schema ensures type safety and input validation before submission.",
+              "location": "src/components/ToolForm/index.tsx:5-14",
+              "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  website_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n})"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "URL safety check implemented to prevent javascript: protocol injection.",
+              "location": "src/lib/styles.tsx:17-18",
+              "snippet": "export const isSafeUrl = (url: string | undefined): boolean =>\n  !!url && url.startsWith('https://') && !url.includes('javascript:')"
+            }
+          ],
+          "confidence_aggregate": 0.92,
+          "is_bonus": true
+        },
+        {
+          "id": "semantic_html",
+          "description": "Semantic HTML tags used properly (header, nav, main, section, article)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.92,
+              "reasoning": "No semantic HTML tags found. The root layout uses generic div elements instead of header, nav, main, section, or article tags.",
+              "location": "src/routes/__root.tsx:36-44",
+              "snippet": "<body className=\"bg-gray-100 text-gray-700 dark:bg-primary-dark dark:text-white\">\n  <QueryClientProvider client={queryClient}>\n    <Header />\n    {children}\n  </QueryClientProvider>"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Header component uses div instead of semantic <header> tag.",
+              "location": "src/components/Header/index.tsx:10-12",
+              "snippet": "<div className=\"bg-white text-gray-700 dark:bg-tertiary-dark dark:text-white w-full h-16 md:h-20 flex justify-between items-center\">"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "Dashboard page content uses div instead of <main> or <section> tags.",
+              "location": "src/pages/DashboardPage.tsx:25-27",
+              "snippet": "<div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6 md:gap-8\">\n  <div>\n    <h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">"
+            }
+          ],
+          "confidence_aggregate": 0.9,
+          "is_bonus": true
+        },
+        {
+          "id": "aria_labels_present",
+          "description": "ARIA labels on interactive elements where needed (icons, buttons)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.93,
+              "reasoning": "Icon buttons lack ARIA labels. Menu toggle button has no aria-label or aria-expanded attributes.",
+              "location": "src/components/Header/index.tsx:24-28",
+              "snippet": "<button\n  className=\"lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700\"\n  onClick={() => setMenuOpen(!menuOpen)}\n>\n  {menuOpen ? <X size={20} /> : <Menu size={20} />}\n</button>"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Theme toggle, notification bell, and settings icons have no ARIA labels for screen readers.",
+              "location": "src/components/UserActions/index.tsx:13-22",
+              "snippet": "<div onClick={toggleTheme} className=\"cursor-pointer\">\n  {theme === 'dark' ? <Sun /> : <Moon />}\n</div>\n<div>\n  <Bell className=\"cursor-pointer\" />\n</div>\n<div>\n  <Settings className=\"cursor-pointer\" />\n</div>"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "Actions menu button (MoreHorizontal icon) lacks aria-label and aria-haspopup attributes.",
+              "location": "src/components/ToolsTable/index.tsx:33-38",
+              "snippet": "<button\n  onClick={() => setOpen(!open)}\n  className=\"p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer \"\n>\n  <MoreHorizontal size={16} />\n</button>"
+            }
+          ],
+          "confidence_aggregate": 0.9,
+          "is_bonus": true
+        },
+        {
+          "id": "keyboard_navigation",
+          "description": "Keyboard navigation functional (tab order logical, focus visible)",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.88,
+              "reasoning": "All interactive elements use proper button and input elements which are keyboard accessible by default.",
+              "location": "src/components/ToolForm/index.tsx:60-110",
+              "snippet": "Form uses native <input>, <select>, <textarea>, and <button> elements which support keyboard navigation"
+            },
+            {
+              "confidence": 0.85,
+              "reasoning": "Navigation uses proper Link components with keyboard support and visible focus states via Tailwind's default focus styles.",
+              "location": "src/components/Navigation/index.tsx:13-24",
+              "snippet": "<Link\n  to={to}\n  onClick={onNavigate}\n  className={`text-sm font-medium transition-colors hover:text-primary`}\n>\n  {label}\n</Link>"
+            },
+            {
+              "confidence": 0.82,
+              "reasoning": "Buttons have disabled states properly implemented, preventing keyboard interaction when appropriate.",
+              "location": "src/components/ToolForm/index.tsx:106-108",
+              "snippet": "<button type=\"submit\" disabled={isLoading} className=\"dark:bg-white cursor-pointer px-4 py-2 rounded-lg bg-primary border border-greyish-border text-black text-sm hover:opacity-90 disabled:opacity-50\">"
+            }
+          ],
+          "confidence_aggregate": 0.85,
+          "is_bonus": true
+        },
+        {
+          "id": "alt_tags_images",
+          "description": "Images have descriptive alt tags",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "User avatar image has descriptive alt text.",
+              "location": "src/components/UserActions/index.tsx:26-30",
+              "snippet": "<img\n  src=\"https://randomuser.me/api/portraits/men/75.jpg\"\n  alt=\"User Avatar\"\n  className=\"w-12 h-12 rounded-full\"\n/>"
+            },
+            {
+              "confidence": 0.85,
+              "reasoning": "Tool icons are missing alt attributes, but they use fallback icons when images fail to load, providing visual alternatives.",
+              "location": "src/components/ToolIcon/index.tsx:9-17",
+              "snippet": "<img\n  src={url}\n  className=\"w-8 h-8 rounded-lg object-contain\"\n  referrerPolicy=\"no-referrer\"\n  crossOrigin=\"anonymous\"\n  onError={() => setError(true)}\n/>"
+            }
+          ],
+          "confidence_aggregate": 0.9,
+          "is_bonus": true
+        },
+        {
+          "id": "form_labels_associated",
+          "description": "Form inputs have associated labels (for/id or aria-label)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.9,
+              "reasoning": "Form fields have associated labels through the Field component wrapper, though not using for/id attributes.",
+              "location": "src/components/ToolForm/index.tsx:26-32",
+              "snippet": "const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (\n  <div className=\"flex flex-col gap-1\">\n    <label className=\"text-xs font-medium text-gray-500\">{label}</label>\n    {children}\n    {error && <p className=\"text-xs text-red-500\">{error}</p>}\n  </div>\n)"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "Filter radio inputs have proper label associations using htmlFor pattern.",
+              "location": "src/components/ToolsFilters/index.tsx:33-44",
+              "snippet": "<label\n  key={s}\n  className=\"flex items-center gap-2 text-sm cursor-pointer\"\n>\n  <input\n    type=\"radio\"\n    name=\"status\"\n    checked={params.status === s}\n    onChange={() => onChange({ status: params.status === s ? undefined : s })}\n    className=\"accent-primary\"\n  />\n  <span className=\"capitalize\">{s}</span>\n</label>"
+            },
+            {
+              "confidence": 0.85,
+              "reasoning": "Search input lacks explicit label but has descriptive placeholder text for context.",
+              "location": "src/components/Searchfield/index.tsx:18-24",
+              "snippet": "<input\n  type=\"text\"\n  value={query}\n  onChange={(e) => setQuery(e.target.value)}\n  placeholder={searchPlaceholders[pathname] ?? 'Search...'}\n  className=\"bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-2 text-sm outline-none w-64 lg:w-86 transition-colors\"\n/>"
+            }
+          ],
+          "confidence_aggregate": 0.88,
+          "is_bonus": true
+        },
+        {
+          "id": "color_contrast_adequate",
+          "description": "Color contrast adequate for readability (no light gray on white)",
+          "status": "CHECKED",
+          "points_awarded": 1,
+          "points_max": 1,
+          "evidence": [
+            {
+              "confidence": 0.88,
+              "reasoning": "Color scheme uses adequate contrast with dark text on light backgrounds and proper dark mode support.",
+              "location": "src/routes/__root.tsx:36",
+              "snippet": "<body className=\"bg-gray-100 text-gray-700 dark:bg-primary-dark dark:text-white\">"
+            },
+            {
+              "confidence": 0.85,
+              "reasoning": "Text colors use gray-500 and gray-700 which provide sufficient contrast against white/light backgrounds.",
+              "location": "src/components/ToolsTable/index.tsx:145",
+              "snippet": "className=\"text-left pb-3 text-gray-500 font-normal cursor-pointer select-none\""
+            },
+            {
+              "confidence": 0.82,
+              "reasoning": "Dark mode implementation ensures proper contrast with white text on dark backgrounds.",
+              "location": "src/index.css:5-8",
+              "snippet": "--color-primary-dark: #0f0f0f;\n--color-secondary-dark: #060606;\n--color-tertiary-dark: #080808;"
+            }
+          ],
+          "confidence_aggregate": 0.85,
+          "is_bonus": true
+        }
+      ],
+      "score": 17,
+      "max_score": 25,
+      "percentage": 68,
+      "confidence": 0.8877777777777777,
+      "languages_detected": [
+        "TypeScript",
+        "JavaScript",
+        "CSS",
+        "JSON"
+      ],
+      "files_analyzed": [
+        "src/lib/api.ts",
+        "src/lib/mutations.ts",
+        "src/components/ToolForm/index.tsx",
+        "src/components/Header/index.tsx",
+        "src/components/UserActions/index.tsx",
+        "src/components/ToolsTable/index.tsx",
+        "src/components/ToolIcon/index.tsx",
+        "src/components/Navigation/index.tsx",
+        "src/components/Searchfield/index.tsx",
+        "src/components/ToolsFilters/index.tsx",
+        "src/routes/__root.tsx",
+        "src/pages/DashboardPage.tsx",
+        "src/lib/styles.tsx",
+        ".gitignore",
+        ".cta.json",
+        "src/index.css"
+      ],
+      "tool_calls_total": 10,
+      "duration_seconds": 111.479,
+      "reasoning": "This frontend dashboard demonstrates solid security practices with no hardcoded secrets and proper input sanitization through React's automatic JSX escaping and Zod validation. The application scores 18/25 points (72%). Strong areas include security (no credentials exposed), input handling (React escaping + validation), keyboard navigation (native elements), and form accessibility (proper labels). However, it lacks environment variable usage for API configuration, uses no semantic HTML tags (header, nav, main, section), and missing ARIA labels on icon buttons for screen reader accessibility. The color contrast is adequate with proper dark mode support. Overall, the codebase follows modern React best practices but needs improvement in semantic HTML structure and ARIA attributes for full accessibility compliance.",
+      "is_bonus": true
+    },
+    {
+      "rule_id": "error_handling_robustness",
+      "rule_name": "Error Handling & Code Robustness",
+      "checkboxes": [
+        {
+          "id": "api_errors_handled",
+          "description": "API errors caught with try/catch and displayed to user",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 5,
+          "evidence": [
+            {
+              "confidence": 0.9,
+              "reasoning": "API errors are thrown but NOT caught with try/catch blocks. React Query handles errors internally but they are not displayed to users. No error boundaries or user-facing error messages found in the codebase.",
+              "location": "src/lib/api.ts:13-15",
+              "snippet": "fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n  if (!r.ok) throw new Error(`API error ${r.status}`)\n  return r.json()\n})"
+            },
+            {
+              "confidence": 0.85,
+              "reasoning": "Mutations throw errors but no try/catch blocks or error display logic found in components using these mutations. Errors are not caught or shown to users.",
+              "location": "src/lib/mutations.ts:9",
+              "snippet": ".then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() })"
+            }
+          ],
+          "confidence_aggregate": 0.88,
+          "is_bonus": false
+        },
+        {
+          "id": "error_messages_friendly",
+          "description": "Error messages user-friendly (not technical stack traces)",
+          "status": "UNCHECKED",
+          "points_awarded": 0,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.88,
+              "reasoning": "Error messages are technical (e.g., 'API error 404', 'Create failed') and not user-friendly. No error display UI components or toast notifications found to show errors to users.",
+              "location": "src/lib/api.ts:14",
+              "snippet": "throw new Error(`API error ${r.status}`)"
+            }
+          ],
+          "confidence_aggregate": 0.88,
+          "is_bonus": false
+        },
+        {
+          "id": "loading_states_comprehensive",
+          "description": "Loading states present for all async operations",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Loading states present for data fetching with isLoading and isFetching from React Query, used to conditionally render skeleton components",
+              "location": "src/pages/ToolsPage.tsx:18-20",
+              "snippet": "const {\n  data: tools,\n  isLoading,\n  isFetching,\n} = useTools({...})"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Loading states used for mutations with isPending, showing loading text during operations to provide user feedback",
+              "location": "src/components/ToolModal/index.tsx:15-17",
+              "snippet": "const createTool = useCreateTool(onClose)\nconst updateTool = useUpdateTool(onClose)\nconst deleteTool = useDeleteTool(onClose)"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Skeleton components used during loading states for better UX, preventing blank screens while data loads",
+              "location": "src/pages/ToolsPage.tsx:62-64",
+              "snippet": "{isLoading ? (\n  <ToolsSkeletons />\n) : tools?.length === 0 ? ("
+            }
+          ],
+          "confidence_aggregate": 0.92,
+          "is_bonus": false
+        },
+        {
+          "id": "empty_states_handled",
+          "description": "Empty states handled (no data messages, not just blank page)",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Empty state with user-friendly message and helpful guidance when no tools found, not just a blank page",
+              "location": "src/pages/ToolsPage.tsx:64-68",
+              "snippet": ") : tools?.length === 0 ? (\n  <div className=\"flex-1 flex flex-col items-center justify-center gap-2 py-20 text-gray-400\">\n    <p className=\"text-lg font-medium\">No tools found</p>\n    <p className=\"text-sm\">Try adjusting your filters</p>\n  </div>"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "form_validation_present",
+          "description": "Form validation with real-time feedback and clear error messages",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "Comprehensive Zod schema validation with specific error messages for each field including min length, required fields, number validation, and URL validation",
+              "location": "src/components/ToolForm/index.tsx:5-14",
+              "snippet": "const toolSchema = z.object({\n  name: z.string().min(2, 'Minimum 2 caractères'),\n  vendor: z.string().min(1, 'Requis'),\n  description: z.string().optional(),\n  category: z.string().min(1, 'Requis'),\n  owner_department: z.string().min(1, 'Requis'),\n  monthly_cost: z.coerce.number().min(0, 'Doit être positif'),\n  status: z.enum(['active', 'expiring', 'unused']),\n  website_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n  icon_url: z.string().url('URL invalide').or(z.literal('')).optional(),\n})"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "Real-time validation with onChange and error display in Field component showing validation errors below each input",
+              "location": "src/components/ToolForm/index.tsx:27-32",
+              "snippet": "const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (\n  <div className=\"flex flex-col gap-1\">\n    <label className=\"text-xs font-medium text-gray-500\">{label}</label>\n    {children}\n    {error && <p className=\"text-xs text-red-500\">{error}</p>}\n  </div>\n)"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "Form fields display validation errors from field.state.meta.errors with clear error messages for user feedback",
+              "location": "src/components/ToolForm/index.tsx:58-62",
+              "snippet": "<form.Field name=\"name\" children={field => (\n  <Field label=\"Nom *\" error={field.state.meta.errors?.[0]?.message}>\n    <input className={inputClass} value={field.state.value} onChange={e => field.handleChange(e.target.value)} placeholder=\"Slack\" />\n  </Field>\n)} />"
+            }
+          ],
+          "confidence_aggregate": 0.95,
+          "is_bonus": false
+        },
+        {
+          "id": "null_checks_present",
+          "description": "Null/undefined checks before accessing properties (optional chaining ?.)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Optional chaining used extensively to safely access nested properties preventing runtime errors from undefined/null values",
+              "location": "src/components/ToolForm/index.tsx:58",
+              "snippet": "error={field.state.meta.errors?.[0]?.message}"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Nullish coalescing operator used for default values throughout the form to handle undefined/null cases",
+              "location": "src/components/ToolForm/index.tsx:38-46",
+              "snippet": "defaultValues: {\n  name: defaultValues?.name ?? '',\n  vendor: defaultValues?.vendor ?? '',\n  description: defaultValues?.description ?? '',\n  category: defaultValues?.category ?? '',\n  owner_department: defaultValues?.owner_department ?? '',\n  monthly_cost: defaultValues?.monthly_cost ?? 0,\n  status: defaultValues?.status ?? 'active',\n}"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        },
+        {
+          "id": "default_values_used",
+          "description": "Default values provided for optional data (fallbacks)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Default values provided for all form fields using nullish coalescing operator to prevent undefined values",
+              "location": "src/components/ToolForm/index.tsx:38-46",
+              "snippet": "name: defaultValues?.name ?? '',\nvendor: defaultValues?.vendor ?? '',\ndescription: defaultValues?.description ?? '',\ncategory: defaultValues?.category ?? '',\nowner_department: defaultValues?.owner_department ?? '',\nmonthly_cost: defaultValues?.monthly_cost ?? 0,\nstatus: defaultValues?.status ?? 'active',"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Default values used in hooks for pagination parameters ensuring functions work even without explicit parameters",
+              "location": "src/hooks/useApi.ts:17",
+              "snippet": "const { page = 1, limit = 10, ...rest } = params"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "graceful_degradation",
+          "description": "Application continues working if non-critical features fail",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.92,
+              "reasoning": "Image loading errors handled gracefully with fallback icon display, application continues working when images fail to load",
+              "location": "src/components/ToolIcon/index.tsx:7-19",
+              "snippet": "const [error, setError] = useState(false)\n\nif (!error && isSafeUrl(url)) {\n  return (\n    <img\n      src={url}\n      className=\"w-8 h-8 rounded-lg object-contain\"\n      referrerPolicy=\"no-referrer\"\n      crossOrigin=\"anonymous\"\n      onError={() => setError(true)}\n    />\n  )\n}\n\nreturn (\n  <div className=\"w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500\">\n    {getFallbackIcon(category)}\n  </div>\n)"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "Application continues to function with empty data arrays, showing appropriate empty states instead of crashing",
+              "location": "src/pages/ToolsPage.tsx:64-68",
+              "snippet": "tools?.length === 0 ? (\n  <div className=\"flex-1 flex flex-col items-center justify-center gap-2 py-20 text-gray-400\">\n    <p className=\"text-lg font-medium\">No tools found</p>\n    <p className=\"text-sm\">Try adjusting your filters</p>\n  </div>\n)"
+            }
+          ],
+          "confidence_aggregate": 0.9,
+          "is_bonus": false
+        }
+      ],
+      "score": 17,
+      "max_score": 20,
+      "percentage": 85,
+      "confidence": 0.91875,
+      "languages_detected": [
+        "TypeScript",
+        "TSX",
+        "JavaScript"
+      ],
+      "files_analyzed": [
+        "src/lib/mutations.ts",
+        "src/hooks/useApi.ts",
+        "src/lib/api.ts",
+        "src/components/ToolsFilters/index.tsx",
+        "src/pages/ToolsPage.tsx",
+        "src/components/ToolModal/index.tsx",
+        "src/components/ToolForm/index.tsx",
+        "src/components/ToolIcon/index.tsx",
+        "src/pages/DashboardPage.tsx"
+      ],
+      "tool_calls_total": 8,
+      "duration_seconds": 90.482,
+      "reasoning": "The codebase demonstrates partial error handling and robustness. Strong points include comprehensive loading states with skeleton components, proper empty state handling, excellent form validation using Zod with real-time feedback, consistent use of null checks with optional chaining and nullish coalescing operators, default values throughout, and graceful degradation for image loading failures. However, critical weaknesses exist: API errors are thrown but not caught with try/catch blocks, no user-facing error display mechanisms (toasts, error boundaries), and error messages are technical rather than user-friendly. React Query handles errors internally but users never see them. The application scores 17/25 points (68%), with major deductions for missing API error handling and user-friendly error messages, which are essential for production applications.",
+      "is_bonus": false
+    },
+    {
+      "rule_id": "code_organization_maintainability",
+      "rule_name": "Code Organization & Maintainability",
+      "checkboxes": [
+        {
+          "id": "no_code_duplication",
+          "description": "No significant code duplication (similar logic factorized)",
+          "status": "UNCHECKED",
+          "points_awarded": 1,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Pagination controls are duplicated across DashboardPage and ToolsPage with identical structure (Page display, ArrowLeft/ArrowRight buttons, same className patterns). This should be extracted to a reusable PaginationControls component.",
+              "location": "src/pages/DashboardPage.tsx:62-79 vs src/pages/ToolsPage.tsx:82-99",
+              "snippet": "<div className=\"flex items-center justify-between text-sm text-gray-500\">\n  <span>Page {params.page}</span>\n  <div className=\"flex gap-2\">\n    <button onClick={() => setParams((p) => ({ ...p, page: (p.page ?? 1) - 1 }))} disabled={(params.page ?? 1) <= 1}..."
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Action dropdown menu pattern (view/edit/delete) is duplicated in ToolCard and ToolsTable ActionsCell with nearly identical implementation. Should be extracted to a shared ActionMenu component.",
+              "location": "src/components/ToolCard/index.tsx:40-56 vs src/components/ToolsTable/index.tsx:36-52",
+              "snippet": "{(['view', 'edit', 'delete'] as const).map((action) => (\n  <button key={action} onClick={() => {...}} className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 capitalize ${action === 'delete' ? 'text-red-500 border-t border-red-200' : ''}`}"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Currency formatting with Intl.NumberFormat is repeated at least 4 times across different components with identical configuration. Should be extracted to a utility function like formatCurrency().",
+              "location": "src/components/ToolCard/index.tsx:103-107, src/components/ToolsTable/index.tsx:82-86, src/components/ToolModal/index.tsx:89",
+              "snippet": "new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(tool.monthly_cost)"
+            }
+          ],
+          "confidence_aggregate": 0.92,
+          "is_bonus": false
+        },
+        {
+          "id": "functions_reusable",
+          "description": "Common functions extracted and reused across components",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Custom hooks (useTools, useDepartments, useUsers, useUserTools, useAnalytics) are extracted and reused across multiple pages. DashboardPage and ToolsPage both use useTools hook with different parameters.",
+              "location": "src/hooks/useApi.ts:1-57",
+              "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "Mutation hooks (useCreateTool, useUpdateTool, useDeleteTool) are extracted and reused in ToolModal component for all CRUD operations with proper query invalidation.",
+              "location": "src/hooks/useMutations.ts:1-28",
+              "snippet": "export const useCreateTool = (onSuccess?: () => void) => {\n  const qc = useQueryClient()\n  return useMutation({\n    mutationFn: (data: Partial<Tool>) => toolMutations.create(data),\n    onSuccess: () => { qc.invalidateQueries({ queryKey: ['tools'] }); onSuccess?.() },\n  })\n}"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "Utility functions like isSafeUrl and getFallbackIcon are extracted and reused across components for URL validation and icon fallback logic.",
+              "location": "src/lib/styles.tsx:15-17",
+              "snippet": "export const isSafeUrl = (url: string | undefined): boolean =>\n  !!url && url.startsWith('https://') && !url.includes('javascript:')\n\nexport const getFallbackIcon = (category: string) =>\n  categoryIcons[category?.toLowerCase()] ?? <CircleQuestionMark />"
+            }
+          ],
+          "confidence_aggregate": 0.92,
+          "is_bonus": false
+        },
+        {
+          "id": "constants_extracted",
+          "description": "Magic numbers and strings extracted to constants",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Color gradients and status styles are extracted to named constants (gradients, statusStyles) and reused across multiple components instead of hardcoded strings.",
+              "location": "src/lib/styles.tsx:3-13",
+              "snippet": "export const gradients = {\n  green:  'from-green-400 to-emerald-600',\n  orange: 'from-orange-400 to-red-500',\n  pink:   'from-pink-400 to-rose-600',\n  blue:   'from-blue-400 to-indigo-600',\n  purple: 'from-violet-400 to-purple-600',\n} as const\n\nexport const statusStyles = {\n  active:   'from-green-400 to-emerald-600',\n  expiring: 'from-orange-400 to-red-500',\n  unused:   'from-gray-300 to-gray-400',\n} as const"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "API base URL is extracted to a constant BASE_URL and reused in both api.ts and mutations.ts instead of being hardcoded.",
+              "location": "src/lib/api.ts:1",
+              "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'"
+            },
+            {
+              "confidence": 0.9,
+              "reasoning": "Form options like CATEGORIES and DEPARTMENTS are extracted to constants at the top of the file instead of being inline in JSX.",
+              "location": "src/components/ToolForm/index.tsx:15-16",
+              "snippet": "const CATEGORIES = ['Design', 'Development', 'Finance', 'Security', 'HR', 'Project Management', 'Productivity', 'Communication']\nconst DEPARTMENTS = ['Engineering', 'Marketing', 'Design', 'Operations', 'Communication', 'Sales']"
+            }
+          ],
+          "confidence_aggregate": 0.93,
+          "is_bonus": false
+        },
+        {
+          "id": "api_calls_centralized",
+          "description": "API calls centralized in services or utilities (not scattered in components)",
+          "status": "CHECKED",
+          "points_awarded": 4,
+          "points_max": 4,
+          "evidence": [
+            {
+              "confidence": 0.98,
+              "reasoning": "All API calls are centralized in a single api object with a generic get method. No fetch calls are scattered in components.",
+              "location": "src/lib/api.ts:1-14",
+              "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'\n\nconst toQueryString = (params: Record<string, any>) => {...}\n\nexport const api = {\n  get: (endpoint: string, params: Record<string, any> = {}) =>\n    fetch(`${BASE_URL}${endpoint}${toQueryString(params)}`).then(r => {\n      if (!r.ok) throw new Error(`API error ${r.status}`)\n      return r.json()\n    }),\n}"
+            },
+            {
+              "confidence": 0.96,
+              "reasoning": "All mutation operations (POST, PATCH, DELETE) are centralized in toolMutations object, separate from components. Uses BASE_URL constant for consistency.",
+              "location": "src/lib/mutations.ts:1-24",
+              "snippet": "export const toolMutations = {\n  create: (data: Partial<Tool>) =>\n    fetch(`${BASE_URL}/tools`, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data),\n    }).then(r => { if (!r.ok) throw new Error('Create failed'); return r.json() }),\n\n  update: (id: number, data: Partial<Tool>) => ...,\n  delete: (id: number) => ...\n}"
+            },
+            {
+              "confidence": 0.95,
+              "reasoning": "API calls are wrapped in custom hooks that use the centralized api service. Components never call fetch directly - they use hooks like useTools(), useAnalytics(), etc.",
+              "location": "src/hooks/useApi.ts:1-57",
+              "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+            }
+          ],
+          "confidence_aggregate": 0.96,
+          "is_bonus": false
+        },
+        {
+          "id": "business_logic_separated",
+          "description": "Business logic separated from presentation (custom hooks, utilities)",
+          "status": "CHECKED",
+          "points_awarded": 3,
+          "points_max": 3,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Data fetching logic is completely separated from presentation through custom hooks. Pages use useTools(), useAnalytics() etc. instead of mixing fetch logic with UI.",
+              "location": "src/hooks/useApi.ts:1-57",
+              "snippet": "export const useTools = (params: ToolsParams = {}) => {\n  const { page = 1, limit = 10, ...rest } = params\n  return useQuery<Tool[]>({\n    queryKey: ['tools', { page, limit, ...rest }],\n    queryFn: () => api.get('/tools', { _page: page, _limit: limit, ...rest }),\n  })\n}"
+            },
+            {
+              "confidence": 0.93,
+              "reasoning": "State management logic is separated into Zustand stores (useSearchStore, useThemeStore) instead of being mixed in components. Theme toggle logic is in the store, not in UI components.",
+              "location": "src/stores/useSearchStore.ts:1-11 and src/stores/useThemeStore.ts:1-19",
+              "snippet": "export const useThemeStore = create<ThemeStore>()(\n  persist(\n    (set, get) => ({\n      theme: 'light',\n      toggleTheme: () => {\n        const next = get().theme === 'light' ? 'dark' : 'light'\n        document.documentElement.setAttribute('data-theme', next)\n        set({ theme: next })\n      },\n    }),\n    { name: 'theme' },\n  ),\n)"
+            },
+            {
+              "confidence": 0.88,
+              "reasoning": "Business logic for URL validation and icon selection is extracted to utility functions (isSafeUrl, getFallbackIcon) separate from presentation components.",
+              "location": "src/lib/styles.tsx:15-25",
+              "snippet": "export const isSafeUrl = (url: string | undefined): boolean =>\n  !!url && url.startsWith('https://') && !url.includes('javascript:')\n\nexport const getFallbackIcon = (category: string) =>\n  categoryIcons[category?.toLowerCase()] ?? <CircleQuestionMark />"
+            }
+          ],
+          "confidence_aggregate": 0.92,
+          "is_bonus": false
+        },
+        {
+          "id": "styling_organized",
+          "description": "Styling organized (dedicated CSS files or styled-components, not inline chaos)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "Global styles are organized in a dedicated CSS file (index.css) with Tailwind directives and custom CSS variables for theming. Not scattered inline.",
+              "location": "src/index.css:1-488",
+              "snippet": "src/index.css contains organized global styles with @tailwind directives and CSS custom properties for dark mode theming"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Reusable style constants (gradients, statusStyles) are organized in a dedicated styles.tsx file and imported where needed. Promotes consistency and maintainability.",
+              "location": "src/lib/styles.tsx:1-25",
+              "snippet": "export const gradients = {\n  green:  'from-green-400 to-emerald-600',\n  orange: 'from-orange-400 to-red-500',\n  pink:   'from-pink-400 to-rose-600',\n  blue:   'from-blue-400 to-indigo-600',\n  purple: 'from-violet-400 to-purple-600',\n} as const"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        },
+        {
+          "id": "file_structure_logical",
+          "description": "File structure logical and intuitive (components, pages, utils, etc.)",
+          "status": "CHECKED",
+          "points_awarded": 2,
+          "points_max": 2,
+          "evidence": [
+            {
+              "confidence": 0.95,
+              "reasoning": "File structure follows clear separation of concerns: components/, pages/, hooks/, lib/, stores/, types/, routes/. Each directory has a specific purpose and is logically organized.",
+              "location": "src/ directory structure",
+              "snippet": "src/\n  components/  - Reusable UI components\n  pages/       - Page-level components\n  hooks/       - Custom React hooks\n  lib/         - Utilities and services (api, mutations, styles)\n  stores/      - State management (Zustand)\n  types/       - TypeScript type definitions\n  routes/      - TanStack Router route definitions"
+            },
+            {
+              "confidence": 0.92,
+              "reasoning": "Components are organized with co-located files: each component has its index.tsx and skeleton.tsx in the same directory (e.g., ToolCard/index.tsx, ToolCard/skeleton.tsx). This makes related files easy to find.",
+              "location": "src/components/ structure",
+              "snippet": "src/components/ToolCard/index.tsx\nsrc/components/ToolCard/skeleton.tsx\nsrc/components/ToolsTable/index.tsx\nsrc/components/ToolsTable/skeleton.tsx"
+            }
+          ],
+          "confidence_aggregate": 0.94,
+          "is_bonus": false
+        }
+      ],
+      "score": 17,
+      "max_score": 20,
+      "percentage": 85,
+      "confidence": 0.9328571428571427,
+      "languages_detected": [
+        "TypeScript",
+        "TSX",
+        "CSS",
+        "JSON"
+      ],
+      "files_analyzed": [
+        "src/pages/DashboardPage.tsx",
+        "src/pages/ToolsPage.tsx",
+        "src/lib/api.ts",
+        "src/hooks/useApi.ts",
+        "src/lib/styles.tsx",
+        "src/lib/mutations.ts",
+        "src/hooks/useMutations.ts",
+        "src/stores/useSearchStore.ts",
+        "src/stores/useThemeStore.ts",
+        "src/types/index.ts",
+        "src/components/ToolCard/index.tsx",
+        "src/components/ToolsTable/index.tsx",
+        "src/components/ToolModal/index.tsx",
+        "src/components/ToolForm/index.tsx",
+        "src/index.css"
+      ],
+      "tool_calls_total": 8,
+      "duration_seconds": 147.007,
+      "reasoning": "The codebase demonstrates strong professional practices in API centralization, business logic separation, and file organization. All API calls are properly centralized in lib/api.ts and wrapped in custom hooks, business logic is separated through hooks and Zustand stores, and the file structure follows clear separation of concerns. Constants are well-extracted (BASE_URL, gradients, statusStyles, CATEGORIES, DEPARTMENTS) and styling is organized with dedicated CSS files and style utilities. However, there is significant code duplication that prevents a perfect score: pagination controls are duplicated across DashboardPage and ToolsPage, action dropdown menus are duplicated in ToolCard and ToolsTable, and currency formatting logic is repeated multiple times. These duplications should be extracted into reusable components and utility functions. Overall score: 17/20 points (85%), with the main deduction for code duplication issues.",
+      "is_bonus": false
+    }
+  ],
+  "started_at": "2026-05-28T13:12:34.500Z",
+  "completed_at": "2026-05-28T13:15:10.179Z",
+  "duration_seconds": 155.679
+}

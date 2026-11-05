@@ -1,0 +1,161 @@
+{
+  "rule_id": "dashboard_kpis",
+  "rule_name": "KPIs Section - 4 Metrics Cards",
+  "checkboxes": [
+    {
+      "id": "four_kpi_cards_present",
+      "description": "All 4 KPI cards present (Total Tools, Active Users, Departments, Monthly Cost)",
+      "status": "CHECKED",
+      "points_awarded": 10,
+      "points_max": 10,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "All 4 required KPI cards are present in src/components/KPI/index.tsx: Monthly Budget with TrendingUp icon, Active Tools with Wrench icon, Departments with Building2 icon, and Cost/User with Users icon. Each card is properly instantiated with distinct props.",
+          "location": "src/components/KPI/index.tsx:13-62",
+          "snippet": "<KPICard cardname=\"Monthly Budget\" cardlogo={<TrendingUp />} .../>\n<KPICard cardname=\"Active Tools\" cardlogo={<Wrench />} .../>\n<KPICard cardname=\"Departments\" cardlogo={<Building2 />} .../>\n<KPICard cardname=\"Cost/User\" cardlogo={<Users />} .../>"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "The KPI component is properly integrated into the Dashboard page with conditional rendering based on loading states, ensuring cards are displayed when data is available.",
+          "location": "src/pages/DashboardPage.tsx:36-38",
+          "snippet": "{!analyticsLoading && !toolsLoading && analytics ? (\n  <KPI analytics={analytics} tools={tools} />\n) : (\n  <KPISkeleton />\n)}"
+        }
+      ],
+      "confidence_aggregate": 0.97,
+      "is_bonus": false
+    },
+    {
+      "id": "card_data_structure",
+      "description": "Each card displays: title, large value, variation %, trend icon",
+      "status": "UNCHECKED",
+      "points_awarded": 4,
+      "points_max": 10,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "Cards display title (cardname), large value, and variation % text (performance prop), but critically missing trend icon rendering. The KPICard component shows performance as plain text without conditional icon logic for up/down arrows based on trend direction.",
+          "location": "src/components/KPICard/index.tsx:12-28",
+          "snippet": "const KPICard = (props: Props) => {\n  return (\n    <div className=\"p-6 rounded-xl bg-white...\">\n      <div className=\"flex items-center justify-between gap-6 mb-16\">\n        {props.cardname}\n        <div className={...}>{props.cardlogo}</div>\n      </div>\n      <h2 className=\"text-xl font-bold\">{props.value}</h2>\n      <p className={...}>{props.performance}</p>\n    </div>\n  )\n}"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Performance data from analytics API (budget_change, tools_change, etc.) is passed to cards but only displayed as text strings like '+12%' without accompanying trend icon visualization.",
+          "location": "src/components/KPI/index.tsx:28-29",
+          "snippet": "performance={props.analytics.kpi_trends.budget_change}\ntailwindBgColor={`bg-gradient-to-br ${gradients.green}`}"
+        }
+      ],
+      "confidence_aggregate": 0.91,
+      "is_bonus": false
+    },
+    {
+      "id": "trend_indicators",
+      "description": "Trend indicators with appropriate colors (green for increase, red for decrease)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 7,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "No trend indicators with appropriate colors implemented. The performance value is displayed as plain text in a badge with static gradient background. There is no conditional rendering to show green for positive trends or red for negative trends, and no arrow icons (up/down) based on trend direction.",
+          "location": "src/components/KPICard/index.tsx:23-27",
+          "snippet": "<p className={`mt-2 px-3 rounded-xl w-max text-white ${props.tailwindBgColor ? props.tailwindBgColor : 'bg-gray-300'}`}>\n  {props.performance}\n</p>\n// Static background color, no conditional logic for trend direction"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "progress_bars",
+      "description": "Visual indicators (progress bars, charts) present in cards",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 7,
+      "evidence": [
+        {
+          "confidence": 0.98,
+          "reasoning": "No progress bars or visual indicators present in KPI cards. The KPICard component structure only includes title, icon, value text, and performance badge - completely missing any progress bar, chart, gauge, or other visual indicator elements.",
+          "location": "src/components/KPICard/index.tsx:12-28",
+          "snippet": "const KPICard = (props: Props) => {\n  return (\n    <div className=\"p-6 rounded-xl...\">\n      <div className=\"flex items-center justify-between gap-6 mb-16\">\n        {props.cardname}\n        <div className={...}>{props.cardlogo}</div>\n      </div>\n      <h2 className=\"text-xl font-bold\">{props.value}</h2>\n      <p className={...}>{props.performance}</p>\n    </div>\n  )\n}\n// No progress bar, chart, or visualization component"
+        }
+      ],
+      "confidence_aggregate": 0.98,
+      "is_bonus": false
+    },
+    {
+      "id": "kpis_responsive_layout",
+      "description": "KPIs adapt to screen size (4 cols desktop → 2x2 tablet → 1 col mobile)",
+      "status": "CHECKED",
+      "points_awarded": 8,
+      "points_max": 8,
+      "evidence": [
+        {
+          "confidence": 0.97,
+          "reasoning": "KPIs implement proper responsive grid layout with Tailwind breakpoints: grid-cols-1 for mobile (default), sm:grid-cols-2 for tablet (640px+), and xl:grid-cols-4 for desktop (1280px+). This matches the required 1 col mobile → 2x2 tablet → 4 cols desktop pattern.",
+          "location": "src/components/KPI/index.tsx:13",
+          "snippet": "<div className=\"grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6\">"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "README documentation confirms the responsive design implementation with explicit breakpoint behavior matching the code implementation.",
+          "location": "README.md",
+          "snippet": "| Breakpoint | Dashboard |\n| `< md` | 1 col KPI, tableau scrollable |\n| `md` | 2 cols KPI |\n| `lg+` | 4 cols KPI |\n\nApproche desktop-first adaptée mobile via Tailwind breakpoints"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "data_integration",
+      "description": "KPIs display real data from API or meaningful mock data",
+      "status": "CHECKED",
+      "points_awarded": 9,
+      "points_max": 9,
+      "evidence": [
+        {
+          "confidence": 0.96,
+          "reasoning": "KPIs display real data from API using useAnalytics() and useTools() hooks with TanStack Query. The analytics data includes budget_overview, kpi_trends, and cost_analytics with proper TypeScript typing, and tools data is used for calculated metrics like active tool count.",
+          "location": "src/pages/DashboardPage.tsx:14-15",
+          "snippet": "const { data: analytics, isLoading: analyticsLoading } = useAnalytics()\nconst { data: refToolsData, isLoading: toolsLoading } = useTools({\n  ...params,\n  name_like: query || undefined,\n})"
+        },
+        {
+          "confidence": 0.94,
+          "reasoning": "Analytics hook properly configured to fetch from /analytics endpoint with typed Analytics response structure, ensuring meaningful data integration rather than hardcoded values.",
+          "location": "src/hooks/useApi.ts:52-56",
+          "snippet": "export const useAnalytics = () =>\n  useQuery<Analytics>({\n    queryKey: ['analytics'],\n    queryFn: () => api.get('/analytics'),\n  })"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "KPI component actively uses real analytics data for performance metrics and calculated values from tools array, demonstrating full data integration with API responses.",
+          "location": "src/components/KPI/index.tsx:28-61",
+          "snippet": "performance={props.analytics.kpi_trends.budget_change}\nvalue={props.tools.reduce(\n  (acc: number, tool: any) =>\n    acc + (tool.status?.toLowerCase() === 'active' ? 1 : 0),\n  0,\n)}\nvalue={`€${props.analytics.cost_analytics.cost_per_user}`}"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    }
+  ],
+  "score": 31,
+  "max_score": 51,
+  "percentage": 60.78431372549019,
+  "confidence": 0.9499999999999998,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "CSS",
+    "JSON"
+  ],
+  "files_analyzed": [
+    "src/components/KPI/index.tsx",
+    "src/components/KPICard/index.tsx",
+    "src/pages/DashboardPage.tsx",
+    "src/hooks/useApi.ts",
+    "src/types/index.ts",
+    "src/lib/styles.tsx",
+    "README.md"
+  ],
+  "tool_calls_total": 9,
+  "duration_seconds": 113.528,
+  "reasoning": "The Dashboard KPIs section shows partial implementation with 4 cards present and proper data integration, but critically missing trend indicators and progress bars. Cards display title, value, and performance text but lack visual trend icons (up/down arrows with color coding) and progress bar visualizations. The responsive layout is well-implemented with proper Tailwind breakpoints (1 col mobile, 2 cols tablet, 4 cols desktop). Data integration is strong with TanStack Query fetching real analytics data from API endpoints. Total score: 31/51 points (61% compliance). Main gaps: no conditional trend icons based on positive/negative values, no progress bars or charts, and incomplete card data structure missing the trend icon requirement.",
+  "is_bonus": false
+}

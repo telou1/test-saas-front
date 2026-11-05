@@ -1,0 +1,15 @@
+{
+  "evaluation_id": "eval_1779973389144",
+  "config_evaluation_id": "frontend_dashboard_eval",
+  "evaluation_name": "Frontend Dashboard",
+  "candidate": "Kévin_Conversin_frontend_dashboard_full",
+  "repository_url": "https://github.com/kevinconversin/ALT_P4_FRONTEND",
+  "config_path": "frontend_dashboard_full",
+  "started_at": "2026-05-28T13:03:09.144Z",
+  "langfuse_trace_id": "1e2dd257-0cdc-481f-ab4e-5544a1124393",
+  "completed_at": "2026-05-28T13:17:55.966Z",
+  "duration_seconds": 886.822,
+  "total_score": 435.33,
+  "total_max_score": 676,
+  "percentage": 64.39792899408285
+}

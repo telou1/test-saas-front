@@ -1,0 +1,14 @@
+{
+  "pass_id": "technical_stack_constraints",
+  "pass_name": "Pass 1 - Technical Stack & Mandatory Constraints",
+  "pass_number": 1,
+  "started_at": "2026-05-28T13:04:14.509Z",
+  "rules_count": 4,
+  "conditional": false,
+  "dependencies": [],
+  "completed_at": "2026-05-28T13:06:02.564Z",
+  "duration_seconds": 108.055,
+  "score": 37,
+  "max_score": 41,
+  "percentage": 90.2439024390244
+}

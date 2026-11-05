@@ -1,0 +1,133 @@
+{
+  "rule_id": "performance_optimization",
+  "rule_name": "Performance & Asset Optimization",
+  "checkboxes": [
+    {
+      "id": "images_optimized",
+      "description": "Images optimized (appropriate formats: webp, svg; responsive sizes)",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.9,
+          "reasoning": "Images are PNG format instead of modern optimized formats (webp/svg). Public folder contains logo192.png and logo512.png - standard React template assets without modern format optimization or responsive sizing.",
+          "location": "public/logo192.png, public/logo512.png",
+          "snippet": "[IMAGE ANALYSIS confirms PNG format at 192x192 and 512x512 sizes]"
+        },
+        {
+          "confidence": 0.85,
+          "reasoning": "External tool icons loaded without size optimization or responsive srcset attributes. Fixed 8x8 pixel size with no responsive image handling strategy.",
+          "location": "src/components/ToolIcon/index.tsx:10-17",
+          "snippet": "<img src={url} className=\"w-8 h-8 rounded-lg object-contain\" referrerPolicy=\"no-referrer\" crossOrigin=\"anonymous\" onError={() => setError(true)} />"
+        }
+      ],
+      "confidence_aggregate": 0.88,
+      "is_bonus": false
+    },
+    {
+      "id": "css_no_duplication",
+      "description": "CSS organized without excessive duplication",
+      "status": "CHECKED",
+      "points_awarded": 1,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Centralized gradient and status style definitions prevent duplication across all components (KPICard, ToolCard, ToolModal, ToolsTable). Design tokens exported and reused consistently.",
+          "location": "src/lib/styles.tsx:3-14",
+          "snippet": "export const gradients = { green: 'from-green-400 to-emerald-600', orange: 'from-orange-400 to-red-500', pink: 'from-pink-400 to-rose-600', blue: 'from-blue-400 to-indigo-600', purple: 'from-violet-400 to-purple-600' } as const\n\nexport const statusStyles = { active: 'from-green-400 to-emerald-600', expiring: 'from-orange-400 to-red-500', unused: 'from-gray-300 to-gray-400' } as const"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "CSS variables defined once in Tailwind v4 @theme block for dark mode colors. Global transition rule applied once without duplication across the codebase.",
+          "location": "src/index.css:4-15",
+          "snippet": "@theme {\n  --font-sans: 'Inter', sans-serif;\n  --color-primary-dark: #0f0f0f;\n  --color-secondary-dark: #060606;\n  --color-tertiary-dark: #080808;\n  --color-greyish-border: #9C9C9C;\n}\n\n@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));\n\n* {\n  transition: background-color 0.3s ease-out, color 0.4s ease, border-color 0.2s ease;\n}"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "lazy_loading_implemented",
+      "description": "Lazy loading for images or components if applicable",
+      "status": "UNCHECKED",
+      "points_awarded": 0,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Images loaded without lazy loading attribute. No loading='lazy' present on img elements, causing all images to load eagerly regardless of viewport position.",
+          "location": "src/components/ToolIcon/index.tsx:10-17",
+          "snippet": "<img src={url} className=\"w-8 h-8 rounded-lg object-contain\" referrerPolicy=\"no-referrer\" crossOrigin=\"anonymous\" onError={() => setError(true)} />"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "No React.lazy() or dynamic imports for components. All components imported statically at module top with no code splitting or lazy loading strategy for heavy components.",
+          "location": "src/pages/ToolsPage.tsx:1-5",
+          "snippet": "import { useEffect, useState } from 'react'\nimport { useTools, type ToolsParams } from '#/hooks/useApi'\nimport ToolCard from '#/components/ToolCard'\nimport ToolModal from '#/components/ToolModal'\nimport ToolsFilters from '#/components/ToolsFilters'"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "performance_aware_code",
+      "description": "Code shows performance awareness (avoid heavy operations in render)",
+      "status": "CHECKED",
+      "points_awarded": 1,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "TanStack Query provides automatic caching and prevents unnecessary re-fetches. Server-side filtering, sorting, and pagination reduce client-side processing and data transfer overhead.",
+          "location": "README.md",
+          "snippet": "TanStack Query : cache automatique, pas de re-fetch inutile, isFetching indicator discret\nSkeletons : KPICardSkeleton, ToolsTableSkeleton, ToolsSkeletons\nFiltrage : côté serveur (requêtes json-server) plutôt que client-side sur les arrays"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Skeleton components implemented to prevent layout shift and improve perceived performance during loading states, avoiding render blocking.",
+          "location": "src/components/ToolCard/skeleton.tsx:1-10",
+          "snippet": "const ToolCardSkeleton = () => (\n  <div className=\"bg-white dark:bg-secondary-dark rounded-xl p-5 flex flex-col gap-4 animate-pulse\">\n    <div className=\"flex items-start justify-between\">\n      <div className=\"flex items-center gap-3\">\n        <div className=\"w-8 h-8 rounded-lg bg-gray-200 dark:bg-gray-700\" />"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Efficient data fetching with TanStack Query, server-side pagination reduces data transfer, query invalidation strategy prevents unnecessary renders and heavy operations in render cycle.",
+          "location": "src/pages/ToolsPage.tsx:14-20",
+          "snippet": "const { data: tools, isLoading, isFetching } = useTools({ ...params, name_like: query || undefined })"
+        }
+      ],
+      "confidence_aggregate": 0.9,
+      "is_bonus": false
+    }
+  ],
+  "score": 2,
+  "max_score": 5,
+  "percentage": 40,
+  "confidence": 0.91,
+  "languages_detected": [
+    "TypeScript",
+    "TSX",
+    "CSS",
+    "JSON"
+  ],
+  "files_analyzed": [
+    "src/components/ToolIcon/index.tsx",
+    "src/lib/styles.tsx",
+    "src/components/ToolCard/index.tsx",
+    "src/components/ToolCard/skeleton.tsx",
+    "src/index.css",
+    "src/pages/ToolsPage.tsx",
+    "src/components/ToolsFilters/index.tsx",
+    "src/components/ToolModal/index.tsx",
+    "vite.config.ts",
+    "package.json",
+    "README.md",
+    "public/logo192.png",
+    "public/logo512.png"
+  ],
+  "tool_calls_total": 9,
+  "duration_seconds": 109.57,
+  "reasoning": "Performance optimization evaluation reveals mixed results. Strong CSS organization with centralized design tokens (gradients, statusStyles) in src/lib/styles.tsx prevents duplication effectively. Performance-aware code demonstrated through TanStack Query caching, server-side filtering/sorting/pagination, and skeleton loading states. However, critical gaps exist: images use PNG format without webp/svg optimization, no responsive image sizing with srcset, and complete absence of lazy loading (no loading='lazy' on images, no React.lazy() for components). The codebase shows architectural maturity in data management and CSS organization but lacks modern image optimization and lazy loading strategies essential for production performance.",
+  "is_bonus": false
+}

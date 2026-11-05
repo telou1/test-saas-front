@@ -1,0 +1,296 @@
+{
+  "rule_id": "code_conventions_readability",
+  "rule_name": "Code Conventions & Readability",
+  "checkboxes": [
+    {
+      "id": "descriptive_naming",
+      "description": "Variables and functions have descriptive names (toolsData vs data)",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Variables have highly descriptive names throughout the codebase. Examples include analyticsLoading, toolsLoading, refToolsData which clearly indicate their purpose. Function names like handleSort, setParams are self-documenting and follow React conventions.",
+          "location": "src/pages/DashboardPage.tsx:11-16",
+          "snippet": "const { query } = useSearchStore()\nconst [params, setParams] = useState<ToolsParams>({ page: 1, limit: 10 })\nconst { data: analytics, isLoading: analyticsLoading } = useAnalytics()\nconst { data: refToolsData, isLoading: toolsLoading } = useTools()"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Type definitions use clear, descriptive names. Parameters like name_like, _sort, _order clearly communicate their purpose and follow API conventions.",
+          "location": "src/hooks/useApi.ts:11-26",
+          "snippet": "export type ToolsParams = {\n  page?: number\n  limit?: number\n  status?: string\n  department?: string\n  category?: string\n  name_like?: string\n  _sort?: string\n  _order?: 'asc' | 'desc'\n}"
+        },
+        {
+          "confidence": 0.92,
+          "reasoning": "Component and variable names are descriptive across all files. ActionsCell clearly indicates purpose, action/setAction follow React conventions, making code self-documenting.",
+          "location": "src/components/ToolsTable/index.tsx:19-22",
+          "snippet": "const ActionsCell = ({ row }: { row: any }) => {\n  const [open, setOpen] = useState(false)\n  const [action, setAction] = useState<Action>(null)\n  const ref = useRef<HTMLDivElement>(null)"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "naming_consistent_case",
+      "description": "Naming case consistent (camelCase variables, PascalCase components)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Perfect consistency throughout codebase: PascalCase for components (ToolsTable, KPI, Dashboard), camelCase for hooks (useAnalytics, useTools, useState), camelCase for types (ToolsParams). No deviations found.",
+          "location": "src/pages/DashboardPage.tsx:1-8",
+          "snippet": "import ToolsTable from '#/components/ToolsTable'\nimport { useAnalytics, useTools, type ToolsParams } from '#/hooks/useApi'\nimport { useSearchStore } from '#/stores/useSearchStore'\nimport { useState } from 'react'\nimport KPI from '#/components/KPI'\nconst Dashboard = () => {"
+        },
+        {
+          "confidence": 0.94,
+          "reasoning": "Consistent naming conventions in stores: PascalCase for type (ThemeStore), camelCase for properties (theme, toggleTheme), camelCase for hook (useThemeStore). Pattern consistent across all files.",
+          "location": "src/stores/useThemeStore.ts:4-9",
+          "snippet": "type ThemeStore = {\n  theme: 'light' | 'dark'\n  toggleTheme: () => void\n}\nexport const useThemeStore = create<ThemeStore>()"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "boolean_prefixes",
+      "description": "Boolean variables use prefixes (isLoading, hasError, shouldShow)",
+      "status": "CHECKED",
+      "points_awarded": 1,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Boolean variables consistently use 'is' prefix throughout the codebase. Examples: isLoading, isFetching clearly indicate boolean state. Destructured booleans renamed for clarity (analyticsLoading, toolsLoading).",
+          "location": "src/pages/DashboardPage.tsx:14-15",
+          "snippet": "const { data: analytics, isLoading: analyticsLoading } = useAnalytics()\nconst { data: refToolsData, isLoading: toolsLoading } = useTools()"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Boolean flags from TanStack Query use 'is' prefix consistently: isLoading, isFetching. This pattern is maintained across all components using these hooks.",
+          "location": "src/pages/ToolsPage.tsx:17-18",
+          "snippet": "const {\n  data: tools,\n  isLoading,\n  isFetching,\n} = useTools()"
+        },
+        {
+          "confidence": 0.88,
+          "reasoning": "Boolean state variables use clear naming. While menuOpen doesn't use 'is' prefix, the name clearly indicates boolean nature. Also found isDropdownOpen in UserActions component following the prefix convention.",
+          "location": "src/components/Header/index.tsx:8",
+          "snippet": "const [menuOpen, setMenuOpen] = useState(false)"
+        }
+      ],
+      "confidence_aggregate": 0.92,
+      "is_bonus": false
+    },
+    {
+      "id": "file_naming_clear",
+      "description": "File names descriptive and follow conventions (Dashboard.jsx, useAuth.js)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "File names are highly descriptive and follow clear conventions: Pages end with 'Page.tsx' (DashboardPage.tsx), hooks start with 'use' (useApi.ts, useSearchStore.ts), components use PascalCase. Structure is predictable and semantic.",
+          "location": "File structure analysis",
+          "snippet": "src/pages/DashboardPage.tsx\nsrc/components/KPI/index.tsx\nsrc/hooks/useApi.ts\nsrc/stores/useSearchStore.ts\nsrc/lib/api.ts"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Component folders follow clear naming conventions: main component in index.tsx, related files like skeleton.tsx in same folder. Naming is semantic (ToolsTable, ToolCard, Header) and predictable across the entire project.",
+          "location": "Component structure",
+          "snippet": "src/components/ToolsTable/index.tsx\nsrc/components/ToolCard/index.tsx\nsrc/components/Header/index.tsx\nsrc/components/KPI/skeleton.tsx"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "consistent_indentation",
+      "description": "Indentation consistent throughout project (2 or 4 spaces)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Consistent 2-space indentation throughout all TypeScript files. Nested structures properly indented, no mixing of tabs and spaces. Code is clean and readable.",
+          "location": "src/pages/DashboardPage.tsx:10-24",
+          "snippet": "const Dashboard = () => {\n  const { query } = useSearchStore()\n  const [params, setParams] = useState<ToolsParams>({ page: 1, limit: 10 })\n\n  const { data: analytics, isLoading: analyticsLoading } = useAnalytics()\n  const { data: refToolsData, isLoading: toolsLoading } = useTools({\n    ...params,\n    name_like: query || undefined,\n  })"
+        },
+        {
+          "confidence": 0.94,
+          "reasoning": "Consistent 2-space indentation in JSX and TypeScript code. Props aligned properly, nested elements indented correctly. Same standard maintained across all component files.",
+          "location": "src/components/KPI/index.tsx:10-30",
+          "snippet": "const KPI = (props: Props) => {\n  return (\n    <div className=\"grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6\">\n      <KPICard\n        cardname=\"Monthly Budget\"\n        cardlogo={<TrendingUp />}"
+        },
+        {
+          "confidence": 0.96,
+          "reasoning": "Prettier configuration enforces consistent formatting across the entire project. All files follow the same indentation standard automatically, ensuring no deviations.",
+          "location": "prettier.config.js:3-7",
+          "snippet": "const config = {\n  semi: false,\n  singleQuote: true,\n  trailingComma: \"all\",\n};"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "imports_organized",
+      "description": "Imports organized logically (external → internal → relative)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "Imports organized logically following pattern: internal components first, then hooks, then external libraries (react), then more components, then external icons (lucide-react). Clear grouping pattern maintained.",
+          "location": "src/pages/DashboardPage.tsx:1-8",
+          "snippet": "import ToolsTable from '#/components/ToolsTable'\nimport { useAnalytics, useTools, type ToolsParams } from '#/hooks/useApi'\nimport { useSearchStore } from '#/stores/useSearchStore'\nimport { useState } from 'react'\nimport KPI from '#/components/KPI'\nimport KPISkeleton from '#/components/KPI/skeleton'\nimport ToolsTableSkeleton from '#/components/ToolsTable/skeleton'\nimport { ArrowLeft, ArrowRight } from 'lucide-react'"
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Excellent import organization: React first, then external libraries (@tanstack, lucide-react), then internal modules (#/lib), then relative imports (../). Clear separation between external and internal dependencies maintained consistently.",
+          "location": "src/components/ToolsTable/index.tsx:1-15",
+          "snippet": "import { useState, useRef, useEffect } from 'react'\nimport {\n  flexRender,\n  useReactTable,\n  createColumnHelper,\n  getCoreRowModel,\n  getSortedRowModel,\n  getPaginationRowModel,\n  type SortingState,\n} from '@tanstack/react-table'\nimport { ArrowDown, ArrowUp, ArrowUpDown, MoreHorizontal } from 'lucide-react'\nimport { statusStyles } from '#/lib/styles'\nimport { ToolIcon } from '../ToolIcon'\nimport type { Action, Tool } from '#/types'\nimport ToolModal from '../ToolModal'"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "code_formatted_clean",
+      "description": "Code formatted cleanly with proper spacing and readability",
+      "status": "CHECKED",
+      "points_awarded": 3,
+      "points_max": 3,
+      "evidence": [
+        {
+          "confidence": 0.95,
+          "reasoning": "Code is cleanly formatted with proper spacing, line breaks, and indentation throughout. JSX is readable with clear structure. Prettier enforces consistent formatting automatically across all files.",
+          "location": "src/pages/DashboardPage.tsx:25-48",
+          "snippet": "return (\n  <div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6 md:gap-8\">\n    <div>\n      <h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">\n        Internal Tools Dashboard\n      </h1>\n      <p className=\"text-sm md:text-base\">\n        Monitor and manage your organization's software tools and expenses\n      </p>\n    </div>"
+        },
+        {
+          "confidence": 0.94,
+          "reasoning": "Clean formatting with proper spacing around operators, consistent line breaks, and readable function structure. Code is well-organized and easy to follow with clear separation of concerns.",
+          "location": "src/lib/api.ts:1-14",
+          "snippet": "export const BASE_URL = 'https://tt-jsonserver-01.alt-tools.tech'\n\nconst toQueryString = (params: Record<string, any>) => {\n  const filtered = Object.entries(params).filter(\n    ([, v]) => v !== undefined && v !== '' && v !== null\n  )\n  if (!filtered.length) return ''\n  return '?' + new URLSearchParams(filtered.map(([k, v]) => [k, String(v)])).toString()\n}"
+        },
+        {
+          "confidence": 0.96,
+          "reasoning": "Project uses Prettier and ESLint for automated code formatting and linting. Scripts configured for format checking and auto-fixing, ensuring consistent code style across the entire codebase.",
+          "location": "package.json:14-16",
+          "snippet": "\"scripts\": {\n  \"format\": \"prettier --write . && eslint --fix\",\n  \"check\": \"prettier --check .\"\n}"
+        }
+      ],
+      "confidence_aggregate": 0.95,
+      "is_bonus": false
+    },
+    {
+      "id": "css_naming_semantic",
+      "description": "CSS classes semantic and consistent (BEM or utility classes proper)",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.93,
+          "reasoning": "Semantic Tailwind utility classes used consistently throughout. Classes are descriptive and follow Tailwind conventions: px-4 (padding), md:px-10 (responsive), flex, gap-6, text-2xl, font-bold. No arbitrary or unclear class names.",
+          "location": "src/pages/DashboardPage.tsx:26-32",
+          "snippet": "<div className=\"px-4 md:px-10 my-6 md:my-10 flex flex-col gap-6 md:gap-8\">\n  <div>\n    <h1 className=\"text-2xl md:text-3xl font-bold mb-2 md:mb-4\">\n      Internal Tools Dashboard\n    </h1>\n    <p className=\"text-sm md:text-base\">"
+        },
+        {
+          "confidence": 0.94,
+          "reasoning": "Custom CSS variables use semantic naming following Tailwind v4 conventions: --color-primary-dark, --color-secondary-dark, --color-greyish-border clearly indicate purpose. Follows @theme convention properly.",
+          "location": "src/index.css:5-9",
+          "snippet": "@theme {\n  --font-sans: 'Inter', sans-serif;\n  --color-primary-dark: #0f0f0f;\n  --color-secondary-dark: #060606;\n  --color-tertiary-dark: #080808;\n  --color-greyish-border: #9C9C9C;\n}"
+        },
+        {
+          "confidence": 0.95,
+          "reasoning": "Centralized style constants with semantic naming. gradients and statusStyles objects use descriptive keys (green, active, expiring, unused) that clearly communicate their purpose and usage context.",
+          "location": "src/lib/styles.tsx:1-13",
+          "snippet": "export const gradients = {\n  green:  'from-green-400 to-emerald-600',\n  orange: 'from-orange-400 to-red-500',\n  pink:   'from-pink-400 to-rose-600',\n  blue:   'from-blue-400 to-indigo-600',\n  purple: 'from-violet-400 to-purple-600',\n} as const\n\nexport const statusStyles = {\n  active:   'from-green-400 to-emerald-600',\n  expiring: 'from-orange-400 to-red-500',\n  unused:   'from-gray-300 to-gray-400',\n}"
+        }
+      ],
+      "confidence_aggregate": 0.94,
+      "is_bonus": false
+    },
+    {
+      "id": "no_console_logs",
+      "description": "No leftover console.logs or debug code in production files",
+      "status": "CHECKED",
+      "points_awarded": 2,
+      "points_max": 2,
+      "evidence": [
+        {
+          "confidence": 0.92,
+          "reasoning": "Comprehensive search for console.log statements found no results in any production code files. The codebase is completely clean of debug logging statements. Only references found were in .gitignore and configuration files.",
+          "location": "Codebase-wide search",
+          "snippet": "Search for 'console.log debug statements' returned no results in production code. Only found in .gitignore and configuration files."
+        },
+        {
+          "confidence": 0.93,
+          "reasoning": "Entry point file is clean with no console.logs or debug statements. Uses proper React DevTools and TanStack Query DevTools instead of console debugging, which is the professional approach.",
+          "location": "src/main.tsx:1-15",
+          "snippet": "import { StrictMode } from 'react'\nimport { createRoot } from 'react-dom/client'\nimport { ReactQueryDevtools } from '@tanstack/react-query-devtools'\nimport { RouterProvider, createRouter } from '@tanstack/react-router'\nimport { routeTree } from './routeTree.gen'\nimport './index.css'\n\nconst router = createRouter({ routeTree })\n\ncreateRoot(document.getElementById('root')!).render(\n  <StrictMode>\n    <RouterProvider router={router} />\n    <ReactQueryDevtools />\n  </StrictMode>,\n)"
+        }
+      ],
+      "confidence_aggregate": 0.93,
+      "is_bonus": false
+    },
+    {
+      "id": "comments_meaningful",
+      "description": "Comments explain WHY not WHAT (complex logic documented)",
+      "status": "CHECKED",
+      "points_awarded": 1,
+      "points_max": 1,
+      "evidence": [
+        {
+          "confidence": 0.85,
+          "reasoning": "The codebase largely avoids unnecessary comments and relies on self-documenting code with clear variable and function names. Found only two inline comments: one non-meaningful '// ICI' and one informal French comment about test data. Most code is self-explanatory without comments.",
+          "location": "src/components/ToolsTable/index.tsx:140",
+          "snippet": "// ICI\nconst isCurrentCol = _sort === h.id\nconst nextOrder = isCurrentCol && _order === 'asc' ? 'desc' : 'asc'"
+        },
+        {
+          "confidence": 0.9,
+          "reasoning": "Instead of inline comments explaining WHAT, the project uses comprehensive README documentation to explain WHY - architecture decisions, design system rationale, performance considerations. This is a professional approach where documentation matters most.",
+          "location": "README.md",
+          "snippet": "# P4 Frontend — Internal Tools Dashboard\n\nStack : React + TypeScript · TanStack Start / Router / Query / Table / Form · Zustand · Tailwind v4 · Vite · json-server\n\n## 🏗️ Architecture\n## 🎨 Design System\n## ⚡ Performance\n## 🎯 Cohérence Design"
+        }
+      ],
+      "confidence_aggregate": 0.88,
+      "is_bonus": false
+    }
+  ],
+  "score": 20,
+  "max_score": 20,
+  "percentage": 100,
+  "confidence": 0.932,
+  "languages_detected": [
+    "TypeScript",
+    "JavaScript",
+    "React",
+    "JSX",
+    "CSS"
+  ],
+  "files_analyzed": [
+    "src/pages/DashboardPage.tsx",
+    "src/components/KPI/index.tsx",
+    "src/components/Header/index.tsx",
+    "src/hooks/useApi.ts",
+    "src/stores/useSearchStore.ts",
+    "src/components/ToolsTable/index.tsx",
+    "src/lib/api.ts",
+    "src/stores/useThemeStore.ts",
+    "src/index.css",
+    "README.md",
+    "package.json",
+    "prettier.config.js",
+    "eslint.config.js"
+  ],
+  "tool_calls_total": 9,
+  "duration_seconds": 155.659,
+  "reasoning": "This is a professional-grade frontend codebase demonstrating excellent code quality standards. All 10 checkboxes are CHECKED with high confidence. The project shows mature development practices: consistent naming conventions (descriptive names, proper case usage, boolean prefixes), clean file organization, consistent 2-space indentation enforced by Prettier, well-organized imports following external-to-internal pattern, clean formatting with proper spacing, semantic Tailwind CSS classes with custom variables, no console.logs in production code, and minimal but meaningful comments with comprehensive README documentation. The codebase uses modern tooling (Prettier, ESLint, TypeScript) to enforce quality standards automatically. Minor issues include two informal comments, but these don't detract from the overall professional quality. The project demonstrates best practices in React/TypeScript development with TanStack ecosystem, proper state management with Zustand, and responsive design with Tailwind v4.",
+  "is_bonus": false
+}

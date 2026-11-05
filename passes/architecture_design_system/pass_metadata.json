@@ -1,0 +1,17 @@
+{
+  "pass_id": "architecture_design_system",
+  "pass_name": "Pass 5 - Architecture & Design System",
+  "pass_number": 6,
+  "started_at": "2026-05-28T13:15:10.183Z",
+  "rules_count": 4,
+  "conditional": false,
+  "dependencies": [
+    "dashboard_page_implementation",
+    "tools_analytics_pages"
+  ],
+  "completed_at": "2026-05-28T13:17:55.959Z",
+  "duration_seconds": 165.776,
+  "score": 69,
+  "max_score": 100,
+  "percentage": 69
+}
